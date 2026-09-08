@@ -1,4 +1,4 @@
-import os, json, html, requests, random
+import os, json, html, requests, random, base64, textwrap
 from datetime import datetime, timezone, timedelta
 
 # ==========================================
@@ -73,7 +73,7 @@ top_h = sorted(habits, key=lambda x: x.get("counterUp", 0), reverse=True)[:3]
 if db["last_daily_date"] != now.strftime("%Y-%m-%d"):
     db["last_daily_date"] = now.strftime("%Y-%m-%d")
     db["daily_habit_baseline"] = up
-    
+
 h_today = max(0, up - db["daily_habit_baseline"])
 t_today = sum(1 for t in c_res if t.get("dateCompleted") and datetime.fromisoformat(t["dateCompleted"].replace("Z", "+00:00")).astimezone(WIB).strftime("%Y-%m-%d") == now.strftime("%Y-%m-%d"))
 t_active = len([t for t in t_res if t.get("type") == "todo"])
@@ -88,7 +88,11 @@ with open(DB_FILE, "w", encoding="utf-8") as f: json.dump(db, f, indent=2)
 def fmt(n): return f"{n/1000000:.2f}M" if n>=1000000 else f"{n/1000:.1f}K" if n>=1000 else str(int(n))
 
 # ==========================================
-# 4. AUTO-UPDATE BIO (SHIELDS.IO PROFESSIONAL)
+# 4. AUTO-UPDATE BIO (BADGE KECIL + LINK KE KARTU LENGKAP)
+#    Catatan: Habitica selalu me-resize gambar apapun jadi thumbnail
+#    kecil dan membungkusnya sebagai link (perilaku tetap platform,
+#    lihat dokumentasi paket habitica-markdown). Badge kecil + link
+#    ini adalah cara paling stabil untuk tetap terlihat rapi.
 # ==========================================
 quote_text = "Consistency is not perfection, it is simply refusing to give up."
 if os.path.exists("quote.txt"):
@@ -113,10 +117,34 @@ try: requests.put("https://habitica.com/api/v3/user", headers=headers, json={"pr
 except: pass
 
 # ==========================================
-# 5. GENERATE NATIVE SVG (ANTI-ERROR / NO EXTERNAL IMAGES)
+# 5. FETCH AVATAR ASLI (GANTI LOGO TEKS "H" DENGAN GAMBAR)
 # ==========================================
-# Pine Tree Forest Generator (Generative Vector Art)
-random.seed(42) # Seed agar bentuk hutannya konsisten
+avatar_b64 = None
+try:
+    av_res = requests.get(f"https://habitica.com/export/avatar-{USER_ID}.png", headers=headers, timeout=6)
+    if av_res.status_code == 200 and len(av_res.content) > 300:
+        avatar_b64 = base64.b64encode(av_res.content).decode("utf-8")
+except Exception as e:
+    print(f"Avatar notice: {e}")
+
+if avatar_b64:
+    logo_svg = (
+        f'<g clip-path="url(#avaClip)">'
+        f'<image xlink:href="data:image/png;base64,{avatar_b64}" x="10" y="14" width="94" height="94" preserveAspectRatio="xMidYMid slice"/>'
+        f'</g>'
+        f'<rect x="18" y="24" width="76" height="76" rx="16" fill="none" stroke="#e9d5ff" stroke-width="2.5"/>'
+    )
+else:
+    # Fallback vector, hanya dipakai jika fetch avatar gagal (mis. rate limit)
+    logo_svg = '''
+    <rect x="18" y="24" width="76" height="76" rx="16" fill="#432874" stroke="#e9d5ff" stroke-width="2.5"/>
+    <path d="M 38 40 L 38 72 M 74 40 L 74 72 M 38 56 L 74 56" stroke="#ffffff" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+    '''
+
+# ==========================================
+# 6. GENERATE NATIVE SVG
+# ==========================================
+random.seed(42)
 pine_trees = ""
 for i in range(16):
     x = random.randint(-30, 430)
@@ -129,15 +157,7 @@ for i in range(16):
     pine_trees += '<polygon points="25,30 0,65 50,65" fill="#064e3b"/>'
     pine_trees += '<rect x="21" y="65" width="8" height="15" fill="#3f2c22"/></g>'
 
-# Logo Habitica Murni Kode (Ungu-Putih & Sparkles)
-logo_svg = '''
-<rect x="18" y="24" width="76" height="76" rx="16" fill="#432874" stroke="#e9d5ff" stroke-width="2.5"/>
-<path d="M 38 40 L 38 72 M 74 40 L 74 72 M 38 56 L 74 56" stroke="#ffffff" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M 64 30 L 66 36 L 72 38 L 66 40 L 64 46 L 62 40 L 56 38 L 62 36 Z" fill="#fcd34d"/>
-<path d="M 34 80 L 35 83 L 38 84 L 35 85 L 34 88 L 33 85 L 30 84 L 33 83 Z" fill="#fcd34d"/>
-'''
-
-# Native Vector Icons
+# Ikon vector untuk kartu statistik
 ic_sw = '<path d="M4 20L20 4M8 20L20 8" stroke="#fb7185" stroke-width="2.5" stroke-linecap="round"/>'
 ic_fr = '<path d="M12 22C12 22 5 15 5 10C5 6 8 2 12 2C12 2 10 6 10 10C10 12 12 14 12 14C12 14 15 11 15 8C17 10 19 13 19 16C19 19.5 16 22 12 22Z" fill="#f59e0b"/>'
 ic_tr = '<path d="M4 6H20M5 6V11C5 14.8 8.1 18 12 18C15.9 18 19 14.8 19 11V6M8 18V22M16 18V22M6 22H18" stroke="#facc15" stroke-width="2" stroke-linecap="round" fill="none"/>'
@@ -148,14 +168,32 @@ ic_ck = '<path d="M5 12L10 17L19 7" stroke="#059669" stroke-width="2.5" stroke-l
 ic_tg = '<circle cx="12" cy="12" r="8" stroke="#0284c7" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#0284c7"/>'
 ic_st = '<path d="M12 2L15 9L22 9L16 14L18 21L12 17L6 21L8 14L2 9L9 9Z" fill="#ca8a04"/>'
 
+# Ikon class (ganti label teks WAR/MAG/ROG/HEA)
+ic_class_war = '<path d="M4 20L18 6M8 20L18 10" stroke="#fb7185" stroke-width="2.2" stroke-linecap="round"/><path d="M15 3L21 9L18 12L12 6Z" fill="#fb7185"/>'
+ic_class_mag = '<path d="M12 2L14 9L21 11L14 13L12 20L10 13L3 11L10 9Z" fill="#60a5fa"/>'
+ic_class_rog = '<path d="M4 20L16 8M16 8L14 4L20 6L16 8Z" fill="#f59e0b" stroke="#f59e0b" stroke-linejoin="round"/>'
+ic_class_hea = '<path d="M12 21C12 21 4 14.5 4 9.5C4 6.5 6.5 4 9.5 4C11 4 12 5 12 5C12 5 13 4 14.5 4C17.5 4 20 6.5 20 9.5C20 14.5 12 21 12 21Z" fill="#34d399"/>'
+
 h_str = "".join([f'<text x="28" y="{632+i*18}" class="list">{i+1}. {html.escape(h.get("text", "")[:28])} (+{h.get("counterUp", 0)})</text>' for i, h in enumerate(top_h)])
 d_str = "".join([f'<text x="28" y="{732+i*18}" class="list">{i+1}. {d[0][:28]} ({d[1]}x)</text>' for i, d in enumerate(top_d)])
 
 cfg = {"warrior": {"sec": "#fb7185", "bg": "#3a0914", "n": "WARRIOR"}, "mage": {"sec": "#60a5fa", "bg": "#0f172a", "n": "ARCHMAGE"}, "rogue": {"sec": "#fbbf24", "bg": "#321706", "n": "SHADOW ROGUE"}, "healer": {"sec": "#34d399", "bg": "#062b20", "n": "HIGH HEALER"}}.get(c_class, {"sec": "#fb7185", "bg": "#3a0914", "n": "WARRIOR"})
 
-svg = f"""<svg width="920" height="1860" viewBox="0 0 460 930" fill="none" xmlns="http://www.w3.org/2000/svg">
+# --- FIX SCROLL OF INSIGHT: wrap otomatis + tinggi kotak/kanvas dinamis ---
+quote_lines = textwrap.wrap(quote_text, width=50)[:4]
+quote_tspans = "".join(
+    f'<tspan x="28" dy="{0 if i == 0 else 18}">{html.escape(line)}</tspan>'
+    for i, line in enumerate(quote_lines)
+)
+quote_box_y = 807
+quote_box_h = 40 + max(1, len(quote_lines)) * 18 + 12
+canvas_w = 460
+canvas_h = quote_box_y + quote_box_h + 20  # tinggi kanvas ikut menyesuaikan panjang quote
+
+svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w} {canvas_h}" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <defs>
-    <clipPath id="rc"><rect width="460" height="930" rx="18"/></clipPath>
+    <clipPath id="rc"><rect width="{canvas_w}" height="{canvas_h}" rx="18"/></clipPath>
+    <clipPath id="avaClip"><rect x="18" y="24" width="76" height="76" rx="16"/></clipPath>
     <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#141724"/><stop offset="100%" stop-color="#07080f"/></linearGradient>
     <linearGradient id="gB" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#78350f"/></linearGradient>
     <linearGradient id="gC" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#24121b"/><stop offset="100%" stop-color="#180c13"/></linearGradient>
@@ -173,28 +211,25 @@ svg = f"""<svg width="920" height="1860" viewBox="0 0 460 930" fill="none" xmlns
     .list {{ font-family: sans-serif; font-size: 11.5px; fill: #cbd5e1; }}
   </style>
   <g clip-path="url(#rc)">
-    <rect width="460" height="930" fill="url(#g1)"/>
-    
-    <!-- Forest Background Generated via Code -->
+    <rect width="{canvas_w}" height="{canvas_h}" fill="url(#g1)"/>
+
     <rect x="0" y="0" width="460" height="130" fill="#0f172a"/>
     {pine_trees}
     <rect width="460" height="130" fill="#0b0e18" opacity="0.4"/>
     <line x1="0" y1="130" x2="460" y2="130" stroke="url(#gB)" stroke-width="1.5"/>
-    
-    <!-- Murni Logo Habitica Vector -->
+
+    <!-- Logo: avatar asli Habitica kamu (fallback ke vector kalau fetch gagal) -->
     {logo_svg}
-    
+
     <text x="110" y="48" class="t" font-size="20">{p_name}</text>
     <text x="110" y="70" class="s">Level {lvl} • <tspan fill="{cfg['sec']}">{cfg['n']}</tspan></text>
-    
-    <!-- Indikator Class (Nyala/Redup) -->
-    <text x="110" y="94" font-family="sans-serif" font-size="10" font-weight="bold">
-      <tspan fill="#fb7185" opacity="{'1.0' if 'warrior' in db['classes_used'] else '0.2'}">WAR</tspan>
-      <tspan fill="#60a5fa" opacity="{'1.0' if 'mage' in db['classes_used'] else '0.2'}" dx="12">MAG</tspan>
-      <tspan fill="#f59e0b" opacity="{'1.0' if 'rogue' in db['classes_used'] else '0.2'}" dx="12">ROG</tspan>
-      <tspan fill="#34d399" opacity="{'1.0' if 'healer' in db['classes_used'] else '0.2'}" dx="12">HEA</tspan>
-    </text>
-    
+
+    <!-- Indikator class pakai ikon, bukan teks -->
+    <g transform="translate(110, 82) scale(0.7)" opacity="{'1.0' if 'warrior' in db['classes_used'] else '0.2'}">{ic_class_war}</g>
+    <g transform="translate(136, 82) scale(0.7)" opacity="{'1.0' if 'mage' in db['classes_used'] else '0.2'}">{ic_class_mag}</g>
+    <g transform="translate(162, 82) scale(0.7)" opacity="{'1.0' if 'rogue' in db['classes_used'] else '0.2'}">{ic_class_rog}</g>
+    <g transform="translate(188, 82) scale(0.7)" opacity="{'1.0' if 'healer' in db['classes_used'] else '0.2'}">{ic_class_hea}</g>
+
     <text x="18" y="152" font-family="sans-serif" font-size="11" fill="#fb7185" font-weight="bold">COMBAT &amp; EXPEDITION LOG</text>
     <rect x="16" y="162" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="26" y="178" class="l">TOTAL DMG</text><g transform="translate(26, 183) scale(0.8)">{ic_sw}</g><text x="50" y="197" class="v">{fmt(db['all_time_damage'])}</text>
     <rect x="236" y="162" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="246" y="178" class="l">WEEKLY DMG</text><g transform="translate(246, 183) scale(0.8)">{ic_sw}</g><text x="270" y="197" class="v">{fmt(db['weekly_damage'])}</text>
@@ -203,26 +238,28 @@ svg = f"""<svg width="920" height="1860" viewBox="0 0 460 930" fill="none" xmlns
     <rect x="16" y="270" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="26" y="286" class="l">BOSSES SLAIN</text><g transform="translate(26, 291) scale(0.8)">{ic_tr}</g><text x="50" y="305" class="v">{db['bosses_slain']}</text>
     <rect x="236" y="270" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="246" y="286" class="l">PEAK GOLD HOARDED</text><g transform="translate(246, 291) scale(0.8)">{ic_gd}</g><text x="270" y="305" class="v" fill="#fbbf24">{fmt(db['peak_gold'])} G</text>
     <rect x="16" y="324" width="428" height="36" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="26" y="347" class="s">✨ Buffs: <tspan class="v">{db['buffs_cast']}</tspan> Casts • 💧 Mana Spent: <tspan class="v">{fmt(db['total_mana_spent'])} MP</tspan></text>
-    
+
     <text x="18" y="394" font-family="sans-serif" font-size="11" fill="#60a5fa" font-weight="bold">PRODUCTIVITY &amp; DISCIPLINE MATRIX</text>
     <text x="18" y="414" class="s">Dailies Today: <tspan class="v">{len(done)}/{len(due)} ({pct}%)</tspan></text>
     <rect x="16" y="422" width="428" height="11" rx="5.5" fill="#151b2e"/><rect x="16" y="422" width="{int(428*(pct/100))}" height="11" rx="5.5" fill="url(#gBar)"/>
     <rect x="16" y="441" width="428" height="34" rx="7" fill="url(#gP)" stroke="#1e293b"/><text x="26" y="462" class="s">Habit Mastery: <tspan class="v">{hratio}% Positive</tspan> ({up} 👍 / {dn} 👎)</text>
-    
+
     <rect x="16" y="483" width="101" height="46" rx="7" fill="#1f1610" stroke="#b45309"/><text x="22" y="499" class="l">HABITS TODAY</text><g transform="translate(22, 503) scale(0.75)">{ic_sp}</g><text x="44" y="518" class="v">{h_today}</text>
     <rect x="125" y="483" width="101" height="46" rx="7" fill="#0d1f18" stroke="#059669"/><text x="131" y="499" class="l">DAILIES TODAY</text><g transform="translate(131, 503) scale(0.75)">{ic_ck}</g><text x="153" y="518" class="v">{len(done)}</text>
     <rect x="234" y="483" width="101" height="46" rx="7" fill="#0f1f33" stroke="#0284c7"/><text x="240" y="499" class="l">TO-DOS TODAY</text><g transform="translate(240, 503) scale(0.75)">{ic_tg}</g><text x="262" y="518" class="v">{t_today}</text>
     <rect x="343" y="483" width="101" height="46" rx="7" fill="#241b0b" stroke="#ca8a04"/><text x="349" y="499" class="l">ALL COMPLETED</text><g transform="translate(349, 503) scale(0.75)">{ic_st}</g><text x="371" y="518" class="v" fill="#fbbf24">{fmt(g_total)}</text>
-    
+
     <rect x="16" y="537" width="208" height="46" rx="8" fill="url(#gP)" stroke="#1e293b"/><text x="26" y="553" class="l">BOUNTY BOARD</text><g transform="translate(26, 558) scale(0.8)">{ic_tg}</g><text x="50" y="572" class="v">{t_active} Open / {t_cleared} Done</text>
     <rect x="236" y="537" width="208" height="46" rx="8" fill="url(#gP)" stroke="#1e293b"/><text x="246" y="553" class="l">DISCIPLINE FLAME</text><g transform="translate(246, 558) scale(0.8)">{ic_fr}</g><text x="270" y="572" class="v">{streak} Days Streak</text>
-    
+
     <rect x="16" y="591" width="428" height="92" rx="8" fill="url(#gH)" stroke="#78350f"/><text x="28" y="611" font-family="sans-serif" font-size="11" font-weight="bold" fill="#f59e0b">TOP 3 HABITS (MOST ACTIVE)</text>{h_str}
     <rect x="16" y="691" width="428" height="92" rx="8" fill="url(#gD)" stroke="#064e3b"/><text x="28" y="711" font-family="sans-serif" font-size="11" font-weight="bold" fill="#10b981">TOP 3 DAILIES (WEEKLY)</text>{d_str}
-    
-    <rect x="16" y="807" width="428" height="96" rx="9" fill="url(#gI)" stroke="#6d28d9"/><text x="28" y="830" font-family="Georgia, serif" font-size="11" font-weight="bold" fill="#facc15">SCROLL OF INSIGHT</text><text x="28" y="852" font-family="Georgia, serif" font-size="12" font-style="italic" fill="#e2e8f0"><tspan x="28" dy="0">{quote_text}</tspan></text>
+
+    <rect x="16" y="{quote_box_y}" width="428" height="{quote_box_h}" rx="9" fill="url(#gI)" stroke="#6d28d9"/>
+    <text x="28" y="{quote_box_y+23}" font-family="sans-serif" font-size="11" font-weight="bold" fill="#facc15">SCROLL OF INSIGHT</text>
+    <text x="28" y="{quote_box_y+45}" font-family="Georgia, serif" font-size="12" font-style="italic" fill="#e2e8f0">{quote_tspans}</text>
   </g>
-  <rect width="460" height="930" rx="18" fill="none" stroke="url(#gB)" stroke-width="3.5"/>
+  <rect width="{canvas_w}" height="{canvas_h}" rx="18" fill="none" stroke="url(#gB)" stroke-width="3.5"/>
 </svg>"""
 
 with open("profile-stats.svg", "w", encoding="utf-8") as f: f.write(svg)
