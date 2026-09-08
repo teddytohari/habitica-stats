@@ -1,6 +1,7 @@
-<svg width="920" height="1860" viewBox="0 0 460 930" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="920" height="1830" viewBox="0 0 460 915" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <defs>
-    <clipPath id="rc"><rect width="460" height="930" rx="18"/></clipPath>
+    <clipPath id="rc"><rect width="460" height="915" rx="18"/></clipPath>
+    <clipPath id="avaClip"><rect x="18" y="24" width="76" height="76" rx="16"/></clipPath>
     <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#141724"/><stop offset="100%" stop-color="#07080f"/></linearGradient>
     <linearGradient id="gB" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#78350f"/></linearGradient>
     <linearGradient id="gC" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#24121b"/><stop offset="100%" stop-color="#180c13"/></linearGradient>
@@ -18,33 +19,28 @@
     .list { font-family: sans-serif; font-size: 11.5px; fill: #cbd5e1; }
   </style>
   <g clip-path="url(#rc)">
-    <rect width="460" height="930" fill="url(#g1)"/>
-    
-    <!-- Forest Background Generated via Code -->
+    <rect width="460" height="915" fill="url(#g1)"/>
+
     <rect x="0" y="0" width="460" height="130" fill="#0f172a"/>
     <g transform="translate(297, 17) scale(0.7150064531336001)" opacity="0.4100117273476477"><polygon points="25,0 0,35 50,35" fill="#064e3b"/><polygon points="25,15 0,50 50,50" fill="#064e3b"/><polygon points="25,30 0,65 50,65" fill="#064e3b"/><rect x="21" y="65" width="8" height="15" fill="#3f2c22"/></g><g transform="translate(84, 18) scale(1.1418827284984074)" opacity="0.5706797949691644"><polygon points="25,0 0,35 50,35" fill="#064e3b"/><polygon points="25,15 0,50 50,50" fill="#064e3b"/><polygon points="25,30 0,65 50,65" fill="#064e3b"/><rect x="21" y="65" width="8" height="15" fill="#3f2c22"/></g><g transform="translate(426, 44) scale(0.7521632995776497)" opacity="0.46876872787410817"><polygon points="25,0 0,35 50,35" fill="#064e3b"/><polygon points="25,15 0,50 50,50" fill="#064e3b"/><polygon points="25,30 0,65 50,65" fill="#064e3b"/><rect x="21" y="65" width="8" height="15" fill="#3f2c22"/></g><g transform="translate(-15, 15) scale(0.831182784882162)" opacity="0.5021421152413449"><polygon points="25,0 0,35 50,35" fill="#064e3b"/><polygon points="25,15 0,50 50,50" fill="#064e3b"/><polygon points="25,30 0,65 50,65" fill="#064e3b"/><rect x="21" y="65" width="8" height="15" fill="#3f2c22"/></g><g transform="translate(-17, 45) scale(0.819302590411989)" opacity="0.5599537751118093"><polygon points="25,0 0,35 50,35" fill="#064e3b"/><polygon points="25,15 0,50 50,50" fill="#064e3b"/><polygon points="25,30 0,65 50,65" fill="#064e3b"/><rect x="21" y="65" width="8" height="15" fill="#3f2c22"/></g><g transform="translate(249, 36) scale(0.8322643732244179)" opacity="0.5357062735503635"><polygon points="25,0 0,35 50,35" fill="#064e3b"/><polygon points="25,15 0,50 50,50" fill="#064e3b"/><polygon points="25,30 0,65 50,65" fill="#064e3b"/><rect x="21" y="65" width="8" height="15" fill="#3f2c22"/></g><g transform="translate(384, 10) scale(1.1552844202778605)" opacity="0.36386372655075605"><polygon points="25,0 0,35 50,35" fill="#064e3b"/><polygon points="25,15 0,50 50,50" fill="#064e3b"/><polygon points="25,30 0,65 50,65" fill="#064e3b"/><rect x="21" y="65" width="8" height="15" fill="#3f2c22"/></g><g transform="translate(186, 31) scale(0.8667228050029852)" opacity="0.3861255048430355"><polygon points="25,0 0,35 50,35" fill="#064e3b"/><polygon points="25,15 0,50 50,50" fill="#064e3b"/><polygon points="25,30 0,65 50,65" fill="#064e3b"/><rect x="21" y="65" width="8" height="15" fill="#3f2c22"/></g><g transform="translate(360, 31) scale(0.7613261659119092)" opacity="0.4519709202549349"><polygon points="25,0 0,35 50,35" fill="#064e3b"/><polygon points="25,15 0,50 50,50" fill="#064e3b"/><polygon points="25,30 0,65 50,65" fill="#064e3b"/><rect x="21" y="65" width="8" height="15" fill="#3f2c22"/></g><g transform="translate(153, 32) scale(1.0622356188201347)" opacity="0.6228513093097521"><polygon points="25,0 0,35 50,35" fill="#064e3b"/><polygon points="25,15 0,50 50,50" fill="#064e3b"/><polygon points="25,30 0,65 50,65" fill="#064e3b"/><rect x="21" y="65" width="8" height="15" fill="#3f2c22"/></g><g transform="translate(343, 39) scale(1.0217368548728205)" opacity="0.6892463055917482"><polygon points="25,0 0,35 50,35" fill="#064e3b"/><polygon points="25,15 0,50 50,50" fill="#064e3b"/><polygon points="25,30 0,65 50,65" fill="#064e3b"/><rect x="21" y="65" width="8" height="15" fill="#3f2c22"/></g><g transform="translate(163, 15) scale(1.0312243787639361)" opacity="0.6317618657011979"><polygon points="25,0 0,35 50,35" fill="#064e3b"/><polygon points="25,15 0,50 50,50" fill="#064e3b"/><polygon points="25,30 0,65 50,65" fill="#064e3b"/><rect x="21" y="65" width="8" height="15" fill="#3f2c22"/></g><g transform="translate(286, 33) scale(1.0464112871540572)" opacity="0.5818287344859694"><polygon points="25,0 0,35 50,35" fill="#064e3b"/><polygon points="25,15 0,50 50,50" fill="#064e3b"/><polygon points="25,30 0,65 50,65" fill="#064e3b"/><rect x="21" y="65" width="8" height="15" fill="#3f2c22"/></g><g transform="translate(-7, 24) scale(1.1638410044732153)" opacity="0.6940886082643031"><polygon points="25,0 0,35 50,35" fill="#064e3b"/><polygon points="25,15 0,50 50,50" fill="#064e3b"/><polygon points="25,30 0,65 50,65" fill="#064e3b"/><rect x="21" y="65" width="8" height="15" fill="#3f2c22"/></g><g transform="translate(407, 24) scale(1.219890200053162)" opacity="0.45205049001566644"><polygon points="25,0 0,35 50,35" fill="#064e3b"/><polygon points="25,15 0,50 50,50" fill="#064e3b"/><polygon points="25,30 0,65 50,65" fill="#064e3b"/><rect x="21" y="65" width="8" height="15" fill="#3f2c22"/></g><g transform="translate(202, 50) scale(1.2004662559844501)" opacity="0.3650616388624339"><polygon points="25,0 0,35 50,35" fill="#064e3b"/><polygon points="25,15 0,50 50,50" fill="#064e3b"/><polygon points="25,30 0,65 50,65" fill="#064e3b"/><rect x="21" y="65" width="8" height="15" fill="#3f2c22"/></g>
     <rect width="460" height="130" fill="#0b0e18" opacity="0.4"/>
     <line x1="0" y1="130" x2="460" y2="130" stroke="url(#gB)" stroke-width="1.5"/>
-    
-    <!-- Murni Logo Habitica Vector -->
-    
-<rect x="18" y="24" width="76" height="76" rx="16" fill="#432874" stroke="#e9d5ff" stroke-width="2.5"/>
-<path d="M 38 40 L 38 72 M 74 40 L 74 72 M 38 56 L 74 56" stroke="#ffffff" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M 64 30 L 66 36 L 72 38 L 66 40 L 64 46 L 62 40 L 56 38 L 62 36 Z" fill="#fcd34d"/>
-<path d="M 34 80 L 35 83 L 38 84 L 35 85 L 34 88 L 33 85 L 30 84 L 33 83 Z" fill="#fcd34d"/>
 
+    <!-- Logo: avatar asli Habitica kamu (fallback ke vector kalau fetch gagal) -->
     
+    <rect x="18" y="24" width="76" height="76" rx="16" fill="#432874" stroke="#e9d5ff" stroke-width="2.5"/>
+    <path d="M 38 40 L 38 72 M 74 40 L 74 72 M 38 56 L 74 56" stroke="#ffffff" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+    
+
     <text x="110" y="48" class="t" font-size="20">🅂🅄🄱🄰🅁🅄</text>
     <text x="110" y="70" class="s">Level 215 • <tspan fill="#fb7185">WARRIOR</tspan></text>
-    
-    <!-- Indikator Class (Nyala/Redup) -->
-    <text x="110" y="94" font-family="sans-serif" font-size="10" font-weight="bold">
-      <tspan fill="#fb7185" opacity="1.0">WAR</tspan>
-      <tspan fill="#60a5fa" opacity="0.2" dx="12">MAG</tspan>
-      <tspan fill="#f59e0b" opacity="0.2" dx="12">ROG</tspan>
-      <tspan fill="#34d399" opacity="0.2" dx="12">HEA</tspan>
-    </text>
-    
+
+    <!-- Indikator class pakai ikon, bukan teks -->
+    <g transform="translate(110, 82) scale(0.7)" opacity="1.0"><path d="M4 20L18 6M8 20L18 10" stroke="#fb7185" stroke-width="2.2" stroke-linecap="round"/><path d="M15 3L21 9L18 12L12 6Z" fill="#fb7185"/></g>
+    <g transform="translate(136, 82) scale(0.7)" opacity="0.2"><path d="M12 2L14 9L21 11L14 13L12 20L10 13L3 11L10 9Z" fill="#60a5fa"/></g>
+    <g transform="translate(162, 82) scale(0.7)" opacity="0.2"><path d="M4 20L16 8M16 8L14 4L20 6L16 8Z" fill="#f59e0b" stroke="#f59e0b" stroke-linejoin="round"/></g>
+    <g transform="translate(188, 82) scale(0.7)" opacity="0.2"><path d="M12 21C12 21 4 14.5 4 9.5C4 6.5 6.5 4 9.5 4C11 4 12 5 12 5C12 5 13 4 14.5 4C17.5 4 20 6.5 20 9.5C20 14.5 12 21 12 21Z" fill="#34d399"/></g>
+
     <text x="18" y="152" font-family="sans-serif" font-size="11" fill="#fb7185" font-weight="bold">COMBAT &amp; EXPEDITION LOG</text>
     <rect x="16" y="162" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="26" y="178" class="l">TOTAL DMG</text><g transform="translate(26, 183) scale(0.8)"><path d="M4 20L20 4M8 20L20 8" stroke="#fb7185" stroke-width="2.5" stroke-linecap="round"/></g><text x="50" y="197" class="v">7.3K</text>
     <rect x="236" y="162" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="246" y="178" class="l">WEEKLY DMG</text><g transform="translate(246, 183) scale(0.8)"><path d="M4 20L20 4M8 20L20 8" stroke="#fb7185" stroke-width="2.5" stroke-linecap="round"/></g><text x="270" y="197" class="v">7.3K</text>
@@ -53,24 +49,26 @@
     <rect x="16" y="270" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="26" y="286" class="l">BOSSES SLAIN</text><g transform="translate(26, 291) scale(0.8)"><path d="M4 6H20M5 6V11C5 14.8 8.1 18 12 18C15.9 18 19 14.8 19 11V6M8 18V22M16 18V22M6 22H18" stroke="#facc15" stroke-width="2" stroke-linecap="round" fill="none"/></g><text x="50" y="305" class="v">0</text>
     <rect x="236" y="270" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="246" y="286" class="l">PEAK GOLD HOARDED</text><g transform="translate(246, 291) scale(0.8)"><circle cx="12" cy="12" r="8" fill="#f59e0b"/><text x="12" y="16" font-size="11" fill="#141724" text-anchor="middle" font-weight="bold" font-family="sans-serif">G</text></g><text x="270" y="305" class="v" fill="#fbbf24">26.7K G</text>
     <rect x="16" y="324" width="428" height="36" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="26" y="347" class="s">✨ Buffs: <tspan class="v">10</tspan> Casts • 💧 Mana Spent: <tspan class="v">243 MP</tspan></text>
-    
+
     <text x="18" y="394" font-family="sans-serif" font-size="11" fill="#60a5fa" font-weight="bold">PRODUCTIVITY &amp; DISCIPLINE MATRIX</text>
     <text x="18" y="414" class="s">Dailies Today: <tspan class="v">0/9 (0%)</tspan></text>
     <rect x="16" y="422" width="428" height="11" rx="5.5" fill="#151b2e"/><rect x="16" y="422" width="0" height="11" rx="5.5" fill="url(#gBar)"/>
     <rect x="16" y="441" width="428" height="34" rx="7" fill="url(#gP)" stroke="#1e293b"/><text x="26" y="462" class="s">Habit Mastery: <tspan class="v">100% Positive</tspan> (0 👍 / 0 👎)</text>
-    
+
     <rect x="16" y="483" width="101" height="46" rx="7" fill="#1f1610" stroke="#b45309"/><text x="22" y="499" class="l">HABITS TODAY</text><g transform="translate(22, 503) scale(0.75)"><path d="M12 2L14 9L21 11L14 13L12 20L10 13L3 11L10 9Z" fill="#b45309"/></g><text x="44" y="518" class="v">0</text>
     <rect x="125" y="483" width="101" height="46" rx="7" fill="#0d1f18" stroke="#059669"/><text x="131" y="499" class="l">DAILIES TODAY</text><g transform="translate(131, 503) scale(0.75)"><path d="M5 12L10 17L19 7" stroke="#059669" stroke-width="2.5" stroke-linecap="round" fill="none"/></g><text x="153" y="518" class="v">0</text>
     <rect x="234" y="483" width="101" height="46" rx="7" fill="#0f1f33" stroke="#0284c7"/><text x="240" y="499" class="l">TO-DOS TODAY</text><g transform="translate(240, 503) scale(0.75)"><circle cx="12" cy="12" r="8" stroke="#0284c7" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#0284c7"/></g><text x="262" y="518" class="v">0</text>
     <rect x="343" y="483" width="101" height="46" rx="7" fill="#241b0b" stroke="#ca8a04"/><text x="349" y="499" class="l">ALL COMPLETED</text><g transform="translate(349, 503) scale(0.75)"><path d="M12 2L15 9L22 9L16 14L18 21L12 17L6 21L8 14L2 9L9 9Z" fill="#ca8a04"/></g><text x="371" y="518" class="v" fill="#fbbf24">30</text>
-    
+
     <rect x="16" y="537" width="208" height="46" rx="8" fill="url(#gP)" stroke="#1e293b"/><text x="26" y="553" class="l">BOUNTY BOARD</text><g transform="translate(26, 558) scale(0.8)"><circle cx="12" cy="12" r="8" stroke="#0284c7" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#0284c7"/></g><text x="50" y="572" class="v">4 Open / 30 Done</text>
     <rect x="236" y="537" width="208" height="46" rx="8" fill="url(#gP)" stroke="#1e293b"/><text x="246" y="553" class="l">DISCIPLINE FLAME</text><g transform="translate(246, 558) scale(0.8)"><path d="M12 22C12 22 5 15 5 10C5 6 8 2 12 2C12 2 10 6 10 10C10 12 12 14 12 14C12 14 15 11 15 8C17 10 19 13 19 16C19 19.5 16 22 12 22Z" fill="#f59e0b"/></g><text x="270" y="572" class="v">247 Days Streak</text>
-    
+
     <rect x="16" y="591" width="428" height="92" rx="8" fill="url(#gH)" stroke="#78350f"/><text x="28" y="611" font-family="sans-serif" font-size="11" font-weight="bold" fill="#f59e0b">TOP 3 HABITS (MOST ACTIVE)</text><text x="28" y="632" class="list">1. Ada kemajuan (+0)</text><text x="28" y="650" class="list">2. Trading Forex (+0)</text><text x="28" y="668" class="list">3. Deep thinking tanpa distraks (+0)</text>
     <rect x="16" y="691" width="428" height="92" rx="8" fill="url(#gD)" stroke="#064e3b"/><text x="28" y="711" font-family="sans-serif" font-size="11" font-weight="bold" fill="#10b981">TOP 3 DAILIES (WEEKLY)</text><text x="28" y="732" class="list">1. Drink water in the morning  (7x)</text><text x="28" y="750" class="list">2. Menunda Kesenangan  (7x)</text><text x="28" y="768" class="list">3. 10 Menit tanpa Short  (7x)</text>
-    
-    <rect x="16" y="807" width="428" height="96" rx="9" fill="url(#gI)" stroke="#6d28d9"/><text x="28" y="830" font-family="Georgia, serif" font-size="11" font-weight="bold" fill="#facc15">SCROLL OF INSIGHT</text><text x="28" y="852" font-family="Georgia, serif" font-size="12" font-style="italic" fill="#e2e8f0"><tspan x="28" dy="0">"Konsistensi kecil setiap hari membangun benteng keberhasilan di masa depan."</tspan></text>
+
+    <rect x="16" y="807" width="428" height="88" rx="9" fill="url(#gI)" stroke="#6d28d9"/>
+    <text x="28" y="830" font-family="sans-serif" font-size="11" font-weight="bold" fill="#facc15">SCROLL OF INSIGHT</text>
+    <text x="28" y="852" font-family="Georgia, serif" font-size="12" font-style="italic" fill="#e2e8f0"><tspan x="28" dy="0">&quot;Konsistensi kecil setiap hari membangun benteng</tspan><tspan x="28" dy="18">keberhasilan di masa depan.&quot;</tspan></text>
   </g>
-  <rect width="460" height="930" rx="18" fill="none" stroke="url(#gB)" stroke-width="3.5"/>
+  <rect width="460" height="915" rx="18" fill="none" stroke="url(#gB)" stroke-width="3.5"/>
 </svg>
