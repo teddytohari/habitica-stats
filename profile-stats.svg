@@ -1,0 +1,106 @@
+<svg width="380" height="740" viewBox="0 0 380 740" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="auraGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FF7979" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#EB4D4B" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="barGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2ED573"/>
+      <stop offset="100%" stop-color="#1DD1A1"/>
+    </linearGradient>
+  </defs>
+
+  <style>
+    .header { font-family: 'Segoe UI', Roboto, sans-serif; font-weight: bold; fill: #FFFFFF; }
+    .sub { font-family: 'Segoe UI', Roboto, sans-serif; font-size: 11px; fill: #A4B0BE; }
+    .label { font-family: 'Segoe UI', Roboto, sans-serif; font-size: 10px; fill: #747D8C; text-transform: uppercase; }
+    .val { font-family: 'Segoe UI', Roboto, sans-serif; font-size: 13px; font-weight: bold; fill: #F1F2F6; }
+    .gold { fill: #FFA502; }
+    .section-title { font-family: 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: bold; fill: #ECCC68; letter-spacing: 0.5px; }
+    .list-item { font-family: 'Segoe UI', Roboto, sans-serif; font-size: 11px; fill: #CED6E0; }
+  </style>
+
+  <rect width="380" height="740" rx="16" fill="#13141C" stroke="#2F3542" stroke-width="1.5"/>
+
+  <circle cx="48" cy="48" r="32" fill="url(#auraGlow)"/>
+  <circle cx="48" cy="48" r="22" fill="#1E202C" stroke="#FF7979" stroke-width="1.5"/>
+  <text x="48" y="55" font-size="20" text-anchor="middle">⚔️</text>
+
+  <text x="82" y="38" class="header" font-size="15">🅂🅄🄱🄰🅁🅄</text>
+  <text x="82" y="53" class="sub">Level 214 • WARRIOR</text>
+
+  <text x="82" y="70" font-size="9" font-family="sans-serif">
+    <tspan style="fill:#F5F6FA; font-weight:bold;">⚔️ WAR </tspan>
+    <tspan style="fill:#57606F; opacity:0.4;">🔮 MAG </tspan>
+    <tspan style="fill:#57606F; opacity:0.4;">🏹 ROG </tspan>
+    <tspan style="fill:#57606F; opacity:0.4;">🌿 HEA</tspan>
+  </text>
+
+  <line x1="16" y1="86" x2="364" y2="86" stroke="#232733" stroke-width="1"/>
+
+  <text x="16" y="105" class="section-title">⚔️ COMBAT &amp; EXPEDITION LOG</text>
+
+  <rect x="16" y="115" width="168" height="42" rx="6" fill="#1C1E2A"/>
+  <text x="24" y="130" class="label">Total Dmg (All-Time)</text>
+  <text x="24" y="147" class="val">⚔️ 2.3K</text>
+
+  <rect x="196" y="115" width="168" height="42" rx="6" fill="#1C1E2A"/>
+  <text x="204" y="130" class="label">Weekly Dmg (Sen 06:00)</text>
+  <text x="204" y="147" class="val">🗡️ 2.3K</text>
+
+  <rect x="16" y="163" width="168" height="42" rx="6" fill="#1C1E2A"/>
+  <text x="24" y="178" class="label">Daily Avg Dmg</text>
+  <text x="24" y="195" class="val">📊 1.2K/hari</text>
+
+  <rect x="196" y="163" width="168" height="42" rx="6" fill="#1C1E2A"/>
+  <text x="204" y="178" class="label">Peak Weekly Record</text>
+  <text x="204" y="195" class="val">🔥 0</text>
+
+  <rect x="16" y="211" width="168" height="42" rx="6" fill="#1C1E2A"/>
+  <text x="24" y="226" class="label">Bosses Slain</text>
+  <text x="24" y="243" class="val">🏆 0 Bosses</text>
+
+  <rect x="196" y="211" width="168" height="42" rx="6" fill="#1C1E2A"/>
+  <text x="204" y="226" class="label">Peak Gold Hoarded</text>
+  <text x="204" y="243" class="val gold">💰 24.1K G</text>
+
+  <text x="20" y="274" class="sub">✨ Buffs Cast to Party: <tspan class="val">0</tspan></text>
+  <text x="20" y="292" class="sub">💧 Total Mana Spent : <tspan class="val">0 MP</tspan> <tspan font-size="9" fill="#747D8C">(All-Time)</tspan></text>
+
+  <line x1="16" y1="308" x2="364" y2="308" stroke="#232733" stroke-width="1"/>
+
+  <text x="16" y="328" class="section-title">📋 PRODUCTIVITY &amp; DISCIPLINE MATRIX</text>
+
+  <text x="16" y="348" class="sub">Dailies Today: <tspan font-weight="bold" fill="#F1F2F6">0/9 (0%)</tspan></text>
+  <rect x="16" y="356" width="348" height="10" rx="5" fill="#242838"/>
+  <rect x="16" y="356" width="0" height="10" rx="5" fill="url(#barGrad)"/>
+
+  <rect x="16" y="376" width="168" height="42" rx="6" fill="#1C1E2A"/>
+  <text x="24" y="391" class="label">Bounty Board</text>
+  <text x="24" y="408" class="val">🎯 5 Open / 29 Done</text>
+
+  <rect x="196" y="376" width="168" height="42" rx="6" fill="#1C1E2A"/>
+  <text x="204" y="391" class="label">Discipline Flame</text>
+  <text x="204" y="408" class="val">🔥 246 Hari Streak</text>
+
+  <rect x="16" y="424" width="348" height="34" rx="6" fill="#1C1E2A"/>
+  <text x="24" y="445" class="sub">Habit Mastery: <tspan class="val">100% Positif</tspan> (0 👍 / 0 👎)</text>
+
+  <text x="16" y="482" class="section-title">🏆 TOP 3 DAILIES (Riset Mingguan):</text>
+  <text x="24" y="502" class="list-item">1. -</text>
+  <text x="24" y="520" class="list-item">2. -</text>
+  <text x="24" y="538" class="list-item">3. -</text>
+
+  <text x="16" y="568" class="section-title">🎯 TOP 3 COMPLETED TO-DOS (Mingguan):</text>
+  <text x="24" y="588" class="list-item">1. Buay prompt untuk analis</text>
+  <text x="24" y="606" class="list-item">2. Buang sampah.</text>
+  <text x="24" y="624" class="list-item">3. Sapu sapu di luar.</text>
+
+  <line x1="16" y1="642" x2="364" y2="642" stroke="#232733" stroke-width="1"/>
+
+  <rect x="16" y="654" width="348" height="66" rx="8" fill="#181A24" stroke="#4834D4" stroke-width="0.8"/>
+  <text x="28" y="672" font-family="'Georgia', serif" font-size="10" font-weight="bold" fill="#ECCC68" letter-spacing="0.5px">📜 SCROLL OF INSIGHT</text>
+  <text x="28" y="692" font-family="'Georgia', serif" font-size="11" font-style="italic" fill="#DCDDE1">
+    &quot;Konsistensi kecil setiap hari membangun benteng keberhasilan di masa depan.&quot;
+  </text>
+</svg>
