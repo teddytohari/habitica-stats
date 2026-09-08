@@ -1,13 +1,13 @@
 import os, json, html, base64, requests
 from datetime import datetime, timezone, timedelta
 
-# 1. Credentials & Setup
+# 1. Setup & Credentials
 USER_ID = os.environ.get("HABITICA_USER_ID")
 API_TOKEN = os.environ.get("HABITICA_API_TOKEN")
 WIB = timezone(timedelta(hours=7))
 headers = {"x-api-user": USER_ID, "x-api-key": API_TOKEN, "x-client": f"{USER_ID}-RPGStatsCard"}
 
-# 2. Local Database
+# 2. Database Init
 DB_FILE = "database.json"
 db = {"current_cycle_id": "", "peak_gold": 0.0, "total_mana_spent": 0.0, "last_mana": None, "buffs_cast": 0, "bosses_slain": 0, "all_time_damage": 0.0, "weekly_damage": 0.0, "peak_weekly_damage": 0.0, "last_damage_up": 0.0, "weekly_top_dailies": {}, "last_daily_date": "", "daily_habit_baseline": 0, "total_dailies_cleared": 0}
 if os.path.exists(DB_FILE):
@@ -19,7 +19,7 @@ if db["current_cycle_id"] != cycle:
     db["peak_weekly_damage"] = max(db["peak_weekly_damage"], db["weekly_damage"])
     db["weekly_damage"] = 0.0; db["weekly_top_dailies"] = {}; db["current_cycle_id"] = cycle
 
-# 3. Fetch Habitica API
+# 3. Fetch API Data
 u_res = requests.get("https://habitica.com/api/v3/user", headers=headers).json().get("data", {})
 t_res = requests.get("https://habitica.com/api/v3/tasks/user", headers=headers).json().get("data", [])
 c_res = requests.get("https://habitica.com/api/v3/tasks/user?type=completedTodos", headers=headers).json().get("data", [])
@@ -43,7 +43,6 @@ if dmg_up > db["last_damage_up"]:
     db["all_time_damage"] += (dmg_up - db["last_damage_up"])
 db["last_damage_up"] = dmg_up
 
-# Tasks Logic
 dailies = [t for t in t_res if t.get("type") == "daily"]
 due = [t for t in dailies if t.get("isDue", False)]
 done = [t for t in due if t.get("completed", False)]
@@ -68,6 +67,10 @@ h_today = max(0, up - db["daily_habit_baseline"])
 t_today = sum(1 for t in c_res if t.get("dateCompleted") and datetime.fromisoformat(t["dateCompleted"].replace("Z", "+00:00")).astimezone(WIB).strftime("%Y-%m-%d") == now.strftime("%Y-%m-%d"))
 t_active = len([t for t in t_res if t.get("type") == "todo"])
 
+# BARIS INI YANG KEMARIN HILANG: Menghitung total keseluruhan
+todos_cleared_total = len(c_res)
+grand_total_completed = up + todos_cleared_total + len(done)
+
 streak = max([t.get("streak", 0) for t in dailies], default=0)
 days = max(1, (now.weekday() if now.hour >= 6 else (now.weekday() - 1) % 7) + 1)
 avg_dmg = db["weekly_damage"] / days
@@ -76,7 +79,7 @@ with open(DB_FILE, "w", encoding="utf-8") as f: json.dump(db, f, indent=2)
 
 def fmt(n): return f"{n/1000000:.2f}M" if n>=1000000 else f"{n/1000:.1f}K" if n>=1000 else str(int(n))
 
-# 4. AUTO-UPDATE BIO MARKDOWN (Hybrid Layout)
+# 4. AUTO-UPDATE BIO MARKDOWN
 bar = "█" * int((pct/100)*10) + "░" * (10 - int((pct/100)*10))
 md_h = "\n".join([f"{i+1}. {html.escape(h.get('text')[:24])} (+{h.get('counterUp', 0)})" for i, h in enumerate(top_h)]) or "-"
 md_d = "\n".join([f"{i+1}. {d[0][:24]} ({d[1]}x)" for i, d in enumerate(top_d)]) or "-"
@@ -105,7 +108,7 @@ bio = f"""[![HD Card](https://raw.githubusercontent.com/teddytohari/habitica-sta
 try: requests.put("https://habitica.com/api/v3/user", headers=headers, json={"profile.blurb": bio.replace("    ", "")})
 except: pass
 
-# 5. GENERATE HD SVG/PNG BANNER
+# 5. GENERATE HD SVG/PNG
 bg_img = ""
 try:
     bg_k = u_res.get("preferences", {}).get("background", "violet")
