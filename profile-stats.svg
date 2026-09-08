@@ -33,9 +33,9 @@
     <text x="98" y="82" font-family="sans-serif" font-size="9.5" fill="#f59e0b" font-weight="bold">★ ACTIVE CHAMPION OF HABITICA ★</text>
     
     <text x="18" y="132" font-family="sans-serif" font-size="11" fill="#fb7185" font-weight="bold">⚔️ COMBAT &amp; EXPEDITION LOG</text>
-    <rect x="16" y="142" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="26" y="158" class="l">TOTAL DMG (ALL-TIME)</text><text x="26" y="177" class="v">⚔️ 6.1K</text>
-    <rect x="236" y="142" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="246" y="158" class="l">WEEKLY DMG (RESET MON)</text><text x="246" y="177" class="v">🗡️ 6.1K</text>
-    <rect x="16" y="196" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="26" y="212" class="l">DAILY AVG DMG</text><text x="26" y="231" class="v">📊 3.1K/day</text>
+    <rect x="16" y="142" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="26" y="158" class="l">TOTAL DMG (ALL-TIME)</text><text x="26" y="177" class="v">⚔️ 7.3K</text>
+    <rect x="236" y="142" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="246" y="158" class="l">WEEKLY DMG (RESET MON)</text><text x="246" y="177" class="v">🗡️ 7.3K</text>
+    <rect x="16" y="196" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="26" y="212" class="l">DAILY AVG DMG</text><text x="26" y="231" class="v">📊 3.7K/day</text>
     <rect x="236" y="196" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="246" y="212" class="l">PEAK WEEKLY RECORD</text><text x="246" y="231" class="v">🔥 0</text>
     <rect x="16" y="250" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="26" y="266" class="l">BOSSES SLAIN</text><text x="26" y="285" class="v">🏆 0</text>
     <rect x="236" y="250" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="246" y="266" class="l">PEAK GOLD HOARDED</text><text x="246" y="285" class="v" fill="#fbbf24">💰 26.4K G</text>
@@ -46,16 +46,16 @@
     <rect x="16" y="402" width="428" height="11" rx="5.5" fill="#151b2e"/><rect x="16" y="402" width="428" height="11" rx="5.5" fill="url(#gBar)"/>
     <rect x="16" y="421" width="428" height="34" rx="7" fill="url(#gP)" stroke="#1e293b"/><text x="26" y="442" class="s">Habit Mastery: <tspan class="v">70% Positive</tspan> (12 👍 / 5 👎)</text>
     
-    <rect x="16" y="463" width="101" height="46" rx="7" fill="#1f1610" stroke="#b45309"/><text x="22" y="479" class="l">HABITS TODAY</text><text x="22" y="499" class="v">✨ 12</text>
+    <rect x="16" y="463" width="101" height="46" rx="7" fill="#1f1610" stroke="#b45309"/><text x="22" y="479" class="l">HABITS TODAY</text><text x="22" y="499" class="v">✨ 0</text>
     <rect x="125" y="463" width="101" height="46" rx="7" fill="#0d1f18" stroke="#059669"/><text x="131" y="479" class="l">DAILIES TODAY</text><text x="131" y="499" class="v">📋 9</text>
-    <rect x="234" y="463" width="101" height="46" rx="7" fill="#0f1f33" stroke="#0284c7"/><text x="240" y="479" class="l">TO-DOS TODAY</text><text x="240" y="499" class="v">🎯 1</text>
+    <rect x="234" y="463" width="101" height="46" rx="7" fill="#0f1f33" stroke="#0284c7"/><text x="240" y="479" class="l">TO-DOS TODAY</text><text x="240" y="499" class="v">🎯 0</text>
     <rect x="343" y="463" width="101" height="46" rx="7" fill="#241b0b" stroke="#ca8a04"/><text x="349" y="479" class="l">ALL COMPLETED</text><text x="349" y="499" class="v" fill="#fbbf24">⭐ 51</text>
     
     <rect x="16" y="517" width="208" height="46" rx="8" fill="url(#gP)" stroke="#1e293b"/><text x="26" y="533" class="l">BOUNTY BOARD</text><text x="26" y="552" class="v">🎯 4 Open / 30 Cleared</text>
     <rect x="236" y="517" width="208" height="46" rx="8" fill="url(#gP)" stroke="#1e293b"/><text x="246" y="533" class="l">DISCIPLINE FLAME</text><text x="246" y="552" class="v">🔥 247 Days Streak</text>
     
     <rect x="16" y="571" width="428" height="92" rx="8" fill="url(#gH)" stroke="#78350f"/><text x="28" y="591" font-family="sans-serif" font-size="11" font-weight="bold" fill="#f59e0b">🔥 TOP 3 HABITS (MOST ACTIVE)</text><text x="28" y="612" class="list">1. Ada kemajuan (+1)</text><text x="28" y="630" class="list">2. Deep thinking tanpa distraks (+1)</text><text x="28" y="648" class="list">3. Menyelesaikan tugas meski mo (+1)</text>
-    <rect x="16" y="671" width="428" height="92" rx="8" fill="url(#gD)" stroke="#064e3b"/><text x="28" y="691" font-family="sans-serif" font-size="11" font-weight="bold" fill="#10b981">🏆 TOP 3 DAILIES (WEEKLY)</text><text x="28" y="712" class="list">1. Drink water in the morning  (5x)</text><text x="28" y="730" class="list">2. Menunda Kesenangan  (5x)</text><text x="28" y="748" class="list">3. 10 Menit tanpa Short  (5x)</text>
+    <rect x="16" y="671" width="428" height="92" rx="8" fill="url(#gD)" stroke="#064e3b"/><text x="28" y="691" font-family="sans-serif" font-size="11" font-weight="bold" fill="#10b981">🏆 TOP 3 DAILIES (WEEKLY)</text><text x="28" y="712" class="list">1. Drink water in the morning  (6x)</text><text x="28" y="730" class="list">2. Menunda Kesenangan  (6x)</text><text x="28" y="748" class="list">3. 10 Menit tanpa Short  (6x)</text>
     
     <rect x="16" y="787" width="428" height="96" rx="9" fill="url(#gI)" stroke="#6d28d9"/><text x="28" y="810" font-family="Georgia, serif" font-size="11" font-weight="bold" fill="#facc15">📜 SCROLL OF INSIGHT</text><text x="28" y="832" font-family="Georgia, serif" font-size="12" font-style="italic" fill="#e2e8f0"><tspan x="28" dy="0">Consistency is not perfection,</tspan><tspan x="28" dy="18">it is simply refusing to give up.</tspan></text>
   </g>
