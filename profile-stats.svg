@@ -1,26 +1,22 @@
-<svg width="380" height="920" viewBox="0 0 380 920" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="380" height="930" viewBox="0 0 380 930" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <!-- Multi-Layer Radial Aura -->
-    <radialGradient id="auraOuter" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#f87171" stop-opacity="0.85"/>
-      <stop offset="60%" stop-color="#ef4444" stop-opacity="0.45"/>
-      <stop offset="100%" stop-color="#ef4444" stop-opacity="0"/>
-    </radialGradient>
-    
-    <!-- Rich RPG Slate Fantasy Canvas Gradient -->
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#1e2235"/>
-      <stop offset="45%" stop-color="#141724"/>
-      <stop offset="100%" stop-color="#0d0f18"/>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#181c2e"/>
+      <stop offset="40%" stop-color="#101424"/>
+      <stop offset="100%" stop-color="#0a0c16"/>
     </linearGradient>
 
-    <!-- Card Box Surface Gradient -->
+    <linearGradient id="goldBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="50%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#78350f"/>
+    </linearGradient>
+
     <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1f2537"/>
-      <stop offset="100%" stop-color="#161a29"/>
+      <stop offset="0%" stop-color="#1f253d"/>
+      <stop offset="100%" stop-color="#141829"/>
     </linearGradient>
 
-    <!-- Emerald Progress Gradient -->
     <linearGradient id="barGrad" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#10b981"/>
       <stop offset="100%" stop-color="#34d399"/>
@@ -28,140 +24,115 @@
   </defs>
 
   <style>
-    .header { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 800; fill: #ffffff; letter-spacing: 0.3px; }
-    .sub { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; fill: #94a3b8; }
-    .label { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 9.5px; fill: #718096; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
-    .val { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13.5px; font-weight: bold; fill: #f8fafc; }
-    .gold { fill: #fbbf24; }
-    .section-title { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 10.5px; font-weight: bold; fill: #facc15; letter-spacing: 0.7px; text-transform: uppercase; }
-    .list-item { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; fill: #cbd5e1; }
-    .emoji-icon { font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif; }
+    .font-title { font-family: 'Segoe UI', Roboto, sans-serif; font-weight: 800; fill: #ffffff; }
+    .font-sub { font-family: 'Segoe UI', Roboto, sans-serif; font-size: 11px; fill: #94a3b8; }
+    .font-label { font-family: 'Segoe UI', Roboto, sans-serif; font-size: 9.5px; fill: #94a3b8; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+    .font-val { font-family: 'Segoe UI', Roboto, sans-serif; font-size: 13.5px; font-weight: bold; fill: #f8fafc; }
+    .font-sec { font-family: 'Segoe UI', Roboto, sans-serif; font-size: 10.5px; font-weight: bold; fill: #fbbf24; letter-spacing: 0.7px; text-transform: uppercase; }
+    .font-list { font-family: 'Segoe UI', Roboto, sans-serif; font-size: 11px; fill: #cbd5e1; }
   </style>
 
-  <!-- Canvas Border & Background -->
-  <rect width="380" height="920" rx="18" fill="url(#bgGrad)" stroke="#334155" stroke-width="1.8"/>
+  <!-- Outer Fantasy Frame -->
+  <rect width="380" height="930" rx="16" fill="url(#bgGrad)" stroke="url(#goldBorder)" stroke-width="2"/>
+  <path d="M 0 0 L 380 0 L 380 84 L 0 84 Z" fill="#13182b" opacity="0.8"/>
+  <line x1="0" y1="84" x2="380" y2="84" stroke="url(#goldBorder)" stroke-width="1.5"/>
 
-  <!-- ================= HEADER SECTION ================= -->
-  <!-- Wide Radiant Aura Layer -->
-  <circle cx="46" cy="46" r="38" fill="url(#auraOuter)"/>
-  
-  <!-- Outer Aura Energy Ring -->
-  <rect x="16" y="16" width="60" height="60" rx="14" fill="none" stroke="#f87171" stroke-width="1.2" stroke-dasharray="4 2" opacity="0.65"/>
+  <!-- ================= HERO BADGE (VECTOR CREST) ================= -->
+  <rect x="18" y="16" width="52" height="52" rx="12" fill="#4c0519" stroke="#fb7185" stroke-width="2"/>
+  <path d="M 33 28 L 55 50" stroke="#f8fafc" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M 55 28 L 33 50" stroke="#f8fafc" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M 30 25 L 36 31" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M 58 25 L 52 31" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="44" cy="39" r="4.5" fill="#f59e0b" stroke="#78350f" stroke-width="1"/>
 
-  <!-- RPG Class Square Badge -->
-  <rect x="21" y="21" width="50" height="50" rx="11" fill="#450a0a" stroke="#f87171" stroke-width="2"/>
-  
-  <!-- Class Icon -->
-  <text x="46" y="47" font-size="24" text-anchor="middle" dominant-baseline="central" class="emoji-icon">⚔️</text>
-
-  <!-- Name & Class Title -->
-  <text x="82" y="38" class="header" font-size="15">🅂🅄🄱🄰🅁🅄</text>
-  <text x="82" y="53" class="sub">Level 214 • <tspan fill="#f87171" font-weight="bold">WARRIOR</tspan></text>
-
-  <!-- Class Badges Row -->
-  <text x="82" y="68" font-size="9.5" class="emoji-icon">
-    <tspan style="fill:#f8fafc; font-weight:bold;">⚔️ WAR </tspan>
-    <tspan style="fill:#475569; opacity:0.35;">🔮 MAG </tspan>
-    <tspan style="fill:#475569; opacity:0.35;">🏹 ROG </tspan>
-    <tspan style="fill:#475569; opacity:0.35;">🌿 HEA</tspan>
-  </text>
-
-  <line x1="16" y1="84" x2="364" y2="84" stroke="#2a324b" stroke-width="1.2"/>
+  <text x="80" y="38" class="font-title" font-size="16">🅂🅄🄱🄰🅁🅄</text>
+  <text x="80" y="53" class="font-sub">Level 214 • <tspan fill="#fb7185" font-weight="bold">WARRIOR</tspan></text>
+  <text x="80" y="68" font-size="9" fill="#f59e0b" font-weight="bold" letter-spacing="1px">★ ACTIVE CHAMPION ★</text>
 
   <!-- ================= COMBAT & EXPEDITION ================= -->
-  <text x="16" y="102" class="section-title">⚔️ COMBAT &amp; EXPEDITION LOG</text>
+  <text x="18" y="104" class="font-sec">⚔️ COMBAT &amp; EXPEDITION LOG</text>
 
-  <!-- Row 1: Total Dmg & Weekly Dmg -->
-  <rect x="16" y="110" width="168" height="42" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
-  <text x="24" y="124" class="label">Total Dmg (All-Time)</text>
-  <text x="24" y="142" class="val emoji-icon">⚔️ 2.3K</text>
+  <rect x="16" y="112" width="168" height="42" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
+  <text x="24" y="126" class="font-label">Total Dmg (All-Time)</text>
+  <text x="24" y="144" class="font-val">⚔️ 2.3K</text>
 
-  <rect x="196" y="110" width="168" height="42" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
-  <text x="204" y="124" class="label">Weekly Dmg (Reset Mon)</text>
-  <text x="204" y="142" class="val emoji-icon">🗡️ 2.3K</text>
+  <rect x="196" y="112" width="168" height="42" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
+  <text x="204" y="126" class="font-label">Weekly Dmg (Reset Mon)</text>
+  <text x="204" y="144" class="font-val">🗡️ 2.3K</text>
 
-  <!-- Row 2: Daily Avg & Peak Weekly -->
-  <rect x="16" y="158" width="168" height="42" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
-  <text x="24" y="172" class="label">Daily Avg Dmg</text>
-  <text x="24" y="190" class="val emoji-icon">📊 1.2K/day</text>
+  <rect x="16" y="160" width="168" height="42" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
+  <text x="24" y="174" class="font-label">Daily Avg Dmg</text>
+  <text x="24" y="192" class="font-val">📊 1.2K/day</text>
 
-  <rect x="196" y="158" width="168" height="42" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
-  <text x="204" y="172" class="label">Peak Weekly Record</text>
-  <text x="204" y="190" class="val emoji-icon">🔥 0</text>
+  <rect x="196" y="160" width="168" height="42" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
+  <text x="204" y="174" class="font-label">Peak Weekly Record</text>
+  <text x="204" y="192" class="font-val">🔥 0</text>
 
-  <!-- Row 3: Bosses Slain & Peak Gold -->
-  <rect x="16" y="206" width="168" height="42" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
-  <text x="24" y="220" class="label">Bosses Slain</text>
-  <text x="24" y="238" class="val emoji-icon">🏆 0 Bosses</text>
+  <rect x="16" y="208" width="168" height="42" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
+  <text x="24" y="222" class="font-label">Bosses Slain</text>
+  <text x="24" y="240" class="font-val">🏆 0 Bosses</text>
 
-  <rect x="196" y="206" width="168" height="42" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
-  <text x="204" y="220" class="label">Peak Gold Hoarded</text>
-  <text x="204" y="238" class="val gold emoji-icon">💰 24.1K G</text>
+  <rect x="196" y="208" width="168" height="42" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
+  <text x="204" y="222" class="font-label">Peak Gold Hoarded</text>
+  <text x="204" y="240" class="font-val" fill="#fbbf24">💰 24.1K G</text>
 
-  <!-- Consolidated Buff & Mana Card -->
-  <rect x="16" y="254" width="348" height="34" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
-  <text x="24" y="275" class="sub emoji-icon">✨ Buffs: <tspan class="val">0</tspan> Casts  •  💧 Mana Spent: <tspan class="val">0 MP</tspan></text>
+  <rect x="16" y="256" width="348" height="34" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
+  <text x="24" y="277" class="font-sub">✨ Buffs: <tspan class="font-val">0</tspan> Casts  •  💧 Mana Spent: <tspan class="font-val">0 MP</tspan></text>
 
-  <line x1="16" y1="298" x2="364" y2="298" stroke="#2a324b" stroke-width="1.2"/>
+  <line x1="16" y1="302" x2="364" y2="302" stroke="#232a42" stroke-width="1"/>
 
   <!-- ================= PRODUCTIVITY MATRIX ================= -->
-  <text x="16" y="318" class="section-title">📋 PRODUCTIVITY &amp; DISCIPLINE MATRIX</text>
+  <text x="18" y="322" class="font-sec">📋 PRODUCTIVITY &amp; DISCIPLINE</text>
 
-  <!-- Dailies Today Header & Bar -->
-  <text x="16" y="338" class="sub">Dailies Today: <tspan font-weight="bold" fill="#f8fafc">0/9 (0%)</tspan></text>
-  <rect x="16" y="346" width="348" height="10" rx="5" fill="#171b29"/>
-  <rect x="16" y="346" width="0" height="10" rx="5" fill="url(#barGrad)"/>
+  <text x="18" y="342" class="font-sub">Dailies Today: <tspan font-weight="bold" fill="#f8fafc">0/9 (0%)</tspan></text>
+  <rect x="16" y="350" width="348" height="10" rx="5" fill="#141928"/>
+  <rect x="16" y="350" width="0" height="10" rx="5" fill="url(#barGrad)"/>
 
-  <!-- Repositioned Habit Mastery -->
-  <rect x="16" y="364" width="348" height="32" rx="7" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
-  <text x="24" y="384" class="sub emoji-icon">Habit Mastery: <tspan class="val">100% Positive</tspan> (0 👍 / 0 👎)</text>
+  <rect x="16" y="368" width="348" height="32" rx="7" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
+  <text x="24" y="388" class="font-sub">Habit Mastery: <tspan class="font-val">100% Positive</tspan> (0 👍 / 0 👎)</text>
 
-  <!-- Daily Completions & Total Aggregates (Grid 4) -->
-  <rect x="16" y="402" width="82" height="42" rx="7" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
-  <text x="22" y="416" class="label">Habits Today</text>
-  <text x="22" y="434" class="val emoji-icon">✨ 0</text>
+  <rect x="16" y="406" width="82" height="42" rx="7" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
+  <text x="22" y="420" class="font-label">Habits Today</text>
+  <text x="22" y="438" class="font-val">✨ 0</text>
 
-  <rect x="104" y="402" width="82" height="42" rx="7" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
-  <text x="110" y="416" class="label">Dailies Today</text>
-  <text x="110" y="434" class="val emoji-icon">📋 0</text>
+  <rect x="104" y="406" width="82" height="42" rx="7" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
+  <text x="110" y="420" class="font-label">Dailies Today</text>
+  <text x="110" y="438" class="font-val">📋 0</text>
 
-  <rect x="194" y="402" width="82" height="42" rx="7" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
-  <text x="200" y="416" class="label">To-Dos Today</text>
-  <text x="200" y="434" class="val emoji-icon">🎯 0</text>
+  <rect x="194" y="406" width="82" height="42" rx="7" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
+  <text x="200" y="420" class="font-label">To-Dos Today</text>
+  <text x="200" y="438" class="font-val">🎯 0</text>
 
-  <rect x="282" y="402" width="82" height="42" rx="7" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
-  <text x="288" y="416" class="label">All Completed</text>
-  <text x="288" y="434" class="val gold emoji-icon">⭐ 29</text>
+  <rect x="282" y="406" width="82" height="42" rx="7" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
+  <text x="288" y="420" class="font-label">All Completed</text>
+  <text x="288" y="438" class="font-val" fill="#fbbf24">⭐ 29</text>
 
-  <!-- Bounty Board & Discipline Flame -->
-  <rect x="16" y="450" width="168" height="42" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
-  <text x="24" y="464" class="label">Bounty Board</text>
-  <text x="24" y="482" class="val emoji-icon">🎯 5 Open / 29 Cleared</text>
+  <rect x="16" y="454" width="168" height="42" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
+  <text x="24" y="468" class="font-label">Bounty Board</text>
+  <text x="24" y="486" class="font-val">🎯 5 Open / 29 Done</text>
 
-  <rect x="196" y="450" width="168" height="42" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
-  <text x="204" y="464" class="label">Discipline Flame</text>
-  <text x="204" y="482" class="val emoji-icon">🔥 246 Days Streak</text>
+  <rect x="196" y="454" width="168" height="42" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
+  <text x="204" y="468" class="font-label">Discipline Flame</text>
+  <text x="204" y="486" class="font-val">🔥 246 Days Streak</text>
 
-  <!-- Dedicated Box: Top 3 Habits -->
-  <rect x="16" y="500" width="348" height="88" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
-  <text x="26" y="518" class="section-title emoji-icon">🔥 TOP 3 HABITS (MOST ACTIVE)</text>
-  <text x="26" y="538" class="list-item">1. Ada kemajuan (+0)</text>
-  <text x="26" y="556" class="list-item">2. Trading Forex (+0)</text>
-  <text x="26" y="574" class="list-item">3. Deep thinking tanpa dist.. (+0)</text>
+  <rect x="16" y="504" width="348" height="88" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
+  <text x="26" y="522" class="font-sec">🔥 TOP 3 HABITS (MOST ACTIVE)</text>
+  <text x="26" y="542" class="font-list">1. Ada kemajuan (+0)</text>
+  <text x="26" y="560" class="font-list">2. Trading Forex (+0)</text>
+  <text x="26" y="578" class="font-list">3. Deep thinking tanpa dist.. (+0)</text>
 
-  <!-- Dedicated Box: Top 3 Dailies -->
-  <rect x="16" y="596" width="348" height="88" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
-  <text x="26" y="614" class="section-title emoji-icon">🏆 TOP 3 DAILIES (WEEKLY CONSISTENCY)</text>
-  <text x="26" y="634" class="list-item">1. -</text>
-  <text x="26" y="652" class="list-item">2. -</text>
-  <text x="26" y="670" class="list-item">3. -</text>
+  <rect x="16" y="600" width="348" height="88" rx="8" fill="url(#cardGrad)" stroke="#2b354f" stroke-width="1"/>
+  <text x="26" y="618" class="font-sec">🏆 TOP 3 DAILIES (WEEKLY CONSISTENCY)</text>
+  <text x="26" y="638" class="font-list">1. -</text>
+  <text x="26" y="656" class="font-list">2. -</text>
+  <text x="26" y="674" class="font-list">3. -</text>
 
-  <line x1="16" y1="696" x2="364" y2="696" stroke="#2a324b" stroke-width="1.2"/>
+  <line x1="16" y1="700" x2="364" y2="700" stroke="#232a42" stroke-width="1"/>
 
   <!-- ================= SCROLL OF INSIGHT ================= -->
-  <rect x="16" y="708" width="348" height="86" rx="9" fill="#131929" stroke="#3b82f6" stroke-width="1.2"/>
-  <text x="28" y="728" font-family="'Georgia', serif" font-size="10.5" font-weight="bold" fill="#facc15" letter-spacing="0.5px">📜 SCROLL OF INSIGHT</text>
-  <text x="28" y="748" font-family="'Georgia', serif" font-size="11" font-style="italic" fill="#e2e8f0">
+  <rect x="16" y="712" width="348" height="86" rx="8" fill="#131929" stroke="url(#goldBorder)" stroke-width="1.2"/>
+  <text x="28" y="732" font-family="'Georgia', serif" font-size="10.5" font-weight="bold" fill="#facc15" letter-spacing="0.5px">📜 SCROLL OF INSIGHT</text>
+  <text x="28" y="752" font-family="'Georgia', serif" font-size="11" font-style="italic" fill="#e2e8f0">
     <tspan x="28" dy="0">&quot;Konsistensi kecil setiap hari membangun</tspan>
     <tspan x="28" dy="16">benteng keberhasilan di masa depan.&quot;</tspan>
     <tspan x="28" dy="16"></tspan>
