@@ -1,6 +1,50 @@
-<svg width="400" height="100" fill="#141724" xmlns="http://www.w3.org/2000/svg">
-  <rect width="400" height="100" rx="8" fill="#141724" stroke="#f59e0b" stroke-width="2"/>
-  <text x="200" y="55" font-family="sans-serif" font-size="16" font-weight="bold" fill="#facc15" text-anchor="middle">
-    ⚔️ VIEW HD RPG STATS CARD ⚔️
-  </text>
+<svg width="920" height="1820" viewBox="0 0 460 910" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <clipPath id="roundCorners"><rect width="460" height="910" rx="18"/></clipPath>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#141724"/><stop offset="100%" stop-color="#07080f"/></linearGradient>
+    <linearGradient id="goldBorder" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="50%" stop-color="#d97706"/><stop offset="100%" stop-color="#78350f"/></linearGradient>
+    <linearGradient id="combatGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#24121b"/><stop offset="100%" stop-color="#180c13"/></linearGradient>
+    <linearGradient id="prodGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#12182b"/><stop offset="100%" stop-color="#0b101e"/></linearGradient>
+    <linearGradient id="habitGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#211710"/><stop offset="100%" stop-color="#140d07"/></linearGradient>
+    <linearGradient id="dailyGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0f2119"/><stop offset="100%" stop-color="#07140e"/></linearGradient>
+    <linearGradient id="insightGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1a1226"/><stop offset="100%" stop-color="#0e0a16"/></linearGradient>
+    <linearGradient id="barGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#34d399"/></linearGradient>
+  </defs>
+
+  <g clip-path="url(#roundCorners)">
+    <rect width="460" height="910" fill="url(#bgGrad)" />
+    <image xlink:href="data:image/png;base64,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" x="0" y="0" width="460" height="110" preserveAspectRatio="xMidYMid slice" opacity="0.35"/>
+    <rect x="0" y="0" width="460" height="110" fill="#0b0e18" opacity="0.6"/>
+    <line x1="0" y1="110" x2="460" y2="110" stroke="url(#goldBorder)" stroke-width="1.5"/>
+    <rect x="22" y="18" width="62" height="62" rx="12" fill="#3a0914" stroke="#fb7185" stroke-width="2"/><path d="M 38 34 L 68 64" stroke="#f8fafc" stroke-width="2.8" stroke-linecap="round"/><path d="M 68 34 L 38 64" stroke="#f8fafc" stroke-width="2.8" stroke-linecap="round"/>
+
+    <text x="98" y="44" font-family="sans-serif" font-weight="800" fill="#fff" font-size="18">🅂🅄🄱🄰🅁🅄</text>
+    <text x="98" y="64" font-family="sans-serif" font-size="11.5" fill="#94a3b8">Level 215 • <tspan fill="#fb7185" font-weight="bold">WARRIOR</tspan></text>
+    
+    <!-- COMBAT SECTION -->
+    <rect x="16" y="142" width="208" height="46" rx="8" fill="url(#combatGrad)" stroke="#4c1d2c"/><text x="26" y="158" font-family="sans-serif" font-size="9.5" fill="#94a3b8">TOTAL DMG (ALL-TIME)</text><text x="26" y="177" font-family="sans-serif" font-size="14" font-weight="bold" fill="#fff">⚔️ 6.1K</text>
+    <rect x="236" y="142" width="208" height="46" rx="8" fill="url(#combatGrad)" stroke="#4c1d2c"/><text x="246" y="158" font-family="sans-serif" font-size="9.5" fill="#94a3b8">WEEKLY DMG (RESET MON)</text><text x="246" y="177" font-family="sans-serif" font-size="14" font-weight="bold" fill="#fff">🗡️ 6.1K</text>
+    
+    <rect x="16" y="196" width="208" height="46" rx="8" fill="url(#combatGrad)" stroke="#4c1d2c"/><text x="26" y="212" font-family="sans-serif" font-size="9.5" fill="#94a3b8">DAILY AVG DMG</text><text x="26" y="231" font-family="sans-serif" font-size="14" font-weight="bold" fill="#fff">📊 3.1K/day</text>
+    <rect x="236" y="196" width="208" height="46" rx="8" fill="url(#combatGrad)" stroke="#4c1d2c"/><text x="246" y="212" font-family="sans-serif" font-size="9.5" fill="#94a3b8">PEAK WEEKLY RECORD</text><text x="246" y="231" font-family="sans-serif" font-size="14" font-weight="bold" fill="#fff">🔥 0</text>
+
+    <rect x="16" y="250" width="208" height="46" rx="8" fill="url(#combatGrad)" stroke="#4c1d2c"/><text x="26" y="266" font-family="sans-serif" font-size="9.5" fill="#94a3b8">BOSSES SLAIN</text><text x="26" y="285" font-family="sans-serif" font-size="14" font-weight="bold" fill="#fff">🏆 0 Bosses</text>
+    <rect x="236" y="250" width="208" height="46" rx="8" fill="url(#combatGrad)" stroke="#4c1d2c"/><text x="246" y="266" font-family="sans-serif" font-size="9.5" fill="#94a3b8">PEAK GOLD HOARDED</text><text x="246" y="285" font-family="sans-serif" font-size="14" font-weight="bold" fill="#fbbf24">💰 26.4K G</text>
+    
+    <rect x="16" y="304" width="428" height="36" rx="8" fill="url(#combatGrad)" stroke="#4c1d2c"/><text x="26" y="327" font-family="sans-serif" font-size="11.5" fill="#94a3b8">✨ Buffs: <tspan fill="#fff" font-weight="bold">0</tspan> Casts  •  💧 Mana Spent: <tspan fill="#fff" font-weight="bold">3 MP</tspan></text>
+
+    <!-- PRODUCTIVITY SECTION -->
+    <rect x="16" y="402" width="428" height="11" rx="5.5" fill="#151b2e"/><rect x="16" y="402" width="428" height="11" rx="5.5" fill="url(#barGrad)"/>
+    <rect x="16" y="421" width="428" height="34" rx="7" fill="url(#prodGrad)" stroke="#1e293b"/><text x="26" y="442" font-family="sans-serif" font-size="11.5" fill="#94a3b8">Habit Mastery: <tspan fill="#fff" font-weight="bold">70% Positive</tspan> (12 👍 / 5 👎)</text>
+    
+    <rect x="16" y="463" width="101" height="46" rx="7" fill="#1f1610" stroke="#b45309"/><text x="22" y="479" font-family="sans-serif" font-size="9.5" fill="#94a3b8">HABITS TODAY</text><text x="22" y="499" font-family="sans-serif" font-size="14" font-weight="bold" fill="#fff">✨ 12</text>
+    <rect x="125" y="463" width="101" height="46" rx="7" fill="#0d1f18" stroke="#059669"/><text x="131" y="479" font-family="sans-serif" font-size="9.5" fill="#94a3b8">DAILIES TODAY</text><text x="131" y="499" font-family="sans-serif" font-size="14" font-weight="bold" fill="#fff">📋 9</text>
+    <rect x="234" y="463" width="101" height="46" rx="7" fill="#0f1f33" stroke="#0284c7"/><text x="240" y="479" font-family="sans-serif" font-size="9.5" fill="#94a3b8">TO-DOS TODAY</text><text x="240" y="499" font-family="sans-serif" font-size="14" font-weight="bold" fill="#fff">🎯 1</text>
+    <rect x="343" y="463" width="101" height="46" rx="7" fill="#241b0b" stroke="#ca8a04"/><text x="349" y="479" font-family="sans-serif" font-size="9.5" fill="#94a3b8">ALL COMPLETED</text><text x="349" y="499" font-family="sans-serif" font-size="14" font-weight="bold" fill="#fbbf24">⭐ 51</text>
+
+    <!-- LISTS -->
+    <rect x="16" y="571" width="428" height="92" rx="8" fill="url(#habitGrad)" stroke="#78350f"/><text x="28" y="591" font-family="sans-serif" font-size="11" font-weight="bold" fill="#f59e0b">🔥 TOP 3 HABITS</text><text x="28" y="612" font-family="sans-serif" font-size="11.5" fill="#cbd5e1">1. Ada kemajuan (+1)</text><text x="28" y="630" font-family="sans-serif" font-size="11.5" fill="#cbd5e1">2. Deep thinking tanpa distraks (+1)</text><text x="28" y="648" font-family="sans-serif" font-size="11.5" fill="#cbd5e1">3. Menyelesaikan tugas meski mo (+1)</text>
+    <rect x="16" y="671" width="428" height="92" rx="8" fill="url(#dailyGrad)" stroke="#064e3b"/><text x="28" y="691" font-family="sans-serif" font-size="11" font-weight="bold" fill="#10b981">🏆 TOP 3 DAILIES</text><text x="28" y="712" font-family="sans-serif" font-size="11.5" fill="#cbd5e1">1. Drink water in the morning  (4x)</text><text x="28" y="730" font-family="sans-serif" font-size="11.5" fill="#cbd5e1">2. Menunda Kesenangan  (4x)</text><text x="28" y="748" font-family="sans-serif" font-size="11.5" fill="#cbd5e1">3. 10 Menit tanpa Short  (4x)</text>
+  </g>
+  <rect width="460" height="910" rx="18" fill="none" stroke="url(#goldBorder)" stroke-width="3.5"/>
 </svg>
