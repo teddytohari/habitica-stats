@@ -152,7 +152,7 @@ avg_daily_dmg = db["weekly_damage"] / days_elapsed
 with open(DB_FILE, "w", encoding="utf-8") as f:
     json.dump(db, f, indent=2)
 
-# Quote Text Wrapping
+# Quote Text
 quote_text = "Small daily disciplines lead to monumental achievements over time."
 if os.path.exists("quote.txt"):
     with open("quote.txt", "r", encoding="utf-8") as qf:
@@ -160,274 +160,93 @@ if os.path.exists("quote.txt"):
         if lines:
             quote_text = " ".join(lines)
 
-quote_lines = textwrap.wrap(quote_text, width=48)[:3]
-
-# Class Palettes & Theming
-CLASS_CONFIG = {
-    "warrior": {"primary": "#e11d48", "secondary": "#fb7185", "bg": "#3a0914", "name": "WARRIOR"},
-    "mage": {"primary": "#3b82f6", "secondary": "#60a5fa", "bg": "#0f172a", "name": "ARCHMAGE"},
-    "rogue": {"primary": "#d97706", "secondary": "#fbbf24", "bg": "#321706", "name": "SHADOW ROGUE"},
-    "healer": {"primary": "#059669", "secondary": "#34d399", "bg": "#062b20", "name": "HIGH HEALER"}
-}
-cfg = CLASS_CONFIG.get(char_class, CLASS_CONFIG["warrior"])
-
-# 5. Fetch Habitica Avatar & Background Image
-avatar_b64 = None
-try:
-    av_url = f"https://habitica.com/export/avatar-{USER_ID}.png"
-    av_res = requests.get(av_url, headers=headers, timeout=6)
-    if av_res.status_code == 200 and len(av_res.content) > 300:
-        avatar_b64 = base64.b64encode(av_res.content).decode("utf-8")
-except Exception as e:
-    print(f"Avatar notice: {e}")
-
-header_bg_b64 = None
-try:
-    bg_key = user_res.get("preferences", {}).get("background", "violet")
-    bg_url = f"https://habitica-assets.s3.amazonaws.com/mobileApp/images/background_{bg_key}.png"
-    bg_res = requests.get(bg_url, timeout=6)
-    if bg_res.status_code == 200 and len(bg_res.content) > 300:
-        header_bg_b64 = base64.b64encode(bg_res.content).decode("utf-8")
-except Exception as e:
-    print(f"Background notice: {e}")
-
+# Formatting for text displays
 def fmt(num):
-    if num >= 1_000_000:
-        return f"{num/1_000_000:.2f}M"
-    elif num >= 1_000:
-        return f"{num/1_000:.1f}K"
+    if num >= 1_000_000: return f"{num/1_000_000:.2f}M"
+    elif num >= 1_000: return f"{num/1_000:.1f}K"
     return f"{int(num)}"
 
-habit_lines = []
+# 5. Generate Text Markdown for Habitica API (Mobile Responsive)
+# Progress Bar Graphic
+bar_len = 10
+filled = int((daily_pct / 100) * bar_len)
+bar_visual = "█" * filled + "░" * (bar_len - filled)
+
+# Top 3 Lists for Markdown
+md_habit_lines = []
 for i in range(3):
     if i < len(sorted_top_habits):
-        h_name = sorted_top_habits[i].get("text", "Habit")
-        h_name = (h_name[:28] + "..") if len(h_name) > 30 else h_name
+        h_name = sorted_top_habits[i].get("text", "Habit")[:24]
         h_cnt = sorted_top_habits[i].get("counterUp", 0)
-        habit_lines.append(f"{i+1}. {html.escape(h_name)} (+{h_cnt})")
-    else:
-        habit_lines.append(f"{i+1}. -")
+        md_habit_lines.append(f"{i+1}. {h_name} (+{h_cnt})")
+md_habits_text = "\n".join(md_habit_lines) if md_habit_lines else "-"
 
-daily_lines = []
+md_daily_lines = []
 for i in range(3):
     if i < len(sorted_top_dailies):
-        d_name = sorted_top_dailies[i][0]
-        d_name = (d_name[:28] + "..") if len(d_name) > 30 else d_name
+        d_name = sorted_top_dailies[i][0][:24]
         d_cnt = sorted_top_dailies[i][1]
-        daily_lines.append(f"{i+1}. {html.escape(d_name)} ({d_cnt}x)")
+        md_daily_lines.append(f"{i+1}. {d_name} ({d_cnt}x)")
+md_dailies_text = "\n".join(md_daily_lines) if md_daily_lines else "-"
+
+class_name_upper = char_class.upper()
+
+bio_markdown = f"""[![HD Card](https://raw.githubusercontent.com/teddytohari/habitica-stats/main/profile-stats.png)](https://raw.githubusercontent.com/teddytohari/habitica-stats/main/profile-stats.png)
+
+### ⚔️ {profile_name} (Lv. {level} {class_name_upper})
+🔥 **Streak:** {longest_streak} Days | 💰 **Peak Gold:** {fmt(db['peak_gold'])}
+
+**▬▬ 🛡️ COMBAT & EXPEDITION ▬▬**
+⚔️ **Total Dmg:** {fmt(db['all_time_damage'])}
+🗡️ **Weekly Dmg:** {fmt(db['weekly_damage'])}
+🏆 **Bosses Slain:** {db['bosses_slain']}
+✨ **Buffs:** {db['buffs_cast']} | 💧 **Mana:** {fmt(db['total_mana_spent'])} MP
+
+**▬▬ 📋 PRODUCTIVITY MATRIX ▬▬**
+**Dailies Today:** {done_count}/{due_count} ({daily_pct}%)
+`{bar_visual}`
+👍 **Habit Mastery:** {habit_ratio}% Positive
+✅ **Cleared Today:** ✨{habits_today_count} | 📋{done_count} | 🎯{todos_today_count}
+
+**🔥 TOP 3 HABITS**
+{md_habits_text}
+
+**🏆 TOP 3 DAILIES**
+{md_dailies_text}
+
+📜 *"{quote_text}"*
+"""
+
+# 6. Update Habitica User Bio via API automatically!
+update_url = "https://habitica.com/api/v3/user"
+update_data = {"profile": {"blurb": bio_markdown}}
+try:
+    update_res = requests.put(update_url, headers=headers, json=update_data)
+    if update_res.status_code == 200:
+        print("✅ Automatically updated Habitica Bio via API!")
     else:
-        daily_lines.append(f"{i+1}. -")
+        print(f"❌ Failed to update bio. Status: {update_res.status_code}")
+except Exception as e:
+    print(f"API Update notice: {e}")
 
-# 6. Render SVG (Menggunakan viewBox dan namespace xlink agar CairoSVG tidak crash)
-avatar_element = f'<image xlink:href="data:image/png;base64,{avatar_b64}" x="18" y="14" width="70" height="70" preserveAspectRatio="xMidYMid meet"/>' if avatar_b64 else f'''
-  <rect x="22" y="18" width="62" height="62" rx="12" fill="{cfg['bg']}" stroke="{cfg['secondary']}" stroke-width="2"/>
-  <path d="M 38 34 L 68 64" stroke="#f8fafc" stroke-width="2.8" stroke-linecap="round"/>
-  <path d="M 68 34 L 38 64" stroke="#f8fafc" stroke-width="2.8" stroke-linecap="round"/>
-  <circle cx="53" cy="49" r="6" fill="#f59e0b" stroke="#78350f" stroke-width="1.2"/>
-'''
-
-header_bg_element = f'<image xlink:href="data:image/png;base64,{header_bg_b64}" x="0" y="0" width="460" height="110" preserveAspectRatio="xMidYMid slice" opacity="0.35"/>' if header_bg_b64 else ''
-
-# Width 920px dan Height 1820px untuk kualitas Resolusi Tinggi / HD 
-svg_code = f"""<svg width="920" height="1820" viewBox="0 0 460 910" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <defs>
-    <!-- ClipPath untuk memotong tepi background gambar agar melengkung rapi -->
-    <clipPath id="roundCorners">
-      <rect width="460" height="910" rx="18"/>
-    </clipPath>
-
-    <!-- Background Canvas Gradient -->
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#141724"/>
-      <stop offset="50%" stop-color="#0c0e17"/>
-      <stop offset="100%" stop-color="#07080f"/>
-    </linearGradient>
-
-    <!-- Gold Border Frame -->
-    <linearGradient id="goldBorder" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f59e0b"/>
-      <stop offset="50%" stop-color="#d97706"/>
-      <stop offset="100%" stop-color="#78350f"/>
-    </linearGradient>
-
-    <!-- Thematic Section Gradients (Warna Mewah Gelap / Dark Jewel Tones) -->
-    <linearGradient id="combatGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#24121b"/>
-      <stop offset="100%" stop-color="#180c13"/>
-    </linearGradient>
-
-    <linearGradient id="prodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#12182b"/>
-      <stop offset="100%" stop-color="#0b101e"/>
-    </linearGradient>
-
-    <linearGradient id="habitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#211710"/>
-      <stop offset="100%" stop-color="#140d07"/>
-    </linearGradient>
-
-    <linearGradient id="dailyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0f2119"/>
-      <stop offset="100%" stop-color="#07140e"/>
-    </linearGradient>
-
-    <linearGradient id="insightGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1a1226"/>
-      <stop offset="100%" stop-color="#0e0a16"/>
-    </linearGradient>
-
-    <linearGradient id="barGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#10b981"/>
-      <stop offset="100%" stop-color="#34d399"/>
-    </linearGradient>
-  </defs>
-
-  <style>
-    .font-title {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 800; fill: #ffffff; }}
-    .font-sub {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11.5px; fill: #94a3b8; }}
-    .font-label {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 9.5px; fill: #94a3b8; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }}
-    .font-val {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; font-weight: bold; fill: #f8fafc; }}
-    .font-sec-combat {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: bold; fill: #fb7185; letter-spacing: 0.7px; text-transform: uppercase; }}
-    .font-sec-prod {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: bold; fill: #60a5fa; letter-spacing: 0.7px; text-transform: uppercase; }}
-    .font-list {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11.5px; fill: #cbd5e1; }}
-  </style>
-
-  <g clip-path="url(#roundCorners)">
-    <!-- Base Canvas -->
-    <rect width="460" height="910" fill="url(#bgGrad)" />
-
-    <!-- ================= HEADER (AVATAR & BACKGROUND) ================= -->
-    {header_bg_element}
-    <rect x="0" y="0" width="460" height="110" fill="#0b0e18" opacity="0.6"/>
-    <line x1="0" y1="110" x2="460" y2="110" stroke="url(#goldBorder)" stroke-width="1.5"/>
-
-    <!-- Avatar Badge Display -->
-    {avatar_element}
-
-    <!-- Hero Titles -->
-    <text x="98" y="44" class="font-title" font-size="18">{html.escape(profile_name[:18])}</text>
-    <text x="98" y="64" class="font-sub">Level {level} • <tspan fill="{cfg['secondary']}" font-weight="bold">{cfg['name']}</tspan></text>
-    <text x="98" y="82" font-size="9.5" fill="#f59e0b" font-weight="bold" letter-spacing="1px">★ ACTIVE CHAMPION OF HABITICA ★</text>
-
-    <!-- ================= COMBAT & EXPEDITION ================= -->
-    <text x="18" y="132" class="font-sec-combat">⚔️ COMBAT &amp; EXPEDITION LOG</text>
-
-    <!-- Row 1 -->
-    <rect x="16" y="142" width="208" height="46" rx="8" fill="url(#combatGrad)" stroke="#4c1d2c" stroke-width="1"/>
-    <text x="26" y="158" class="font-label">Total Dmg (All-Time)</text>
-    <text x="26" y="177" class="font-val">⚔️ {fmt(db['all_time_damage'])}</text>
-
-    <rect x="236" y="142" width="208" height="46" rx="8" fill="url(#combatGrad)" stroke="#4c1d2c" stroke-width="1"/>
-    <text x="246" y="158" class="font-label">Weekly Dmg (Reset Mon)</text>
-    <text x="246" y="177" class="font-val">🗡️ {fmt(db['weekly_damage'])}</text>
-
-    <!-- Row 2 -->
-    <rect x="16" y="196" width="208" height="46" rx="8" fill="url(#combatGrad)" stroke="#4c1d2c" stroke-width="1"/>
-    <text x="26" y="212" class="font-label">Daily Avg Dmg</text>
-    <text x="26" y="231" class="font-val">📊 {fmt(avg_daily_dmg)}/day</text>
-
-    <rect x="236" y="196" width="208" height="46" rx="8" fill="url(#combatGrad)" stroke="#4c1d2c" stroke-width="1"/>
-    <text x="246" y="212" class="font-label">Peak Weekly Record</text>
-    <text x="246" y="231" class="font-val">🔥 {fmt(db['peak_weekly_damage'])}</text>
-
-    <!-- Row 3 -->
-    <rect x="16" y="250" width="208" height="46" rx="8" fill="url(#combatGrad)" stroke="#4c1d2c" stroke-width="1"/>
-    <text x="26" y="266" class="font-label">Bosses Slain</text>
-    <text x="26" y="285" class="font-val">🏆 {db['bosses_slain']} Bosses</text>
-
-    <rect x="236" y="250" width="208" height="46" rx="8" fill="url(#combatGrad)" stroke="#4c1d2c" stroke-width="1"/>
-    <text x="246" y="266" class="font-label">Peak Gold Hoarded</text>
-    <text x="246" y="285" class="font-val" fill="#fbbf24">💰 {fmt(db['peak_gold'])} G</text>
-
-    <!-- Consolidated Buff & Mana Box -->
-    <rect x="16" y="304" width="428" height="36" rx="8" fill="url(#combatGrad)" stroke="#4c1d2c" stroke-width="1"/>
-    <text x="26" y="327" class="font-sub">✨ Buffs: <tspan class="font-val">{db['buffs_cast']}</tspan> Casts  •  💧 Mana Spent: <tspan class="font-val">{fmt(db['total_mana_spent'])} MP</tspan></text>
-
-    <line x1="16" y1="352" x2="444" y2="352" stroke="#252b40" stroke-width="1"/>
-
-    <!-- ================= PRODUCTIVITY MATRIX ================= -->
-    <text x="18" y="374" class="font-sec-prod">📋 PRODUCTIVITY &amp; DISCIPLINE MATRIX</text>
-
-    <!-- Dailies Progress -->
-    <text x="18" y="394" class="font-sub">Dailies Today: <tspan font-weight="bold" fill="#f8fafc">{done_count}/{due_count} ({daily_pct}%)</tspan></text>
-    <rect x="16" y="402" width="428" height="11" rx="5.5" fill="#151b2e"/>
-    <rect x="16" y="402" width="{int(428 * (daily_pct / 100))}" height="11" rx="5.5" fill="url(#barGrad)"/>
-
-    <!-- Repositioned Habit Mastery -->
-    <rect x="16" y="421" width="428" height="34" rx="7" fill="url(#prodGrad)" stroke="#1e293b" stroke-width="1"/>
-    <text x="26" y="442" class="font-sub">Habit Mastery: <tspan class="font-val">{habit_ratio}% Positive</tspan> ({pos_clicks} 👍 / {neg_clicks} 👎)</text>
-
-    <!-- Distinct Color Grid 4 Activity Today -->
-    <!-- 1. Habits Today (Dark Amber) -->
-    <rect x="16" y="463" width="101" height="46" rx="7" fill="#1f1610" stroke="#b45309" stroke-width="1"/>
-    <text x="22" y="479" class="font-label">Habits Today</text>
-    <text x="22" y="499" class="font-val">✨ {habits_today_count}</text>
-
-    <!-- 2. Dailies Today (Dark Emerald) -->
-    <rect x="125" y="463" width="101" height="46" rx="7" fill="#0d1f18" stroke="#059669" stroke-width="1"/>
-    <text x="131" y="479" class="font-label">Dailies Today</text>
-    <text x="131" y="499" class="font-val">📋 {done_count}</text>
-
-    <!-- 3. To-Dos Today (Dark Cobalt) -->
-    <rect x="234" y="463" width="101" height="46" rx="7" fill="#0f1f33" stroke="#0284c7" stroke-width="1"/>
-    <text x="240" y="479" class="font-label">To-Dos Today</text>
-    <text x="240" y="499" class="font-val">🎯 {todos_today_count}</text>
-
-    <!-- 4. Grand Total (Dark Gold) -->
-    <rect x="343" y="463" width="101" height="46" rx="7" fill="#241b0b" stroke="#ca8a04" stroke-width="1"/>
-    <text x="349" y="479" class="font-label">All Completed</text>
-    <text x="349" y="499" class="font-val" fill="#fbbf24">⭐ {fmt(grand_total_completed)}</text>
-
-    <!-- Bounty Board & Streak -->
-    <rect x="16" y="517" width="208" height="46" rx="8" fill="url(#prodGrad)" stroke="#1e293b" stroke-width="1"/>
-    <text x="26" y="533" class="font-label">Bounty Board</text>
-    <text x="26" y="552" class="font-val">🎯 {todos_active} Open / {todos_cleared_total} Cleared</text>
-
-    <rect x="236" y="517" width="208" height="46" rx="8" fill="url(#prodGrad)" stroke="#1e293b" stroke-width="1"/>
-    <text x="246" y="533" class="font-label">Discipline Flame</text>
-    <text x="246" y="552" class="font-val">🔥 {longest_streak} Days Streak</text>
-
-    <!-- Box 1: Dedicated Top 3 Habits (Dark Bronze) -->
-    <rect x="16" y="571" width="428" height="92" rx="8" fill="url(#habitGrad)" stroke="#78350f" stroke-width="1.2"/>
-    <text x="28" y="591" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11px" font-weight="bold" fill="#f59e0b" letter-spacing="0.6px">🔥 TOP 3 HABITS (MOST ACTIVE)</text>
-    <text x="28" y="612" class="font-list">{habit_lines[0]}</text>
-    <text x="28" y="630" class="font-list">{habit_lines[1]}</text>
-    <text x="28" y="648" class="font-list">{habit_lines[2]}</text>
-
-    <!-- Box 2: Dedicated Top 3 Dailies (Dark Forest) -->
-    <rect x="16" y="671" width="428" height="92" rx="8" fill="url(#dailyGrad)" stroke="#064e3b" stroke-width="1.2"/>
-    <text x="28" y="691" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11px" font-weight="bold" fill="#10b981" letter-spacing="0.6px">🏆 TOP 3 DAILIES (WEEKLY CONSISTENCY)</text>
-    <text x="28" y="712" class="font-list">{daily_lines[0]}</text>
-    <text x="28" y="730" class="font-list">{daily_lines[1]}</text>
-    <text x="28" y="748" class="font-list">{daily_lines[2]}</text>
-
-    <line x1="16" y1="775" x2="444" y2="775" stroke="#252b40" stroke-width="1"/>
-
-    <!-- ================= SCROLL OF INSIGHT (Dark Amethyst) ================= -->
-    <rect x="16" y="787" width="428" height="96" rx="9" fill="url(#insightGrad)" stroke="#6d28d9" stroke-width="1.2"/>
-    <text x="28" y="810" font-family="'Georgia', serif" font-size="11" font-weight="bold" fill="#facc15" letter-spacing="0.5px">📜 SCROLL OF INSIGHT</text>
-    <text x="28" y="832" font-family="'Georgia', serif" font-size="12" font-style="italic" fill="#e2e8f0">
-      <tspan x="28" dy="0">{html.escape(quote_lines[0]) if len(quote_lines) > 0 else ''}</tspan>
-      <tspan x="28" dy="18">{html.escape(quote_lines[1]) if len(quote_lines) > 1 else ''}</tspan>
-      <tspan x="28" dy="18">{html.escape(quote_lines[2]) if len(quote_lines) > 2 else ''}</tspan>
-    </text>
-  </g>
-
-  <!-- Border Utama (Dirender paling atas) -->
-  <rect width="460" height="910" rx="18" fill="none" stroke="url(#goldBorder)" stroke-width="3.5"/>
+# 7. Create SVG/PNG as usual (for the clickable banner)
+# (Kode pembangkitan SVG/PNG sengaja disederhanakan sebagai dummy agar eksekusi cepat,
+# karena sekarang kita mengandalkan teks Markdown Habitica sebagai layar utamanya).
+svg_code = f"""<svg width="400" height="100" fill="#141724" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="100" rx="8" fill="#141724" stroke="#f59e0b" stroke-width="2"/>
+  <text x="200" y="55" font-family="sans-serif" font-size="16" font-weight="bold" fill="#facc15" text-anchor="middle">
+    ⚔️ VIEW HD RPG STATS CARD ⚔️
+  </text>
 </svg>"""
 
 with open("profile-stats.svg", "w", encoding="utf-8") as f:
     f.write(svg_code)
 
-# Konversi PNG dengan sistem aman
 try:
     import cairosvg
     cairosvg.svg2png(bytestring=svg_code.encode("utf-8"), write_to="profile-stats.png")
-    print("PNG generated successfully without errors.")
+    print("✅ PNG banner generated.")
 except Exception as e:
-    import traceback
-    traceback.print_exc()
-    print(f"PNG conversion notice: {e}")
+    print(f"PNG notice: {e}")
 
-print("Sync completed successfully.")
+print("Sync & API Update completed successfully.")
