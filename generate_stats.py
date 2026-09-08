@@ -106,6 +106,21 @@ for todo in completed_todos_res[:3]:
         db["weekly_top_todos"].append(t_text)
 sorted_top_todos = db["weekly_top_todos"][:3]
 
+# Proteksi daftar kosong agar tidak crash
+daily_lines = []
+for i in range(3):
+    if i < len(sorted_top_dailies):
+        daily_lines.append(f"{i+1}. {html.escape(sorted_top_dailies[i][0])} ({sorted_top_dailies[i][1]}x)")
+    else:
+        daily_lines.append(f"{i+1}. -")
+
+todo_lines = []
+for i in range(3):
+    if i < len(sorted_top_todos):
+        todo_lines.append(f"{i+1}. {html.escape(sorted_top_todos[i])}")
+    else:
+        todo_lines.append(f"{i+1}. -")
+
 todos_active = len([t for t in tasks_res if t.get("type") == "todo"])
 todos_cleared = len(completed_todos_res)
 
@@ -238,14 +253,14 @@ svg_code = f"""<svg width="380" height="740" viewBox="0 0 380 740" fill="none" x
   <text x="24" y="445" class="sub">Habit Mastery: <tspan class="val">{habit_ratio}% Positif</tspan> ({pos_clicks} 👍 / {neg_clicks} 👎)</text>
 
   <text x="16" y="482" class="section-title">🏆 TOP 3 DAILIES (Riset Mingguan):</text>
-  <text x="24" y="502" class="list-item">1. {html.escape(sorted_top_dailies[0][0]) if len(sorted_top_dailies) > 0 else '-'} ({sorted_top_dailies[0][1]}x)</text>
-  <text x="24" y="520" class="list-item">2. {html.escape(sorted_top_dailies[1][0]) if len(sorted_top_dailies) > 1 else '-'} ({sorted_top_dailies[1][1]}x)</text>
-  <text x="24" y="538" class="list-item">3. {html.escape(sorted_top_dailies[2][0]) if len(sorted_top_dailies) > 2 else '-'} ({sorted_top_dailies[2][1]}x)</text>
+  <text x="24" y="502" class="list-item">{daily_lines[0]}</text>
+  <text x="24" y="520" class="list-item">{daily_lines[1]}</text>
+  <text x="24" y="538" class="list-item">{daily_lines[2]}</text>
 
   <text x="16" y="568" class="section-title">🎯 TOP 3 COMPLETED TO-DOS (Mingguan):</text>
-  <text x="24" y="588" class="list-item">1. {html.escape(sorted_top_todos[0]) if len(sorted_top_todos) > 0 else '-'}</text>
-  <text x="24" y="606" class="list-item">2. {html.escape(sorted_top_todos[1]) if len(sorted_top_todos) > 1 else '-'}</text>
-  <text x="24" y="624" class="list-item">3. {html.escape(sorted_top_todos[2]) if len(sorted_top_todos) > 2 else '-'}</text>
+  <text x="24" y="588" class="list-item">{todo_lines[0]}</text>
+  <text x="24" y="606" class="list-item">{todo_lines[1]}</text>
+  <text x="24" y="624" class="list-item">{todo_lines[2]}</text>
 
   <line x1="16" y1="642" x2="364" y2="642" stroke="#232733" stroke-width="1"/>
 
