@@ -1,13 +1,17 @@
-import os, json, html, base64, requests
+import os, json, html, requests, random
 from datetime import datetime, timezone, timedelta
 
-# 1. Credentials & Setup
+# ==========================================
+# 1. SETUP & CREDENTIALS
+# ==========================================
 USER_ID = os.environ.get("HABITICA_USER_ID")
 API_TOKEN = os.environ.get("HABITICA_API_TOKEN")
 WIB = timezone(timedelta(hours=7))
 headers = {"x-api-user": USER_ID, "x-api-key": API_TOKEN, "x-client": f"{USER_ID}-RPGStatsCard"}
 
-# 2. Local Database
+# ==========================================
+# 2. DATABASE INITIALIZATION
+# ==========================================
 DB_FILE = "database.json"
 db = {"current_cycle_id": "", "classes_used": [], "peak_gold": 0.0, "total_mana_spent": 0.0, "last_mana": None, "buffs_cast": 0, "bosses_slain": 0, "all_time_damage": 0.0, "weekly_damage": 0.0, "peak_weekly_damage": 0.0, "last_damage_up": 0.0, "weekly_top_dailies": {}, "last_daily_date": "", "daily_habit_baseline": 0}
 if os.path.exists(DB_FILE):
@@ -19,7 +23,9 @@ if db["current_cycle_id"] != cycle:
     db["peak_weekly_damage"] = max(db["peak_weekly_damage"], db["weekly_damage"])
     db["weekly_damage"] = 0.0; db["weekly_top_dailies"] = {}; db["current_cycle_id"] = cycle
 
-# 3. Fetch Data API
+# ==========================================
+# 3. FETCH HABITICA API DATA
+# ==========================================
 u_res = requests.get("https://habitica.com/api/v3/user", headers=headers).json().get("data", {})
 t_res = requests.get("https://habitica.com/api/v3/tasks/user", headers=headers).json().get("data", [])
 c_res = requests.get("https://habitica.com/api/v3/tasks/user?type=completedTodos", headers=headers).json().get("data", [])
@@ -81,13 +87,15 @@ avg_dmg = db["weekly_damage"] / days
 with open(DB_FILE, "w", encoding="utf-8") as f: json.dump(db, f, indent=2)
 def fmt(n): return f"{n/1000000:.2f}M" if n>=1000000 else f"{n/1000:.1f}K" if n>=1000 else str(int(n))
 
-quote_text = "Small daily disciplines lead to monumental achievements over time."
+# ==========================================
+# 4. AUTO-UPDATE BIO (SHIELDS.IO PROFESSIONAL)
+# ==========================================
+quote_text = "Consistency is not perfection, it is simply refusing to give up."
 if os.path.exists("quote.txt"):
     with open("quote.txt", "r", encoding="utf-8") as qf:
         lines = [line.strip() for line in qf.readlines() if line.strip()]
         if lines: quote_text = " ".join(lines)
 
-# 4. AUTO-UPDATE BIO (DESAIN SHIELDS PROFESIONAL)
 bio = f"""### ⚔️ {p_name.upper()} — Level {lvl} {c_class.capitalize()}
 
 ![](https://img.shields.io/badge/Level-{lvl}_{c_class.upper()}-432874?style=for-the-badge&labelColor=141724)
@@ -99,23 +107,37 @@ bio = f"""### ⚔️ {p_name.upper()} — Level {lvl} {c_class.capitalize()}
 ---
 > "{quote_text}"
 ---
-📊 **[Lihat Kartu Statistik HD →](https://raw.githubusercontent.com/teddytohari/habitica-stats/main/profile-stats.png?v=9)**
+📊 **[Lihat Kartu Statistik HD →](https://raw.githubusercontent.com/teddytohari/habitica-stats/main/profile-stats.png)**
 """
 try: requests.put("https://habitica.com/api/v3/user", headers=headers, json={"profile.blurb": bio.replace("    ", "")})
 except: pass
 
-# 5. FETCH ASSETS & DRAW ICONS NATIF (Tanpa Emoji)
-logo_img = bg_img = ""
-try:
-    l_r = requests.get("https://habitica.com/static/img/apple-touch-icon-144x144.png", timeout=5)
-    if l_r.status_code == 200: logo_img = f'<image xlink:href="data:image/png;base64,{base64.b64encode(l_r.content).decode("utf-8")}" x="16" y="25" width="80" height="80" clip-path="url(#lc)"/>'
-except: pass
-try:
-    b_r = requests.get("https://habitica-assets.s3.amazonaws.com/mobileApp/images/background_woods.png", timeout=5)
-    if b_r.status_code == 200: bg_img = f'<image xlink:href="data:image/png;base64,{base64.b64encode(b_r.content).decode("utf-8")}" x="0" y="0" width="460" height="130" preserveAspectRatio="xMidYMid slice" opacity="0.4"/>'
-except: pass
+# ==========================================
+# 5. GENERATE NATIVE SVG (ANTI-ERROR / NO EXTERNAL IMAGES)
+# ==========================================
+# Pine Tree Forest Generator (Generative Vector Art)
+random.seed(42) # Seed agar bentuk hutannya konsisten
+pine_trees = ""
+for i in range(16):
+    x = random.randint(-30, 430)
+    y = random.randint(10, 50)
+    scale = random.uniform(0.7, 1.3)
+    opacity = random.uniform(0.3, 0.7)
+    pine_trees += f'<g transform="translate({x}, {y}) scale({scale})" opacity="{opacity}">'
+    pine_trees += '<polygon points="25,0 0,35 50,35" fill="#064e3b"/>'
+    pine_trees += '<polygon points="25,15 0,50 50,50" fill="#064e3b"/>'
+    pine_trees += '<polygon points="25,30 0,65 50,65" fill="#064e3b"/>'
+    pine_trees += '<rect x="21" y="65" width="8" height="15" fill="#3f2c22"/></g>'
 
-# Vektor Murni (Anti Error Kotak Silang)
+# Logo Habitica Murni Kode (Ungu-Putih & Sparkles)
+logo_svg = '''
+<rect x="18" y="24" width="76" height="76" rx="16" fill="#432874" stroke="#e9d5ff" stroke-width="2.5"/>
+<path d="M 38 40 L 38 72 M 74 40 L 74 72 M 38 56 L 74 56" stroke="#ffffff" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 64 30 L 66 36 L 72 38 L 66 40 L 64 46 L 62 40 L 56 38 L 62 36 Z" fill="#fcd34d"/>
+<path d="M 34 80 L 35 83 L 38 84 L 35 85 L 34 88 L 33 85 L 30 84 L 33 83 Z" fill="#fcd34d"/>
+'''
+
+# Native Vector Icons
 ic_sw = '<path d="M4 20L20 4M8 20L20 8" stroke="#fb7185" stroke-width="2.5" stroke-linecap="round"/>'
 ic_fr = '<path d="M12 22C12 22 5 15 5 10C5 6 8 2 12 2C12 2 10 6 10 10C10 12 12 14 12 14C12 14 15 11 15 8C17 10 19 13 19 16C19 19.5 16 22 12 22Z" fill="#f59e0b"/>'
 ic_tr = '<path d="M4 6H20M5 6V11C5 14.8 8.1 18 12 18C15.9 18 19 14.8 19 11V6M8 18V22M16 18V22M6 22H18" stroke="#facc15" stroke-width="2" stroke-linecap="round" fill="none"/>'
@@ -131,10 +153,9 @@ d_str = "".join([f'<text x="28" y="{732+i*18}" class="list">{i+1}. {d[0][:28]} (
 
 cfg = {"warrior": {"sec": "#fb7185", "bg": "#3a0914", "n": "WARRIOR"}, "mage": {"sec": "#60a5fa", "bg": "#0f172a", "n": "ARCHMAGE"}, "rogue": {"sec": "#fbbf24", "bg": "#321706", "n": "SHADOW ROGUE"}, "healer": {"sec": "#34d399", "bg": "#062b20", "n": "HIGH HEALER"}}.get(c_class, {"sec": "#fb7185", "bg": "#3a0914", "n": "WARRIOR"})
 
-svg = f"""<svg width="920" height="1860" viewBox="0 0 460 930" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+svg = f"""<svg width="920" height="1860" viewBox="0 0 460 930" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <clipPath id="rc"><rect width="460" height="930" rx="18"/></clipPath>
-    <clipPath id="lc"><rect x="16" y="25" width="80" height="80" rx="16"/></clipPath>
     <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#141724"/><stop offset="100%" stop-color="#07080f"/></linearGradient>
     <linearGradient id="gB" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#78350f"/></linearGradient>
     <linearGradient id="gC" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#24121b"/><stop offset="100%" stop-color="#180c13"/></linearGradient>
@@ -153,19 +174,25 @@ svg = f"""<svg width="920" height="1860" viewBox="0 0 460 930" fill="none" xmlns
   </style>
   <g clip-path="url(#rc)">
     <rect width="460" height="930" fill="url(#g1)"/>
-    {bg_img}
-    <rect width="460" height="130" fill="#0b0e18" opacity="0.6"/>
+    
+    <!-- Forest Background Generated via Code -->
+    <rect x="0" y="0" width="460" height="130" fill="#0f172a"/>
+    {pine_trees}
+    <rect width="460" height="130" fill="#0b0e18" opacity="0.4"/>
     <line x1="0" y1="130" x2="460" y2="130" stroke="url(#gB)" stroke-width="1.5"/>
     
-    {logo_img if logo_img else f'<rect x="16" y="25" width="80" height="80" rx="16" fill="#432874" stroke="#fff" stroke-width="2"/><text x="56" y="75" fill="#fff" font-size="44" font-weight="bold" font-family="serif" text-anchor="middle">H</text>'}
+    <!-- Murni Logo Habitica Vector -->
+    {logo_svg}
     
-    <text x="110" y="50" class="t" font-size="20">{p_name}</text>
-    <text x="110" y="72" class="s">Level {lvl} • <tspan fill="{cfg['sec']}">{cfg['n']}</tspan></text>
+    <text x="110" y="48" class="t" font-size="20">{p_name}</text>
+    <text x="110" y="70" class="s">Level {lvl} • <tspan fill="{cfg['sec']}">{cfg['n']}</tspan></text>
+    
+    <!-- Indikator Class (Nyala/Redup) -->
     <text x="110" y="94" font-family="sans-serif" font-size="10" font-weight="bold">
-      <tspan fill="#fb7185" opacity="{1.0 if 'warrior' in db['classes_used'] else 0.3}">WAR</tspan>
-      <tspan fill="#60a5fa" opacity="{1.0 if 'mage' in db['classes_used'] else 0.3}" dx="12">MAG</tspan>
-      <tspan fill="#f59e0b" opacity="{1.0 if 'rogue' in db['classes_used'] else 0.3}" dx="12">ROG</tspan>
-      <tspan fill="#34d399" opacity="{1.0 if 'healer' in db['classes_used'] else 0.3}" dx="12">HEA</tspan>
+      <tspan fill="#fb7185" opacity="{'1.0' if 'warrior' in db['classes_used'] else '0.2'}">WAR</tspan>
+      <tspan fill="#60a5fa" opacity="{'1.0' if 'mage' in db['classes_used'] else '0.2'}" dx="12">MAG</tspan>
+      <tspan fill="#f59e0b" opacity="{'1.0' if 'rogue' in db['classes_used'] else '0.2'}" dx="12">ROG</tspan>
+      <tspan fill="#34d399" opacity="{'1.0' if 'healer' in db['classes_used'] else '0.2'}" dx="12">HEA</tspan>
     </text>
     
     <text x="18" y="152" font-family="sans-serif" font-size="11" fill="#fb7185" font-weight="bold">COMBAT &amp; EXPEDITION LOG</text>
@@ -193,7 +220,7 @@ svg = f"""<svg width="920" height="1860" viewBox="0 0 460 930" fill="none" xmlns
     <rect x="16" y="591" width="428" height="92" rx="8" fill="url(#gH)" stroke="#78350f"/><text x="28" y="611" font-family="sans-serif" font-size="11" font-weight="bold" fill="#f59e0b">TOP 3 HABITS (MOST ACTIVE)</text>{h_str}
     <rect x="16" y="691" width="428" height="92" rx="8" fill="url(#gD)" stroke="#064e3b"/><text x="28" y="711" font-family="sans-serif" font-size="11" font-weight="bold" fill="#10b981">TOP 3 DAILIES (WEEKLY)</text>{d_str}
     
-    <rect x="16" y="807" width="428" height="96" rx="9" fill="url(#gI)" stroke="#6d28d9"/><text x="28" y="830" font-family="Georgia, serif" font-size="11" font-weight="bold" fill="#facc15">SCROLL OF INSIGHT</text><text x="28" y="852" font-family="Georgia, serif" font-size="12" font-style="italic" fill="#e2e8f0"><tspan x="28" dy="0">Consistency is not perfection,</tspan><tspan x="28" dy="18">it is simply refusing to give up.</tspan></text>
+    <rect x="16" y="807" width="428" height="96" rx="9" fill="url(#gI)" stroke="#6d28d9"/><text x="28" y="830" font-family="Georgia, serif" font-size="11" font-weight="bold" fill="#facc15">SCROLL OF INSIGHT</text><text x="28" y="852" font-family="Georgia, serif" font-size="12" font-style="italic" fill="#e2e8f0"><tspan x="28" dy="0">{quote_text}</tspan></text>
   </g>
   <rect width="460" height="930" rx="18" fill="none" stroke="url(#gB)" stroke-width="3.5"/>
 </svg>"""
