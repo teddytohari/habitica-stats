@@ -1,31 +1,138 @@
 {
-  "current_cycle_id": "2026-W37",
+  "current_cycle_id": "2026-09-06",
   "classes_used": [
     "warrior"
   ],
-  "peak_gold": 36985,
-  "total_mana_spent": 491.0,
-  "last_mana": 308,
+  "peak_gold": 37935,
+  "total_mana_spent": 493.0,
+  "last_mana": 306,
   "buffs_cast": 20,
-  "bosses_slain": 7,
+  "bosses_slain": 8,
   "all_time_damage": 15558.0,
-  "weekly_damage": 15558.0,
+  "weekly_damage": 0.0,
   "peak_daily_damage": 6950.0,
   "current_day_damage": 1302.0,
   "damage_day_date": "2026-09-10",
-  "last_damage_up": 8690,
-  "weekly_top_dailies": {
-    "Drink water in the morning ": 11,
-    "Menunda Kesenangan ": 11,
-    "10 Menit tanpa Short ": 11,
-    "Tanpa sosmed 2 jam": 11,
-    "Tanpa YouTube 2 jam": 11,
-    "10 Menit tanpa HP": 11,
-    "Membaca / Buku / Alqur'an ": 4,
-    "Menyelesaikan 1 tujuan per h": 11,
-    "20 Menit Medsos ": 11,
-    "Membaca / Buku / Alqur&#x27;an ": 7
+  "last_damage_up": 473,
+  "weekly_top_dailies": {},
+  "last_daily_date": "2026-09-10",
+  "daily_habit_baseline": 23,
+  "last_quest_key": "dilatoryDistress2",
+  "last_quest_is_boss": true,
+  "last_habit_counters": {
+    "a7738b9e-49a9-4e59-9896-83571c330c1c": {
+      "up": 0,
+      "down": 0
+    },
+    "77f441f2-f99e-40f3-8b1a-5ae04255a03f": {
+      "up": 0,
+      "down": 0
+    },
+    "1fef3a4f-3558-4911-86b9-39a9a6c9d58f": {
+      "up": 0,
+      "down": 0
+    },
+    "1e0d7b6e-d756-4b44-a32e-9020f89b7503": {
+      "up": 0,
+      "down": 0
+    },
+    "f166b711-ced7-40c8-96b8-da12c41d0ab1": {
+      "up": 0,
+      "down": 0
+    },
+    "a2a6daa9-d43c-4d5d-a90c-ba1b6fe612ed": {
+      "up": 0,
+      "down": 0
+    },
+    "379abfe3-1535-4237-adcf-117cd95f176b": {
+      "up": 0,
+      "down": 0
+    },
+    "1a9aeab6-5a75-4f34-bf70-180dc5394f1d": {
+      "up": 0,
+      "down": 0
+    },
+    "87c92412-ace6-4193-bdec-f87222ab060c": {
+      "up": 0,
+      "down": 0
+    },
+    "8e19b1b7-2d9e-4017-a33a-dca0802cf347": {
+      "up": 0,
+      "down": 0
+    },
+    "c1c77eff-03d4-435f-9017-e3c28cd5f0ee": {
+      "up": 0,
+      "down": 0
+    },
+    "b4988daa-371f-4ad7-b685-74448fb0b155": {
+      "up": 0,
+      "down": 0
+    },
+    "4e6a943b-dc82-46b6-980b-0a3b2fff5edd": {
+      "up": 0,
+      "down": 0
+    },
+    "6a74dab8-a1c1-4272-af7d-851350939bef": {
+      "up": 0,
+      "down": 0
+    },
+    "b2ca4f83-d519-4120-a621-e08b6ebb4afb": {
+      "up": 0,
+      "down": 0
+    },
+    "1ab21ba0-b4b2-4dfd-9fd7-7f7083e5c168": {
+      "up": 0,
+      "down": 0
+    },
+    "b992b57a-ba05-44d3-86b4-5abe6755c929": {
+      "up": 0,
+      "down": 0
+    },
+    "3561dabe-5c61-47a3-bcb5-9f51a71fe9e5": {
+      "up": 0,
+      "down": 0
+    },
+    "1edd259a-7a1e-4ca1-abe2-8a6ba21734a4": {
+      "up": 0,
+      "down": 0
+    },
+    "c4cf729d-e600-4aba-887c-bb76dab18d01": {
+      "up": 0,
+      "down": 0
+    },
+    "5377736d-ffd4-4dfa-b1fb-caf6c6994088": {
+      "up": 0,
+      "down": 0
+    },
+    "fb976e3e-02a3-43e0-9a23-791c17a500b9": {
+      "up": 0,
+      "down": 0
+    },
+    "828dcbe6-87c8-4f63-ab73-6169ba2f340a": {
+      "up": 0,
+      "down": 0
+    },
+    "5846a8ec-2664-44c8-8ff4-eca2cddd007a": {
+      "up": 0,
+      "down": 0
+    },
+    "63e8284a-1ab3-45c0-8394-28c31b39a1a0": {
+      "up": 0,
+      "down": 0
+    },
+    "f18afa35-3f22-43df-88ca-d10dd71148ca": {
+      "up": 0,
+      "down": 0
+    },
+    "fb8f1fe7-db20-442a-8cdb-51eaeaeb5808": {
+      "up": 0,
+      "down": 0
+    }
   },
+  "weekly_habit_clicks": {},
+  "weekly_habit_neg": {},
+  "today_habit_clicks": {},
+  "last_completed_daily_ids": [],
   "alltime_top_dailies": {
     "Drink water in the morning ": 4,
     "Menunda Kesenangan ": 4,
@@ -167,10 +274,6 @@
       "down": 0
     }
   },
-  "last_daily_date": "2026-09-10",
-  "daily_habit_baseline": 23,
-  "last_quest_key": "crab",
-  "last_quest_is_boss": true,
   "peak_weekly_damage": 0.0,
   "total_dailies_cleared": 0,
   "weekly_top_todos": [
