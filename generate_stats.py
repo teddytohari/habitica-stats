@@ -13,15 +13,29 @@ headers = {"x-api-user": USER_ID, "x-api-key": API_TOKEN, "x-client": f"{USER_ID
 # 2. DATABASE INITIALIZATION
 # ==========================================
 DB_FILE = "database.json"
-db = {"current_cycle_id": "", "classes_used": [], "peak_gold": 0.0, "total_mana_spent": 0.0, "last_mana": None, "buffs_cast": 0, "bosses_slain": 0, "all_time_damage": 0.0, "weekly_damage": 0.0, "peak_weekly_damage": 0.0, "last_damage_up": 0.0, "weekly_top_dailies": {}, "last_daily_date": "", "daily_habit_baseline": 0}
+db = {
+    "current_cycle_id": "", "classes_used": [], "peak_gold": 0.0, "total_mana_spent": 0.0,
+    "last_mana": None, "buffs_cast": 0, "bosses_slain": 0, "all_time_damage": 0.0,
+    "weekly_damage": 0.0, "peak_daily_damage": 0.0, "current_day_damage": 0.0,
+    "damage_day_date": "", "last_damage_up": 0.0, "weekly_top_dailies": {},
+    "last_daily_date": "", "daily_habit_baseline": 0,
+    "last_quest_key": None, "last_quest_is_boss": False
+}
 if os.path.exists(DB_FILE):
     with open(DB_FILE, "r", encoding="utf-8") as f: db.update(json.load(f))
 
 now = datetime.now(WIB)
+today_str = now.strftime("%Y-%m-%d")
 cycle = f"{(now - timedelta(hours=6)).year}-W{(now - timedelta(hours=6)).isocalendar()[1]}"
 if db["current_cycle_id"] != cycle:
-    db["peak_weekly_damage"] = max(db["peak_weekly_damage"], db["weekly_damage"])
     db["weekly_damage"] = 0.0; db["weekly_top_dailies"] = {}; db["current_cycle_id"] = cycle
+
+# --- Rekor Damage Harian Tertinggi (hanya naik/bertahan, tidak pernah turun) ---
+if db.get("damage_day_date") != today_str:
+    if db.get("current_day_damage", 0) > db.get("peak_daily_damage", 0):
+        db["peak_daily_damage"] = db["current_day_damage"]
+    db["damage_day_date"] = today_str
+    db["current_day_damage"] = 0.0
 
 # ==========================================
 # 3. FETCH HABITICA API DATA
@@ -48,11 +62,36 @@ if db["last_mana"] is not None and mp < db["last_mana"]:
     if diff >= 15: db["buffs_cast"] += int(diff // 25) + 1
 db["last_mana"] = mp
 
+# --- Damage: update total/weekly/harian sekaligus rekor harian ---
 dmg_up = u_res.get("party", {}).get("quest", {}).get("progress", {}).get("up", 0.0)
 if dmg_up > db["last_damage_up"]:
-    db["weekly_damage"] += (dmg_up - db["last_damage_up"])
-    db["all_time_damage"] += (dmg_up - db["last_damage_up"])
+    delta = dmg_up - db["last_damage_up"]
+    db["weekly_damage"] += delta
+    db["all_time_damage"] += delta
+    db["current_day_damage"] += delta
+    if db["current_day_damage"] > db.get("peak_daily_damage", 0):
+        db["peak_daily_damage"] = db["current_day_damage"]
 db["last_damage_up"] = dmg_up
+
+# --- Deteksi Boss Slain lewat endpoint party ---
+# Catatan: API Habitica tidak membedakan "boss dikalahkan" vs "quest di-abort",
+# jadi ini best-effort: dianggap slain kalau quest boss yang tadinya aktif kini hilang/berganti.
+try:
+    party_res = requests.get("https://habitica.com/api/v3/groups/party", headers=headers, timeout=8).json().get("data", {})
+except Exception:
+    party_res = {}
+quest_now = party_res.get("quest") or {}
+quest_key_now = quest_now.get("key")
+quest_active_now = quest_now.get("active", False)
+is_boss_now = bool(quest_now.get("progress") and "hp" in quest_now.get("progress", {}))
+
+prev_key = db.get("last_quest_key")
+prev_is_boss = db.get("last_quest_is_boss", False)
+if prev_key and prev_is_boss and quest_key_now != prev_key:
+    db["bosses_slain"] += 1
+
+db["last_quest_key"] = quest_key_now if quest_active_now else None
+db["last_quest_is_boss"] = is_boss_now if quest_active_now else False
 
 dailies = [t for t in t_res if t.get("type") == "daily"]
 due = [t for t in dailies if t.get("isDue", False)]
@@ -70,12 +109,12 @@ dn = sum(t.get("counterDown", 0) for t in habits)
 hratio = int((up / (up + dn) * 100)) if (up + dn) > 0 else 100
 top_h = sorted(habits, key=lambda x: x.get("counterUp", 0), reverse=True)[:3]
 
-if db["last_daily_date"] != now.strftime("%Y-%m-%d"):
-    db["last_daily_date"] = now.strftime("%Y-%m-%d")
+if db["last_daily_date"] != today_str:
+    db["last_daily_date"] = today_str
     db["daily_habit_baseline"] = up
 
 h_today = max(0, up - db["daily_habit_baseline"])
-t_today = sum(1 for t in c_res if t.get("dateCompleted") and datetime.fromisoformat(t["dateCompleted"].replace("Z", "+00:00")).astimezone(WIB).strftime("%Y-%m-%d") == now.strftime("%Y-%m-%d"))
+t_today = sum(1 for t in c_res if t.get("dateCompleted") and datetime.fromisoformat(t["dateCompleted"].replace("Z", "+00:00")).astimezone(WIB).strftime("%Y-%m-%d") == today_str)
 t_active = len([t for t in t_res if t.get("type") == "todo"])
 t_cleared = len(c_res)
 g_total = up + t_cleared + len(done)
@@ -87,37 +126,66 @@ avg_dmg = db["weekly_damage"] / days
 with open(DB_FILE, "w", encoding="utf-8") as f: json.dump(db, f, indent=2)
 def fmt(n): return f"{n/1000000:.2f}M" if n>=1000000 else f"{n/1000:.1f}K" if n>=1000 else str(int(n))
 
-# ==========================================
-# 4. AUTO-UPDATE BIO (BADGE KECIL + LINK KE KARTU LENGKAP)
-#    Catatan: Habitica selalu me-resize gambar apapun jadi thumbnail
-#    kecil dan membungkusnya sebagai link (perilaku tetap platform,
-#    lihat dokumentasi paket habitica-markdown). Badge kecil + link
-#    ini adalah cara paling stabil untuk tetap terlihat rapi.
-# ==========================================
 quote_text = "Consistency is not perfection, it is simply refusing to give up."
 if os.path.exists("quote.txt"):
     with open("quote.txt", "r", encoding="utf-8") as qf:
         lines = [line.strip() for line in qf.readlines() if line.strip()]
         if lines: quote_text = " ".join(lines)
 
-bio = f"""### ⚔️ {p_name.upper()} — Level {lvl} {c_class.capitalize()}
+# ==========================================
+# 4. AUTO-UPDATE BIO
+#    Gambar + teks pendamping yang rapi (tanpa emoji langka yang jadi kotak
+#    putus di sebagian HP). Teks pendamping ini juga yang membuat kolom About Me
+#    melebar sehingga gambarnya tidak dipaksa kecil.
+# ==========================================
+STATS_IMG_URL = f"https://raw.githubusercontent.com/teddytohari/habitica-stats/main/profile-stats.png?v={int(now.timestamp())}"
 
-![](https://img.shields.io/badge/Level-{lvl}_{c_class.upper()}-432874?style=for-the-badge&labelColor=141724)
-![](https://img.shields.io/badge/Total_Dmg-{fmt(db['all_time_damage'])}-880e4f?style=for-the-badge&labelColor=141724)
-![](https://img.shields.io/badge/Streak-{streak}_Days-e65100?style=for-the-badge&labelColor=141724)
-![](https://img.shields.io/badge/Peak_Gold-{fmt(db['peak_gold'])}-f57f17?style=for-the-badge&labelColor=141724)
-![](https://img.shields.io/badge/Dailies_Today-{len(done)}%2F{len(due)}-1b5e20?style=for-the-badge&labelColor=141724)
+habit_bio_lines = "\n".join(
+    f"{i+1}. {h.get('text','')[:30]} (+{h.get('counterUp',0)})" for i, h in enumerate(top_h)
+) or "-"
+daily_bio_lines = "\n".join(
+    f"{i+1}. {d[0]} ({d[1]}x)" for i, d in enumerate(top_d)
+) or "-"
+
+bio = f"""### {p_name.upper()} — Level {lvl} {c_class.capitalize()}
+
+![]({STATS_IMG_URL})
+
+**Streak:** {streak} hari • **Peak Gold:** {fmt(db['peak_gold'])} G • **Peak Dmg/Hari:** {fmt(db['peak_daily_damage'])}
+
+---
+**COMBAT & EXPEDITION**
+- Total Damage (All-Time): **{fmt(db['all_time_damage'])}**
+- Weekly Damage: **{fmt(db['weekly_damage'])}**
+- Bosses Slain: **{db['bosses_slain']}**
+- Buffs Cast: **{db['buffs_cast']}** • Mana Spent: **{fmt(db['total_mana_spent'])} MP**
+
+---
+**PRODUCTIVITY MATRIX**
+- Dailies Hari Ini: **{len(done)}/{len(due)} ({pct}%)**
+- Habit Mastery: **{hratio}% Positive**
+- Selesai Hari Ini: **{h_today} Habits • {len(done)} Dailies • {t_today} To-Dos**
+
+---
+**TOP 3 HABITS**
+{habit_bio_lines}
+
+**TOP 3 DAILIES**
+{daily_bio_lines}
 
 ---
 > "{quote_text}"
+
 ---
-📊 **[Lihat Kartu Statistik HD →](https://raw.githubusercontent.com/teddytohari/habitica-stats/main/profile-stats.png)**
+[Lihat Versi HD]({STATS_IMG_URL})
 """
-try: requests.put("https://habitica.com/api/v3/user", headers=headers, json={"profile.blurb": bio.replace("    ", "")})
-except: pass
+try:
+    requests.put("https://habitica.com/api/v3/user", headers=headers, json={"profile.blurb": bio})
+except Exception:
+    pass
 
 # ==========================================
-# 5. FETCH AVATAR ASLI (GANTI LOGO TEKS "H" DENGAN GAMBAR)
+# 5. FETCH AVATAR ASLI (logo pakai gambar, bukan teks)
 # ==========================================
 avatar_b64 = None
 try:
@@ -135,7 +203,6 @@ if avatar_b64:
         f'<rect x="18" y="24" width="76" height="76" rx="16" fill="none" stroke="#e9d5ff" stroke-width="2.5"/>'
     )
 else:
-    # Fallback vector, hanya dipakai jika fetch avatar gagal (mis. rate limit)
     logo_svg = '''
     <rect x="18" y="24" width="76" height="76" rx="16" fill="#432874" stroke="#e9d5ff" stroke-width="2.5"/>
     <path d="M 38 40 L 38 72 M 74 40 L 74 72 M 38 56 L 74 56" stroke="#ffffff" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
@@ -157,7 +224,6 @@ for i in range(16):
     pine_trees += '<polygon points="25,30 0,65 50,65" fill="#064e3b"/>'
     pine_trees += '<rect x="21" y="65" width="8" height="15" fill="#3f2c22"/></g>'
 
-# Ikon vector untuk kartu statistik
 ic_sw = '<path d="M4 20L20 4M8 20L20 8" stroke="#fb7185" stroke-width="2.5" stroke-linecap="round"/>'
 ic_fr = '<path d="M12 22C12 22 5 15 5 10C5 6 8 2 12 2C12 2 10 6 10 10C10 12 12 14 12 14C12 14 15 11 15 8C17 10 19 13 19 16C19 19.5 16 22 12 22Z" fill="#f59e0b"/>'
 ic_tr = '<path d="M4 6H20M5 6V11C5 14.8 8.1 18 12 18C15.9 18 19 14.8 19 11V6M8 18V22M16 18V22M6 22H18" stroke="#facc15" stroke-width="2" stroke-linecap="round" fill="none"/>'
@@ -168,7 +234,6 @@ ic_ck = '<path d="M5 12L10 17L19 7" stroke="#059669" stroke-width="2.5" stroke-l
 ic_tg = '<circle cx="12" cy="12" r="8" stroke="#0284c7" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="#0284c7"/>'
 ic_st = '<path d="M12 2L15 9L22 9L16 14L18 21L12 17L6 21L8 14L2 9L9 9Z" fill="#ca8a04"/>'
 
-# Ikon class (ganti label teks WAR/MAG/ROG/HEA)
 ic_class_war = '<path d="M4 20L18 6M8 20L18 10" stroke="#fb7185" stroke-width="2.2" stroke-linecap="round"/><path d="M15 3L21 9L18 12L12 6Z" fill="#fb7185"/>'
 ic_class_mag = '<path d="M12 2L14 9L21 11L14 13L12 20L10 13L3 11L10 9Z" fill="#60a5fa"/>'
 ic_class_rog = '<path d="M4 20L16 8M16 8L14 4L20 6L16 8Z" fill="#f59e0b" stroke="#f59e0b" stroke-linejoin="round"/>'
@@ -179,7 +244,6 @@ d_str = "".join([f'<text x="28" y="{732+i*18}" class="list">{i+1}. {d[0][:28]} (
 
 cfg = {"warrior": {"sec": "#fb7185", "bg": "#3a0914", "n": "WARRIOR"}, "mage": {"sec": "#60a5fa", "bg": "#0f172a", "n": "ARCHMAGE"}, "rogue": {"sec": "#fbbf24", "bg": "#321706", "n": "SHADOW ROGUE"}, "healer": {"sec": "#34d399", "bg": "#062b20", "n": "HIGH HEALER"}}.get(c_class, {"sec": "#fb7185", "bg": "#3a0914", "n": "WARRIOR"})
 
-# --- FIX SCROLL OF INSIGHT: wrap otomatis + tinggi kotak/kanvas dinamis ---
 quote_lines = textwrap.wrap(quote_text, width=50)[:4]
 quote_tspans = "".join(
     f'<tspan x="28" dy="{0 if i == 0 else 18}">{html.escape(line)}</tspan>'
@@ -188,7 +252,7 @@ quote_tspans = "".join(
 quote_box_y = 807
 quote_box_h = 40 + max(1, len(quote_lines)) * 18 + 12
 canvas_w = 460
-canvas_h = quote_box_y + quote_box_h + 20  # tinggi kanvas ikut menyesuaikan panjang quote
+canvas_h = quote_box_y + quote_box_h + 20
 
 svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w} {canvas_h}" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <defs>
@@ -218,13 +282,11 @@ svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w
     <rect width="460" height="130" fill="#0b0e18" opacity="0.4"/>
     <line x1="0" y1="130" x2="460" y2="130" stroke="url(#gB)" stroke-width="1.5"/>
 
-    <!-- Logo: avatar asli Habitica kamu (fallback ke vector kalau fetch gagal) -->
     {logo_svg}
 
     <text x="110" y="48" class="t" font-size="20">{p_name}</text>
     <text x="110" y="70" class="s">Level {lvl} • <tspan fill="{cfg['sec']}">{cfg['n']}</tspan></text>
 
-    <!-- Indikator class pakai ikon, bukan teks -->
     <g transform="translate(110, 82) scale(0.7)" opacity="{'1.0' if 'warrior' in db['classes_used'] else '0.2'}">{ic_class_war}</g>
     <g transform="translate(136, 82) scale(0.7)" opacity="{'1.0' if 'mage' in db['classes_used'] else '0.2'}">{ic_class_mag}</g>
     <g transform="translate(162, 82) scale(0.7)" opacity="{'1.0' if 'rogue' in db['classes_used'] else '0.2'}">{ic_class_rog}</g>
@@ -234,7 +296,7 @@ svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w
     <rect x="16" y="162" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="26" y="178" class="l">TOTAL DMG</text><g transform="translate(26, 183) scale(0.8)">{ic_sw}</g><text x="50" y="197" class="v">{fmt(db['all_time_damage'])}</text>
     <rect x="236" y="162" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="246" y="178" class="l">WEEKLY DMG</text><g transform="translate(246, 183) scale(0.8)">{ic_sw}</g><text x="270" y="197" class="v">{fmt(db['weekly_damage'])}</text>
     <rect x="16" y="216" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="26" y="232" class="l">DAILY AVG DMG</text><g transform="translate(26, 237) scale(0.8)">{ic_ch}</g><text x="50" y="251" class="v">{fmt(avg_dmg)}/day</text>
-    <rect x="236" y="216" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="246" y="232" class="l">PEAK WEEKLY RECORD</text><g transform="translate(246, 237) scale(0.8)">{ic_fr}</g><text x="270" y="251" class="v">{fmt(db['peak_weekly_damage'])}</text>
+    <rect x="236" y="216" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="246" y="232" class="l">PEAK DAILY RECORD</text><g transform="translate(246, 237) scale(0.8)">{ic_fr}</g><text x="270" y="251" class="v">{fmt(db['peak_daily_damage'])}</text>
     <rect x="16" y="270" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="26" y="286" class="l">BOSSES SLAIN</text><g transform="translate(26, 291) scale(0.8)">{ic_tr}</g><text x="50" y="305" class="v">{db['bosses_slain']}</text>
     <rect x="236" y="270" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="246" y="286" class="l">PEAK GOLD HOARDED</text><g transform="translate(246, 291) scale(0.8)">{ic_gd}</g><text x="270" y="305" class="v" fill="#fbbf24">{fmt(db['peak_gold'])} G</text>
     <rect x="16" y="324" width="428" height="36" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="26" y="347" class="s">✨ Buffs: <tspan class="v">{db['buffs_cast']}</tspan> Casts • 💧 Mana Spent: <tspan class="v">{fmt(db['total_mana_spent'])} MP</tspan></text>
