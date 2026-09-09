@@ -3,39 +3,39 @@
   "classes_used": [
     "warrior"
   ],
-  "peak_gold": 36730,
+  "peak_gold": 36942,
   "total_mana_spent": 491.0,
   "last_mana": 308,
   "buffs_cast": 20,
-  "bosses_slain": 5,
-  "all_time_damage": 14256.0,
-  "weekly_damage": 14256.0,
+  "bosses_slain": 6,
+  "all_time_damage": 15558.0,
+  "weekly_damage": 15558.0,
   "peak_daily_damage": 6950.0,
-  "current_day_damage": 6950.0,
-  "damage_day_date": "2026-09-09",
-  "last_damage_up": 7388,
+  "current_day_damage": 1302.0,
+  "damage_day_date": "2026-09-10",
+  "last_damage_up": 8690,
   "weekly_top_dailies": {
-    "Drink water in the morning ": 9,
-    "Menunda Kesenangan ": 9,
-    "10 Menit tanpa Short ": 9,
-    "Tanpa sosmed 2 jam": 9,
-    "Tanpa YouTube 2 jam": 9,
-    "10 Menit tanpa HP": 9,
+    "Drink water in the morning ": 10,
+    "Menunda Kesenangan ": 10,
+    "10 Menit tanpa Short ": 10,
+    "Tanpa sosmed 2 jam": 10,
+    "Tanpa YouTube 2 jam": 10,
+    "10 Menit tanpa HP": 10,
     "Membaca / Buku / Alqur'an ": 4,
-    "Menyelesaikan 1 tujuan per h": 9,
-    "20 Menit Medsos ": 9,
-    "Membaca / Buku / Alqur&#x27;an ": 5
+    "Menyelesaikan 1 tujuan per h": 10,
+    "20 Menit Medsos ": 10,
+    "Membaca / Buku / Alqur&#x27;an ": 6
   },
   "alltime_top_dailies": {
-    "Drink water in the morning ": 2,
-    "Menunda Kesenangan ": 2,
-    "10 Menit tanpa Short ": 2,
-    "Tanpa sosmed 2 jam": 2,
-    "Tanpa YouTube 2 jam": 2,
-    "10 Menit tanpa HP": 2,
-    "Membaca / Buku / Alqur&#x27;an ": 2,
-    "Menyelesaikan 1 tujuan per h": 2,
-    "20 Menit Medsos ": 2
+    "Drink water in the morning ": 3,
+    "Menunda Kesenangan ": 3,
+    "10 Menit tanpa Short ": 3,
+    "Tanpa sosmed 2 jam": 3,
+    "Tanpa YouTube 2 jam": 3,
+    "10 Menit tanpa HP": 3,
+    "Membaca / Buku / Alqur&#x27;an ": 3,
+    "Menyelesaikan 1 tujuan per h": 3,
+    "20 Menit Medsos ": 3
   },
   "weekly_top_habits_pos": {
     "Ada kemajuan": 3,
@@ -55,22 +55,8 @@
   "weekly_top_habits_neg": {
     "Sholat tepat waktu ": 1
   },
-  "daily_top_habits_pos": {
-    "Ada kemajuan": 3,
-    "Deep thinking tanpa distraks": 1,
-    "Sholat tepat waktu ": 1,
-    "Belajar skill inti (AI / bis": 1,
-    "Pernapasan ": 1,
-    "Mengangkat kaki ke tembok ": 1,
-    "Kurangi Makanan ": 1,
-    "Mandi pagi ": 1,
-    "Ketepatan Waktu Sholat.": 2,
-    "Planks": 1,
-    "Olahraga / gerak": 1,
-    "Tidak Menghamburkan uang ": 1,
-    "Beres - beres apapun ": 1
-  },
-  "daily_habits_date": "2026-09-09",
+  "daily_top_habits_pos": {},
+  "daily_habits_date": "2026-09-10",
   "habit_counters": {
     "a7738b9e-49a9-4e59-9896-83571c330c1c": {
       "up": 3,
@@ -181,9 +167,9 @@
       "down": 0
     }
   },
-  "last_daily_date": "2026-09-09",
-  "daily_habit_baseline": 12,
-  "last_quest_key": "fluorite",
+  "last_daily_date": "2026-09-10",
+  "daily_habit_baseline": 23,
+  "last_quest_key": "cheetah",
   "last_quest_is_boss": true,
   "peak_weekly_damage": 0.0,
   "total_dailies_cleared": 0,
