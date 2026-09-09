@@ -17,7 +17,11 @@ db = {
     "current_cycle_id": "", "classes_used": [], "peak_gold": 0.0, "total_mana_spent": 0.0,
     "last_mana": None, "buffs_cast": 0, "bosses_slain": 0, "all_time_damage": 0.0,
     "weekly_damage": 0.0, "peak_daily_damage": 0.0, "current_day_damage": 0.0,
-    "damage_day_date": "", "last_damage_up": 0.0, "weekly_top_dailies": {},
+    "damage_day_date": "", "last_damage_up": 0.0,
+    "weekly_top_dailies": {}, "alltime_top_dailies": {},
+    "weekly_top_habits_pos": {}, "weekly_top_habits_neg": {},
+    "daily_top_habits_pos": {}, "daily_habits_date": "",
+    "habit_counters": {},
     "last_daily_date": "", "daily_habit_baseline": 0,
     "last_quest_key": None, "last_quest_is_boss": False
 }
@@ -28,13 +32,23 @@ now = datetime.now(WIB)
 today_str = now.strftime("%Y-%m-%d")
 cycle = f"{(now - timedelta(hours=6)).year}-W{(now - timedelta(hours=6)).isocalendar()[1]}"
 if db["current_cycle_id"] != cycle:
-    db["weekly_damage"] = 0.0; db["weekly_top_dailies"] = {}; db["current_cycle_id"] = cycle
+    # Reset mingguan (Minggu, cron Habitica) -> Top 3 Habits/Dailies mingguan
+    db["weekly_damage"] = 0.0
+    db["weekly_top_dailies"] = {}
+    db["weekly_top_habits_pos"] = {}
+    db["weekly_top_habits_neg"] = {}
+    db["current_cycle_id"] = cycle
 
 if db.get("damage_day_date") != today_str:
     if db.get("current_day_damage", 0) > db.get("peak_daily_damage", 0):
         db["peak_daily_damage"] = db["current_day_damage"]
     db["damage_day_date"] = today_str
     db["current_day_damage"] = 0.0
+
+# Reset harian -> Top 5 Habits harian ("kemarin")
+if db.get("daily_habits_date") != today_str:
+    db["daily_top_habits_pos"] = {}
+    db["daily_habits_date"] = today_str
 
 # ==========================================
 # 3. FETCH HABITICA API DATA
@@ -47,11 +61,9 @@ if not isinstance(t_res, list): t_res = []
 if not isinstance(c_res, list): c_res = []
 
 raw_name = u_res.get("profile", {}).get("name", "Hero")
-p_name = html.escape(raw_name[:18])  # dipakai di bio (Habitica app punya font lengkap)
+p_name = html.escape(raw_name[:18])
 
 def safe_ascii_name(name, fallback="HERO"):
-    """Normalisasi nama jadi huruf biasa, khusus untuk gambar SVG/PNG
-    (font di server tidak selalu punya glyph untuk karakter kotak/unicode khusus)."""
     try:
         decomposed = unicodedata.normalize("NFKD", name)
         cleaned = "".join(ch for ch in decomposed if ord(ch) < 128 and (ch.isalnum() or ch.isspace() or ch in "-_.'"))
@@ -60,7 +72,7 @@ def safe_ascii_name(name, fallback="HERO"):
     except Exception:
         return fallback
 
-svg_name = html.escape(safe_ascii_name(raw_name)[:18])  # dipakai khusus di dalam kartu SVG
+svg_name = html.escape(safe_ascii_name(raw_name)[:18])
 
 c_class = u_res.get("stats", {}).get("class", "warrior").lower()
 lvl = u_res.get("stats", {}).get("lvl", 1)
@@ -110,15 +122,37 @@ dailies_gagal = max(0, len(due) - len(done))
 for d in done:
     n = html.escape(d.get("text", "")[:28])
     db["weekly_top_dailies"][n] = db["weekly_top_dailies"].get(n, 0) + 1
-top_d = sorted(db["weekly_top_dailies"].items(), key=lambda x: x[1], reverse=True)[:3]
-top_d5 = sorted(db["weekly_top_dailies"].items(), key=lambda x: x[1], reverse=True)[:5]
+    db["alltime_top_dailies"][n] = db["alltime_top_dailies"].get(n, 0) + 1
 
+top_d = sorted(db["weekly_top_dailies"].items(), key=lambda x: x[1], reverse=True)[:3]      # mingguan
+top_d5 = sorted(db["alltime_top_dailies"].items(), key=lambda x: x[1], reverse=True)[:5]    # all-time
+
+# --- Habits: lacak delta klik sendiri (counterUp/Down Habitica bisa direset otomatis) ---
 habits = [t for t in t_res if t.get("type") == "habit"]
 up = sum(t.get("counterUp", 0) for t in habits)
 dn = sum(t.get("counterDown", 0) for t in habits)
 hratio = int((up / (up + dn) * 100)) if (up + dn) > 0 else 100
-top_h = sorted(habits, key=lambda x: x.get("counterUp", 0), reverse=True)[:3]
-top_h5 = sorted(habits, key=lambda x: x.get("counterUp", 0), reverse=True)[:5]
+
+for h in habits:
+    hid = h.get("_id") or h.get("id") or h.get("text", "")
+    cur_up = h.get("counterUp", 0)
+    cur_down = h.get("counterDown", 0)
+    prev = db["habit_counters"].get(hid, {"up": cur_up, "down": cur_down})
+    delta_up = cur_up - prev.get("up", cur_up)
+    delta_down = cur_down - prev.get("down", cur_down)
+    if delta_up < 0: delta_up = cur_up        # kemungkinan counter di-reset otomatis oleh Habitica
+    if delta_down < 0: delta_down = cur_down
+    name = html.escape(h.get("text", "")[:28])
+    if delta_up > 0:
+        db["weekly_top_habits_pos"][name] = db["weekly_top_habits_pos"].get(name, 0) + delta_up
+        db["daily_top_habits_pos"][name] = db["daily_top_habits_pos"].get(name, 0) + delta_up
+    if delta_down > 0:
+        db["weekly_top_habits_neg"][name] = db["weekly_top_habits_neg"].get(name, 0) + delta_down
+    db["habit_counters"][hid] = {"up": cur_up, "down": cur_down}
+
+top_h = sorted(db["weekly_top_habits_pos"].items(), key=lambda x: x[1], reverse=True)[:3]      # mingguan
+top_h_neg = sorted(db["weekly_top_habits_neg"].items(), key=lambda x: x[1], reverse=True)[:3]  # mingguan
+top_h5 = sorted(db["daily_top_habits_pos"].items(), key=lambda x: x[1], reverse=True)[:5]      # harian
 
 if db["last_daily_date"] != today_str:
     db["last_daily_date"] = today_str
@@ -145,17 +179,11 @@ if os.path.exists("quote.txt"):
 
 # ==========================================
 # 4. AUTO-UPDATE BIO
-#    Habitica men-sanitize HTML mentah, jadi warna teks asli tidak bisa dipakai.
-#    Marker emoji warna dipakai sebagai gantinya (didukung penuh oleh font app Habitica).
 # ==========================================
 STATS_IMG_URL = f"https://raw.githubusercontent.com/teddytohari/habitica-stats/main/profile-stats.png?v={int(now.timestamp())}"
 
-habit_bio_lines = "\n".join(
-    f"{i+1}. {h.get('text','')[:30]} (+{h.get('counterUp',0)})" for i, h in enumerate(top_h)
-) or "-"
-daily_bio_lines = "\n".join(
-    f"{i+1}. {d[0]} ({d[1]}x)" for i, d in enumerate(top_d)
-) or "-"
+habit_bio_lines = "\n".join(f"{i+1}. {h[0]} ({h[1]}x)" for i, h in enumerate(top_h)) or "-"
+daily_bio_lines = "\n".join(f"{i+1}. {d[0]} ({d[1]}x)" for i, d in enumerate(top_d)) or "-"
 
 bio = f"""### {p_name.upper()} — Level {lvl} {c_class.capitalize()}
 
@@ -177,10 +205,10 @@ bio = f"""### {p_name.upper()} — Level {lvl} {c_class.capitalize()}
 - Selesai Hari Ini: **{h_today} Habits • {len(done)} Dailies • {t_today} To-Dos**
 
 ---
-🟠 **TOP 3 HABITS**
+🟠 **TOP 3 HABITS (MINGGUAN)**
 {habit_bio_lines}
 
-🟢 **TOP 3 DAILIES**
+🟢 **TOP 3 DAILIES (MINGGUAN)**
 {daily_bio_lines}
 
 ---
@@ -195,18 +223,20 @@ except Exception:
     pass
 
 # ==========================================
-# 5. LOGO EMBLEM (vector murni, bebas gagal jaringan, ukuran lebih besar)
+# 5. LOGO EMBLEM MEWAH (obsidian + emas, tanpa ungu)
 # ==========================================
 logo_svg = '''
-<rect x="14" y="20" width="100" height="100" rx="22" fill="#432874" stroke="#e9d5ff" stroke-width="3"/>
-<path d="M64 42 L82 64 L64 96 L46 64 Z" fill="#fcd34d" stroke="#b45309" stroke-width="2"/>
-<circle cx="64" cy="64" r="10" fill="#ffffff" opacity="0.9"/>
-<path d="M64 30 L68 40 L78 42 L68 44 L64 54 L60 44 L50 42 L60 40 Z" fill="#ffffff"/>
-<path d="M40 100 L43 106 L49 108 L43 110 L40 116 L37 110 L31 108 L37 106 Z" fill="#fcd34d"/>
+<rect x="14" y="20" width="100" height="100" rx="22" fill="#15100a" stroke="url(#gB)" stroke-width="4"/>
+<rect x="19" y="25" width="90" height="90" rx="18" fill="none" stroke="#78350f" stroke-width="1" opacity="0.5"/>
+<path d="M64 38 L86 64 L64 100 L42 64 Z" fill="url(#gemGrad)" stroke="#78350f" stroke-width="2"/>
+<path d="M64 38 L86 64 L64 64 Z" fill="#fde68a" opacity="0.35"/>
+<circle cx="64" cy="62" r="9" fill="#fffbe8" opacity="0.9"/>
+<path d="M64 26 L68 37 L79 40 L68 43 L64 54 L60 43 L49 40 L60 37 Z" fill="#fde68a"/>
+<path d="M30 96 L33 102 L39 104 L33 106 L30 112 L27 106 L21 104 L27 102 Z" fill="#fde68a" opacity="0.85"/>
 '''
 
 # ==========================================
-# 6. IKON VEKTOR (menggantikan seluruh emoji di dalam kartu SVG)
+# 6. IKON VEKTOR
 # ==========================================
 random.seed(42)
 pine_trees = ""
@@ -248,13 +278,12 @@ quote_tspans = "".join(
     for i, line in enumerate(quote_lines)
 )
 
-# ---- Tata letak vertikal (semua koordinat dihitung dari sini) ----
+# ---- Tata letak vertikal ----
 canvas_w = 460
-QUOTE_Y = 1139
+QUOTE_Y = 1239
 quote_box_h = 40 + max(1, len(quote_lines)) * 18 + 12
 canvas_h = QUOTE_Y + quote_box_h + 20
 
-# Background pattern transparan untuk bagian bawah kartu (mengulang motif header)
 random.seed(7)
 bg_pattern = ""
 for i in range(24):
@@ -266,20 +295,23 @@ for i in range(24):
     bg_pattern += '<polygon points="25,15 0,50 50,50" fill="#94a3b8"/>'
     bg_pattern += '</g>'
 
-h_str = "".join([f'<text x="28" y="{696+i*18}" class="list">{i+1}. {html.escape(h.get("text", "")[:28])} (+{h.get("counterUp", 0)})</text>' for i, h in enumerate(top_h)])
-d_str = "".join([f'<text x="28" y="{796+i*18}" class="list">{i+1}. {d[0][:28]} ({d[1]}x)</text>' for i, d in enumerate(top_d)])
-h5_str = "".join([f'<text x="28" y="{896+i*18}" class="list">{i+1}. {html.escape(h.get("text", "")[:28])} (+{h.get("counterUp", 0)})</text>' for i, h in enumerate(top_h5)])
-d5_str = "".join([f'<text x="28" y="{1034+i*18}" class="list">{i+1}. {d[0][:28]} ({d[1]}x)</text>' for i, d in enumerate(top_d5)])
+h_str = "".join([f'<text x="28" y="{696+i*18}" class="list">{i+1}. {h[0]} ({h[1]}x)</text>' for i, h in enumerate(top_h)])
+d_str = "".join([f'<text x="28" y="{796+i*18}" class="list">{i+1}. {d[0]} ({d[1]}x)</text>' for i, d in enumerate(top_d)])
+hneg_str = "".join([f'<text x="28" y="{896+i*18}" class="list">{i+1}. {h[0]} ({h[1]}x)</text>' for i, h in enumerate(top_h_neg)])
+h5_str = "".join([f'<text x="28" y="{996+i*18}" class="list">{i+1}. {h[0]} ({h[1]}x)</text>' for i, h in enumerate(top_h5)])
+d5_str = "".join([f'<text x="28" y="{1134+i*18}" class="list">{i+1}. {d[0]} ({d[1]}x)</text>' for i, d in enumerate(top_d5)])
 
 svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w} {canvas_h}" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <defs>
     <clipPath id="rc"><rect width="{canvas_w}" height="{canvas_h}" rx="18"/></clipPath>
     <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#141724"/><stop offset="100%" stop-color="#07080f"/></linearGradient>
-    <linearGradient id="gB" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#78350f"/></linearGradient>
+    <linearGradient id="gB" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fde68a"/><stop offset="50%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#78350f"/></linearGradient>
+    <linearGradient id="gemGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fde68a"/><stop offset="50%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#92400e"/></linearGradient>
     <linearGradient id="gC" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#24121b"/><stop offset="100%" stop-color="#180c13"/></linearGradient>
     <linearGradient id="gP" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#12182b"/><stop offset="100%" stop-color="#0b101e"/></linearGradient>
     <linearGradient id="gH" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#211710"/><stop offset="100%" stop-color="#140d07"/></linearGradient>
     <linearGradient id="gD" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0f2119"/><stop offset="100%" stop-color="#07140e"/></linearGradient>
+    <linearGradient id="gNeg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2a0f14"/><stop offset="100%" stop-color="#180a0c"/></linearGradient>
     <linearGradient id="gI" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1a1226"/><stop offset="100%" stop-color="#0e0a16"/></linearGradient>
     <linearGradient id="gBar" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#34d399"/></linearGradient>
     <linearGradient id="gT5H" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#082629"/><stop offset="100%" stop-color="#051619"/></linearGradient>
@@ -343,11 +375,12 @@ svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w
     <rect x="16" y="601" width="208" height="46" rx="8" fill="url(#gP)" stroke="#1e293b"/><text x="26" y="617" class="l">BOUNTY BOARD</text><g transform="translate(26, 622) scale(0.8)">{ic_tg}</g><text x="50" y="636" class="v">{t_active} Open / {t_cleared} Done</text>
     <rect x="236" y="601" width="208" height="46" rx="8" fill="url(#gP)" stroke="#1e293b"/><text x="246" y="617" class="l">DISCIPLINE FLAME</text><g transform="translate(246, 622) scale(0.8)">{ic_fr}</g><text x="270" y="636" class="v">{streak} Days Streak</text>
 
-    <rect x="16" y="655" width="428" height="92" rx="8" fill="url(#gH)" stroke="#78350f"/><text x="28" y="675" font-family="sans-serif" font-size="11" font-weight="bold" fill="#f59e0b">TOP 3 HABITS (MOST ACTIVE)</text>{h_str}
-    <rect x="16" y="755" width="428" height="92" rx="8" fill="url(#gD)" stroke="#064e3b"/><text x="28" y="775" font-family="sans-serif" font-size="11" font-weight="bold" fill="#10b981">TOP 3 DAILIES (WEEKLY)</text>{d_str}
+    <rect x="16" y="655" width="428" height="92" rx="8" fill="url(#gH)" stroke="#78350f"/><text x="28" y="675" font-family="sans-serif" font-size="11" font-weight="bold" fill="#f59e0b">TOP 3 HABITS (MINGGUAN)</text>{h_str}
+    <rect x="16" y="755" width="428" height="92" rx="8" fill="url(#gD)" stroke="#064e3b"/><text x="28" y="775" font-family="sans-serif" font-size="11" font-weight="bold" fill="#10b981">TOP 3 DAILIES (MINGGUAN)</text>{d_str}
+    <rect x="16" y="855" width="428" height="92" rx="8" fill="url(#gNeg)" stroke="#dc2626"/><text x="28" y="875" font-family="sans-serif" font-size="11" font-weight="bold" fill="#f87171">TOP 3 HABITS NEGATIF (MINGGUAN)</text>{hneg_str}
 
-    <rect x="16" y="855" width="428" height="130" rx="8" fill="url(#gT5H)" stroke="#06b6d4"/><text x="28" y="875" font-family="sans-serif" font-size="11" font-weight="bold" fill="#22d3ee">TOP 5 HABITS (ALL-TIME)</text>{h5_str}
-    <rect x="16" y="993" width="428" height="130" rx="8" fill="url(#gT5D)" stroke="#ec4899"/><text x="28" y="1013" font-family="sans-serif" font-size="11" font-weight="bold" fill="#f472b6">TOP 5 DAILIES (MOST COMPLETED)</text>{d5_str}
+    <rect x="16" y="955" width="428" height="130" rx="8" fill="url(#gT5H)" stroke="#06b6d4"/><text x="28" y="975" font-family="sans-serif" font-size="11" font-weight="bold" fill="#22d3ee">TOP 5 HABITS (HARIAN)</text>{h5_str}
+    <rect x="16" y="1093" width="428" height="130" rx="8" fill="url(#gT5D)" stroke="#ec4899"/><text x="28" y="1113" font-family="sans-serif" font-size="11" font-weight="bold" fill="#f472b6">TOP 5 DAILIES (ALL-TIME)</text>{d5_str}
 
     <rect x="16" y="{QUOTE_Y}" width="428" height="{quote_box_h}" rx="9" fill="url(#gI)" stroke="#6d28d9"/>
     <text x="28" y="{QUOTE_Y+23}" font-family="sans-serif" font-size="11" font-weight="bold" fill="#facc15">SCROLL OF INSIGHT</text>
