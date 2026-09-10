@@ -3,33 +3,70 @@
   "classes_used": [
     "warrior"
   ],
-  "peak_gold": 38019,
-  "total_mana_spent": 731.0,
-  "last_mana": 305,
+  "peak_gold": 39495,
+  "total_mana_spent": 734.0,
+  "last_mana": 302,
   "buffs_cast": 30,
-  "bosses_slain": 12,
-  "all_time_damage": 17492.0,
-  "weekly_damage": 1934.0,
+  "bosses_slain": 13,
+  "all_time_damage": 19369.0,
+  "weekly_damage": 3811.0,
   "peak_daily_damage": 6950.0,
-  "current_day_damage": 3236.0,
+  "current_day_damage": 5113.0,
   "damage_day_date": "2026-09-10",
-  "last_damage_up": 2407,
-  "weekly_top_dailies": {},
+  "last_damage_up": 4284,
+  "weekly_top_dailies": {
+    "bfdf0eba-c8a3-4b0c-ac41-ba2df558807d": {
+      "text": "Drink water in the morning ",
+      "count": 1
+    },
+    "a793ab72-3711-47e6-bcae-7202b8a73c98": {
+      "text": "Menunda Kesenangan ",
+      "count": 1
+    },
+    "e30c85b2-9b79-4e33-99b6-052eb9e98e58": {
+      "text": "10 Menit tanpa Short ",
+      "count": 1
+    },
+    "6ef47ca0-4a20-47b0-85c3-9694c7178dca": {
+      "text": "Tanpa sosmed 2 jam",
+      "count": 1
+    },
+    "7ea1af51-1a7d-40b8-b866-2b95fcbac3b8": {
+      "text": "Tanpa YouTube 2 jam",
+      "count": 1
+    },
+    "0ccf8f94-5e50-4913-b98d-5305f4b4dce9": {
+      "text": "10 Menit tanpa HP",
+      "count": 1
+    },
+    "63fa7fa1-ff43-4f00-b967-7872ead696f8": {
+      "text": "Membaca / Buku / Alqur&#x27;an ",
+      "count": 1
+    },
+    "10095d12-603b-40af-bea3-52c301f2cd91": {
+      "text": "Menyelesaikan 1 tujuan per h",
+      "count": 1
+    },
+    "325d8585-0a79-4f05-8a4c-13dfa5e6de5f": {
+      "text": "20 Menit Medsos ",
+      "count": 1
+    }
+  },
   "last_daily_date": "2026-09-10",
   "daily_habit_baseline": 23,
-  "last_quest_key": "taskwoodsTerror1",
+  "last_quest_key": "lostMasterclasser2",
   "last_quest_is_boss": true,
   "last_habit_counters": {
     "a7738b9e-49a9-4e59-9896-83571c330c1c": {
-      "up": 0,
+      "up": 2,
       "down": 0
     },
     "77f441f2-f99e-40f3-8b1a-5ae04255a03f": {
       "up": 0,
-      "down": 0
+      "down": 1
     },
     "1fef3a4f-3558-4911-86b9-39a9a6c9d58f": {
-      "up": 0,
+      "up": 1,
       "down": 0
     },
     "1e0d7b6e-d756-4b44-a32e-9020f89b7503": {
@@ -45,19 +82,19 @@
       "down": 0
     },
     "379abfe3-1535-4237-adcf-117cd95f176b": {
-      "up": 0,
+      "up": 1,
       "down": 0
     },
     "1a9aeab6-5a75-4f34-bf70-180dc5394f1d": {
-      "up": 0,
+      "up": 5,
       "down": 0
     },
     "87c92412-ace6-4193-bdec-f87222ab060c": {
-      "up": 0,
+      "up": 2,
       "down": 0
     },
     "8e19b1b7-2d9e-4017-a33a-dca0802cf347": {
-      "up": 0,
+      "up": 1,
       "down": 0
     },
     "c1c77eff-03d4-435f-9017-e3c28cd5f0ee": {
@@ -65,7 +102,7 @@
       "down": 0
     },
     "b4988daa-371f-4ad7-b685-74448fb0b155": {
-      "up": 0,
+      "up": 1,
       "down": 0
     },
     "4e6a943b-dc82-46b6-980b-0a3b2fff5edd": {
@@ -73,7 +110,7 @@
       "down": 0
     },
     "6a74dab8-a1c1-4272-af7d-851350939bef": {
-      "up": 3,
+      "up": 4,
       "down": 0
     },
     "b2ca4f83-d519-4120-a621-e08b6ebb4afb": {
@@ -81,7 +118,7 @@
       "down": 0
     },
     "1ab21ba0-b4b2-4dfd-9fd7-7f7083e5c168": {
-      "up": 0,
+      "up": 1,
       "down": 0
     },
     "b992b57a-ba05-44d3-86b4-5abe6755c929": {
@@ -113,7 +150,7 @@
       "down": 0
     },
     "5846a8ec-2664-44c8-8ff4-eca2cddd007a": {
-      "up": 0,
+      "up": 1,
       "down": 0
     },
     "63e8284a-1ab3-45c0-8394-28c31b39a1a0": {
@@ -121,40 +158,196 @@
       "down": 0
     },
     "f18afa35-3f22-43df-88ca-d10dd71148ca": {
-      "up": 0,
+      "up": 1,
       "down": 0
     },
     "fb8f1fe7-db20-442a-8cdb-51eaeaeb5808": {
-      "up": 0,
+      "up": 1,
       "down": 0
     }
   },
   "weekly_habit_clicks": {
     "6a74dab8-a1c1-4272-af7d-851350939bef": {
       "text": "Olahraga / gerak",
-      "count": 3
+      "count": 4
     },
     "b992b57a-ba05-44d3-86b4-5abe6755c929": {
       "text": "Kurangi Makanan ",
       "count": 1
+    },
+    "a7738b9e-49a9-4e59-9896-83571c330c1c": {
+      "text": "Ada kemajuan",
+      "count": 2
+    },
+    "1fef3a4f-3558-4911-86b9-39a9a6c9d58f": {
+      "text": "Deep thinking tanpa distraks",
+      "count": 1
+    },
+    "379abfe3-1535-4237-adcf-117cd95f176b": {
+      "text": "Belajar skill inti (AI / bis",
+      "count": 1
+    },
+    "1a9aeab6-5a75-4f34-bf70-180dc5394f1d": {
+      "text": "Ketepatan Waktu Sholat.",
+      "count": 5
+    },
+    "87c92412-ace6-4193-bdec-f87222ab060c": {
+      "text": "Sholat sunah harian ",
+      "count": 2
+    },
+    "8e19b1b7-2d9e-4017-a33a-dca0802cf347": {
+      "text": "Dzikir harian",
+      "count": 1
+    },
+    "b4988daa-371f-4ad7-b685-74448fb0b155": {
+      "text": "Pernapasan ",
+      "count": 1
+    },
+    "1ab21ba0-b4b2-4dfd-9fd7-7f7083e5c168": {
+      "text": "Tidak Menghamburkan uang ",
+      "count": 1
+    },
+    "5846a8ec-2664-44c8-8ff4-eca2cddd007a": {
+      "text": "Reward Menonton Anime ",
+      "count": 1
+    },
+    "f18afa35-3f22-43df-88ca-d10dd71148ca": {
+      "text": "Mandi pagi ",
+      "count": 1
+    },
+    "fb8f1fe7-db20-442a-8cdb-51eaeaeb5808": {
+      "text": "Beres - beres apapun ",
+      "count": 1
     }
   },
-  "weekly_habit_neg": {},
+  "weekly_habit_neg": {
+    "77f441f2-f99e-40f3-8b1a-5ae04255a03f": {
+      "text": "Trading Forex",
+      "count": 1
+    }
+  },
   "today_habit_clicks": {
     "6a74dab8-a1c1-4272-af7d-851350939bef": {
       "text": "Olahraga / gerak",
-      "count": 3
+      "count": 4
     },
     "b992b57a-ba05-44d3-86b4-5abe6755c929": {
       "text": "Kurangi Makanan ",
       "count": 1
+    },
+    "a7738b9e-49a9-4e59-9896-83571c330c1c": {
+      "text": "Ada kemajuan",
+      "count": 2
+    },
+    "1fef3a4f-3558-4911-86b9-39a9a6c9d58f": {
+      "text": "Deep thinking tanpa distraks",
+      "count": 1
+    },
+    "379abfe3-1535-4237-adcf-117cd95f176b": {
+      "text": "Belajar skill inti (AI / bis",
+      "count": 1
+    },
+    "1a9aeab6-5a75-4f34-bf70-180dc5394f1d": {
+      "text": "Ketepatan Waktu Sholat.",
+      "count": 5
+    },
+    "87c92412-ace6-4193-bdec-f87222ab060c": {
+      "text": "Sholat sunah harian ",
+      "count": 2
+    },
+    "8e19b1b7-2d9e-4017-a33a-dca0802cf347": {
+      "text": "Dzikir harian",
+      "count": 1
+    },
+    "b4988daa-371f-4ad7-b685-74448fb0b155": {
+      "text": "Pernapasan ",
+      "count": 1
+    },
+    "1ab21ba0-b4b2-4dfd-9fd7-7f7083e5c168": {
+      "text": "Tidak Menghamburkan uang ",
+      "count": 1
+    },
+    "5846a8ec-2664-44c8-8ff4-eca2cddd007a": {
+      "text": "Reward Menonton Anime ",
+      "count": 1
+    },
+    "f18afa35-3f22-43df-88ca-d10dd71148ca": {
+      "text": "Mandi pagi ",
+      "count": 1
+    },
+    "fb8f1fe7-db20-442a-8cdb-51eaeaeb5808": {
+      "text": "Beres - beres apapun ",
+      "count": 1
     }
   },
-  "today_habit_neg": {},
-  "last_completed_daily_ids": [],
+  "today_habit_neg": {
+    "77f441f2-f99e-40f3-8b1a-5ae04255a03f": {
+      "text": "Trading Forex",
+      "count": 1
+    }
+  },
+  "last_completed_daily_ids": [
+    "0ccf8f94-5e50-4913-b98d-5305f4b4dce9",
+    "bfdf0eba-c8a3-4b0c-ac41-ba2df558807d",
+    "6ef47ca0-4a20-47b0-85c3-9694c7178dca",
+    "e30c85b2-9b79-4e33-99b6-052eb9e98e58",
+    "325d8585-0a79-4f05-8a4c-13dfa5e6de5f",
+    "10095d12-603b-40af-bea3-52c301f2cd91",
+    "7ea1af51-1a7d-40b8-b866-2b95fcbac3b8",
+    "63fa7fa1-ff43-4f00-b967-7872ead696f8",
+    "a793ab72-3711-47e6-bcae-7202b8a73c98"
+  ],
   "monthly_habit_clicks": {
     "b992b57a-ba05-44d3-86b4-5abe6755c929": {
       "text": "Kurangi Makanan ",
+      "count": 1
+    },
+    "a7738b9e-49a9-4e59-9896-83571c330c1c": {
+      "text": "Ada kemajuan",
+      "count": 2
+    },
+    "1fef3a4f-3558-4911-86b9-39a9a6c9d58f": {
+      "text": "Deep thinking tanpa distraks",
+      "count": 1
+    },
+    "379abfe3-1535-4237-adcf-117cd95f176b": {
+      "text": "Belajar skill inti (AI / bis",
+      "count": 1
+    },
+    "1a9aeab6-5a75-4f34-bf70-180dc5394f1d": {
+      "text": "Ketepatan Waktu Sholat.",
+      "count": 5
+    },
+    "87c92412-ace6-4193-bdec-f87222ab060c": {
+      "text": "Sholat sunah harian ",
+      "count": 2
+    },
+    "8e19b1b7-2d9e-4017-a33a-dca0802cf347": {
+      "text": "Dzikir harian",
+      "count": 1
+    },
+    "b4988daa-371f-4ad7-b685-74448fb0b155": {
+      "text": "Pernapasan ",
+      "count": 1
+    },
+    "6a74dab8-a1c1-4272-af7d-851350939bef": {
+      "text": "Olahraga / gerak",
+      "count": 1
+    },
+    "1ab21ba0-b4b2-4dfd-9fd7-7f7083e5c168": {
+      "text": "Tidak Menghamburkan uang ",
+      "count": 1
+    },
+    "5846a8ec-2664-44c8-8ff4-eca2cddd007a": {
+      "text": "Reward Menonton Anime ",
+      "count": 1
+    },
+    "f18afa35-3f22-43df-88ca-d10dd71148ca": {
+      "text": "Mandi pagi ",
+      "count": 1
+    },
+    "fb8f1fe7-db20-442a-8cdb-51eaeaeb5808": {
+      "text": "Beres - beres apapun ",
       "count": 1
     }
   },
