@@ -3,22 +3,22 @@
   "classes_used": [
     "warrior"
   ],
-  "peak_gold": 37982,
+  "peak_gold": 38019,
   "total_mana_spent": 501.0,
-  "last_mana": 302,
+  "last_mana": 535,
   "buffs_cast": 20,
   "bosses_slain": 10,
-  "all_time_damage": 16432.0,
-  "weekly_damage": 874.0,
+  "all_time_damage": 16434.0,
+  "weekly_damage": 876.0,
   "peak_daily_damage": 6950.0,
-  "current_day_damage": 2176.0,
+  "current_day_damage": 2178.0,
   "damage_day_date": "2026-09-10",
-  "last_damage_up": 1347,
+  "last_damage_up": 1349,
   "weekly_top_dailies": {},
   "last_daily_date": "2026-09-10",
   "daily_habit_baseline": 23,
-  "last_quest_key": null,
-  "last_quest_is_boss": false,
+  "last_quest_key": "mayhemMistiflying3",
+  "last_quest_is_boss": true,
   "last_habit_counters": {
     "a7738b9e-49a9-4e59-9896-83571c330c1c": {
       "up": 0,
@@ -85,7 +85,7 @@
       "down": 0
     },
     "b992b57a-ba05-44d3-86b4-5abe6755c929": {
-      "up": 0,
+      "up": 1,
       "down": 0
     },
     "3561dabe-5c61-47a3-bcb5-9f51a71fe9e5": {
@@ -133,6 +133,10 @@
     "6a74dab8-a1c1-4272-af7d-851350939bef": {
       "text": "Olahraga / gerak",
       "count": 3
+    },
+    "b992b57a-ba05-44d3-86b4-5abe6755c929": {
+      "text": "Kurangi Makanan ",
+      "count": 1
     }
   },
   "weekly_habit_neg": {},
@@ -140,9 +144,21 @@
     "6a74dab8-a1c1-4272-af7d-851350939bef": {
       "text": "Olahraga / gerak",
       "count": 3
+    },
+    "b992b57a-ba05-44d3-86b4-5abe6755c929": {
+      "text": "Kurangi Makanan ",
+      "count": 1
     }
   },
   "last_completed_daily_ids": [],
+  "monthly_habit_clicks": {
+    "b992b57a-ba05-44d3-86b4-5abe6755c929": {
+      "text": "Kurangi Makanan ",
+      "count": 1
+    }
+  },
+  "current_month_id": "2026-09",
+  "habit_daily_log": [],
   "alltime_top_dailies": {
     "Drink water in the morning ": 4,
     "Menunda Kesenangan ": 4,
