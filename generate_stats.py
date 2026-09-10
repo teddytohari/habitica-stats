@@ -211,7 +211,7 @@ STATS_IMG_URL = f"https://raw.githubusercontent.com/teddytohari/habitica-stats/m
 habit_bio_lines = "\n".join(f"{i+1}. {it['text']} (+{it['count']})" for i, it in enumerate(top_h)) or "-"
 daily_bio_lines = "\n".join(f"{i+1}. {it['text']} ({it['count']}x)" for i, it in enumerate(top_d)) or "-"
 
-bio = f"""### PERSONAL MASTERY ANALYTICS CONSOLE
+bio = f"""### PERFORMANCE MATRIX
 
 ![]({STATS_IMG_URL})
 
@@ -286,6 +286,17 @@ for i in range(30):
     r = random.uniform(0.6, 1.8); op = random.uniform(0.4, 0.95)
     night_stars += f'<circle cx="{sx}" cy="{sy}" r="{r}" fill="#fef9e7" opacity="{op}"/>'
 
+# Tanah di bawah pohon pinus (biar tidak terlihat mengambang) + rumput
+ground_band = '<rect x="0" y="112" width="460" height="28" fill="url(#groundGrad)"/>'
+random.seed(33)
+grass = ""
+for i in range(45):
+    gx = random.randint(0, 460)
+    gh = random.uniform(5, 12)
+    gy = 140 - gh
+    op = random.uniform(0.5, 0.9)
+    grass += f'<polygon points="{gx-2},140 {gx},{gy:.1f} {gx+2},140" fill="#15803d" opacity="{op:.2f}"/>'
+
 ic_sw = '<path d="M4 20L20 4M8 20L20 8" stroke="#fb7185" stroke-width="2.5" stroke-linecap="round"/>'
 ic_fr = '<path d="M12 22C12 22 5 15 5 10C5 6 8 2 12 2C12 2 10 6 10 10C10 12 12 14 12 14C12 14 15 11 15 8C17 10 19 13 19 16C19 19.5 16 22 12 22Z" fill="#f59e0b"/>'
 ic_tr = '<path d="M4 6H20M5 6V11C5 14.8 8.1 18 12 18C15.9 18 19 14.8 19 11V6M8 18V22M16 18V22M6 22H18" stroke="#facc15" stroke-width="2" stroke-linecap="round" fill="none"/>'
@@ -353,8 +364,9 @@ svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w
     <linearGradient id="gNeg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2a0f14"/><stop offset="100%" stop-color="#180a0d"/></linearGradient>
     <linearGradient id="goldRing" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fde68a"/><stop offset="50%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#92400e"/></linearGradient>
     <linearGradient id="gemGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fde68a"/><stop offset="50%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#b45309"/></linearGradient>
-    <radialGradient id="logoBgGlow" cx="50%" cy="42%" r="72%"><stop offset="0%" stop-color="#3a2c14"/><stop offset="45%" stop-color="#261e0f"/><stop offset="100%" stop-color="#0e0d0c"/></radialGradient>
+    <radialGradient id="logoBgGlow" cx="50%" cy="42%" r="72%"><stop offset="0%" stop-color="#1e4534"/><stop offset="45%" stop-color="#123024"/><stop offset="100%" stop-color="#061410"/></radialGradient>
     <radialGradient id="gemGlow" cx="50%" cy="32%" r="68%"><stop offset="0%" stop-color="#fff7d6"/><stop offset="35%" stop-color="#fde68a"/><stop offset="70%" stop-color="#f2b705"/><stop offset="100%" stop-color="#8a5a10"/></radialGradient>
+    <linearGradient id="groundGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#2a1f14"/><stop offset="100%" stop-color="#120d09"/></linearGradient>
   </defs>
   <style>
     .t {{ font-family: sans-serif; font-weight: 900; fill: #fff; }}
@@ -369,20 +381,22 @@ svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w
 
     <rect x="0" y="0" width="460" height="140" fill="#0f172a"/>
     {night_stars}
+    {ground_band}
     {pine_trees}
+    {grass}
     <rect width="460" height="140" fill="#0b0e18" opacity="0.22"/>
     <line x1="0" y1="140" x2="460" y2="140" stroke="url(#gB)" stroke-width="1.5"/>
 
     {logo_svg}
 
-    <text x="128" y="42" font-family="sans-serif" font-size="9" font-weight="700" letter-spacing="1.5" fill="#d4a72c" opacity="0.85">PLAYER IDENTIFICATION</text>
-    <text x="128" y="62" class="t" font-size="22">{svg_name}</text>
-    <text x="128" y="82" class="s">Level {lvl} • <tspan fill="{cfg['sec']}">{cfg['n']}</tspan></text>
+    <text x="128" y="38" font-family="sans-serif" font-size="9" font-weight="700" letter-spacing="1.5" fill="#d4a72c" opacity="0.85">PLAYER IDENTIFICATION</text>
+    <text x="128" y="70" class="t" font-size="22">{svg_name}</text>
+    <text x="128" y="90" class="s">Level {lvl} • <tspan fill="{cfg['sec']}">{cfg['n']}</tspan></text>
 
-    <g transform="translate(128, 92) scale(0.75)" opacity="{'1.0' if 'warrior' in db['classes_used'] else '0.2'}">{ic_class_war}</g>
-    <g transform="translate(156, 92) scale(0.75)" opacity="{'1.0' if 'mage' in db['classes_used'] else '0.2'}">{ic_class_mag}</g>
-    <g transform="translate(184, 92) scale(0.75)" opacity="{'1.0' if 'rogue' in db['classes_used'] else '0.2'}">{ic_class_rog}</g>
-    <g transform="translate(212, 92) scale(0.75)" opacity="{'1.0' if 'healer' in db['classes_used'] else '0.2'}">{ic_class_hea}</g>
+    <g transform="translate(128, 100) scale(0.75)" opacity="{'1.0' if 'warrior' in db['classes_used'] else '0.2'}">{ic_class_war}</g>
+    <g transform="translate(156, 100) scale(0.75)" opacity="{'1.0' if 'mage' in db['classes_used'] else '0.2'}">{ic_class_mag}</g>
+    <g transform="translate(184, 100) scale(0.75)" opacity="{'1.0' if 'rogue' in db['classes_used'] else '0.2'}">{ic_class_rog}</g>
+    <g transform="translate(212, 100) scale(0.75)" opacity="{'1.0' if 'healer' in db['classes_used'] else '0.2'}">{ic_class_hea}</g>
 
     <text x="18" y="162" font-family="sans-serif" font-size="11" fill="#fb7185" font-weight="bold">COMBAT &amp; EXPEDITION LOG</text>
     <rect x="16" y="172" width="208" height="46" rx="8" fill="url(#gC)" stroke="#4c1d2c"/><text x="26" y="188" class="l">TOTAL DMG</text><g transform="translate(26, 193) scale(0.8)">{ic_sw}</g><text x="50" y="207" class="v">{fmt(db['all_time_damage'])}</text>
