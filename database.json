@@ -4,16 +4,16 @@
     "warrior"
   ],
   "peak_gold": 39495,
-  "total_mana_spent": 734.0,
-  "last_mana": 350,
-  "buffs_cast": 30,
+  "total_mana_spent": 784.0,
+  "last_mana": 300,
+  "buffs_cast": 33,
   "bosses_slain": 16,
-  "all_time_damage": 20462.0,
-  "weekly_damage": 4904.0,
+  "all_time_damage": 20685.0,
+  "weekly_damage": 5127.0,
   "peak_daily_damage": 6950.0,
-  "current_day_damage": 1093.0,
+  "current_day_damage": 1316.0,
   "damage_day_date": "2026-09-11",
-  "last_damage_up": 0,
+  "last_damage_up": 223,
   "weekly_top_dailies": {
     "bfdf0eba-c8a3-4b0c-ac41-ba2df558807d": {
       "text": "Drink water in the morning ",
