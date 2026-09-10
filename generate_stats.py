@@ -189,24 +189,38 @@ top_h = sorted(weekly_habit_clicks.values(), key=lambda x: x["count"], reverse=T
 top_hneg3 = sorted(weekly_habit_neg.values(), key=lambda x: x["count"], reverse=True)[:3]
 top_h_month = sorted(monthly_habit_clicks.values(), key=lambda x: x["count"], reverse=True)[:5]
 
-# Habits yang tidak pernah diklik (positif maupun negatif) minggu ini / hari ini
+# Habits yang tidak pernah diklik (positif maupun negatif) minggu ini
 touched_ids_week = set(weekly_habit_clicks.keys()) | set(weekly_habit_neg.keys())
 habits_untouched_week = sum(1 for h in habits if h.get("id") not in touched_ids_week)
-touched_ids_today = set(today_habit_clicks.keys()) | set(today_habit_neg.keys())
-habits_untouched_today = sum(1 for h in habits if h.get("id") not in touched_ids_today)
+total_habits_count = len(habits)
+idle_week_pct = int(round(habits_untouched_week / total_habits_count * 100)) if total_habits_count else 0
 
 if db["last_daily_date"] != today_str:
-    # Arsipkan data klik hari yang baru saja lewat (dipakai utk ranking "3 hari terakhir")
+    # Arsipkan data klik & negatif hari yang baru saja lewat
+    # (dipakai utk ranking "3 hari terakhir" dan "Idle Habits (Daily)" yang menampilkan data kemarin)
     db.setdefault("habit_daily_log", [])
-    if db["today_habit_clicks"]:
-        db["habit_daily_log"].append({"date": db["last_daily_date"], "clicks": db["today_habit_clicks"]})
+    if db["today_habit_clicks"] or db["today_habit_neg"]:
+        db["habit_daily_log"].append({
+            "date": db["last_daily_date"],
+            "clicks": db["today_habit_clicks"],
+            "neg": db["today_habit_neg"],
+        })
     db["habit_daily_log"] = db["habit_daily_log"][-3:]
     db["last_daily_date"] = today_str
     db["daily_habit_baseline"] = up
     db["today_habit_clicks"] = {}
     db["today_habit_neg"] = {}
     today_habit_clicks = {}
-    habits_untouched_today = len(habits)  # hari baru mulai, belum ada satupun yang disentuh
+
+# Idle Habits (Daily) memakai data hari KEMARIN (hari yang baru saja diarsipkan),
+# bukan hari ini yang masih berjalan, supaya datanya sudah lengkap saat ditampilkan.
+_log = db.get("habit_daily_log", [])
+if _log:
+    _yesterday = _log[-1]
+    touched_yesterday_ids = set(_yesterday.get("clicks", {}).keys()) | set(_yesterday.get("neg", {}).keys())
+    idle_yesterday_count = sum(1 for h in habits if h.get("id") not in touched_yesterday_ids)
+else:
+    idle_yesterday_count = total_habits_count  # belum ada arsip sama sekali
 
 top_h5_daily = sorted(today_habit_clicks.values(), key=lambda x: x["count"], reverse=True)[:5]
 
@@ -386,6 +400,7 @@ ic_class_mag = '<path d="M12 2L14 9L21 11L14 13L12 20L10 13L3 11L10 9Z" fill="#6
 ic_class_rog = '<path d="M4 20L16 8M16 8L14 4L20 6L16 8Z" fill="#f59e0b" stroke="#f59e0b" stroke-linejoin="round"/>'
 ic_class_hea = '<path d="M12 21C12 21 4 14.5 4 9.5C4 6.5 6.5 4 9.5 4C11 4 12 5 12 5C12 5 13 4 14.5 4C17.5 4 20 6.5 20 9.5C20 14.5 12 21 12 21Z" fill="#34d399"/>'
 ic_moon = '<path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z" fill="#94a3b8"/>'
+ic_calendar = '<rect x="3" y="4" width="18" height="17" rx="2" stroke="#a5b4fc" stroke-width="1.8" fill="none"/><path d="M3 9.5H21" stroke="#a5b4fc" stroke-width="1.8"/><path d="M7 2.2V6M17 2.2V6" stroke="#a5b4fc" stroke-width="1.8" stroke-linecap="round"/>'
 
 cfg = {"warrior": {"sec": "#fb7185", "bg": "#3a0914", "n": "WARRIOR"}, "mage": {"sec": "#60a5fa", "bg": "#0f172a", "n": "ARCHMAGE"}, "rogue": {"sec": "#fbbf24", "bg": "#321706", "n": "SHADOW ROGUE"}, "healer": {"sec": "#34d399", "bg": "#062b20", "n": "HIGH HEALER"}}.get(c_class, {"sec": "#fb7185", "bg": "#3a0914", "n": "WARRIOR"})
 
@@ -396,7 +411,7 @@ quote_tspans = "".join(
 )
 
 canvas_w = 460
-QUOTE_Y = 1379
+QUOTE_Y = 1335
 quote_box_h = 40 + max(1, len(quote_lines)) * 18 + 12
 canvas_h = QUOTE_Y + quote_box_h + 20
 
@@ -411,12 +426,12 @@ for i in range(24):
     bg_pattern += '<polygon points="25,15 0,50 50,50" fill="#94a3b8"/>'
     bg_pattern += '</g>'
 
-h5daily_str = "".join(f'<text x="28" y="{750+i*18}" class="list">{i+1}. {trunc(it["text"])} (+{it["count"]})</text>' for i, it in enumerate(top_h5_daily))
-h53day_str = "".join(f'<text x="248" y="{750+i*18}" class="list">{i+1}. {trunc(it["text"])} (+{it["count"]})</text>' for i, it in enumerate(top_h_3day))
-h_str = "".join(f'<text x="28" y="{898+i*18}" class="list">{i+1}. {it["text"]} (+{it["count"]})</text>' for i, it in enumerate(top_h))
-d_str = "".join(f'<text x="28" y="{1036+i*18}" class="list">{i+1}. {it["text"]} ({it["count"]}x)</text>' for i, it in enumerate(top_d))
-hneg_str = "".join(f'<text x="28" y="{1174+i*18}" class="list">{i+1}. {it["text"]} (-{it["count"]})</text>' for i, it in enumerate(top_hneg3))
-hmonth_str = "".join(f'<text x="28" y="{1274+i*18}" class="list">{i+1}. {it["text"]} (+{it["count"]})</text>' for i, it in enumerate(top_h_month))
+h5daily_str = "".join(f'<text x="28" y="{696+i*18}" class="list">{i+1}. {it["text"]} (+{it["count"]})</text>' for i, it in enumerate(top_h5_daily))
+h53day_str = "".join(f'<text x="28" y="{834+i*18}" class="list">{i+1}. {it["text"]} (+{it["count"]})</text>' for i, it in enumerate(top_h_3day))
+hneg_str = "".join(f'<text x="28" y="{972+i*18}" class="list">{i+1}. {it["text"]} (-{it["count"]})</text>' for i, it in enumerate(top_hneg3))
+h_str = "".join(f'<text x="28" y="{1072+i*18}" class="list">{i+1}. {trunc(it["text"])} (+{it["count"]})</text>' for i, it in enumerate(top_h))
+d_str = "".join(f'<text x="248" y="{1072+i*18}" class="list">{i+1}. {trunc(it["text"])} ({it["count"]}x)</text>' for i, it in enumerate(top_d))
+hmonth_str = "".join(f'<text x="28" y="{1220+i*18}" class="list">{i+1}. {trunc(it["text"])} (+{it["count"]})</text>' for i, it in enumerate(top_h_month))
 
 svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w} {canvas_h}" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <defs>
@@ -506,16 +521,22 @@ svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w
     <rect x="16" y="601" width="208" height="46" rx="8" fill="url(#gP)" stroke="#1e293b"/><text x="26" y="617" class="l">BOUNTY BOARD</text><g transform="translate(26, 622) scale(0.8)">{ic_tg}</g><text x="50" y="636" class="v">{t_active} Open / {t_cleared} Done</text>
     <rect x="236" y="601" width="208" height="46" rx="8" fill="url(#gP)" stroke="#1e293b"/><text x="246" y="617" class="l">DISCIPLINE FLAME</text><g transform="translate(246, 622) scale(0.8)">{ic_fr}</g><text x="270" y="636" class="v">{streak} Days Streak</text>
 
-    <rect x="16" y="655" width="208" height="46" rx="8" fill="url(#gP)" stroke="#1e293b"/><text x="26" y="671" class="l">IDLE HABITS (WEEKLY)</text><g transform="translate(26, 676) scale(0.8)">{ic_moon}</g><text x="50" y="690" class="v">{habits_untouched_week}</text>
-    <rect x="236" y="655" width="208" height="46" rx="8" fill="url(#gP)" stroke="#1e293b"/><text x="246" y="671" class="l">IDLE HABITS (TODAY)</text><g transform="translate(246, 676) scale(0.8)">{ic_moon}</g><text x="270" y="690" class="v">{habits_untouched_today}</text>
+    <rect x="16" y="655" width="428" height="130" rx="8" fill="url(#gT5H)" stroke="#06b6d4"/><text x="28" y="675" font-family="sans-serif" font-size="11" font-weight="bold" fill="#22d3ee">TOP 5 HABITS (HARI INI)</text>{h5daily_str}
+    <rect x="16" y="793" width="428" height="130" rx="8" fill="url(#gT5V)" stroke="#a855f7"/><text x="28" y="813" font-family="sans-serif" font-size="11" font-weight="bold" fill="#c084fc">TOP 5 HABITS (3 HARI TERAKHIR)</text>{h53day_str}
 
-    <rect x="16" y="709" width="208" height="140" rx="8" fill="url(#gT5H)" stroke="#06b6d4"/><text x="28" y="729" font-family="sans-serif" font-size="10.5" font-weight="bold" fill="#22d3ee">TOP 5 HABITS (HARI INI)</text>{h5daily_str}
-    <rect x="236" y="709" width="208" height="140" rx="8" fill="url(#gT5V)" stroke="#a855f7"/><text x="248" y="729" font-family="sans-serif" font-size="10.5" font-weight="bold" fill="#c084fc">TOP 5 (3 HARI TERAKHIR)</text>{h53day_str}
+    <rect x="16" y="931" width="428" height="92" rx="8" fill="url(#gNeg)" stroke="#dc2626"/><text x="28" y="951" font-family="sans-serif" font-size="11" font-weight="bold" fill="#f87171">TOP 3 HABITS NEGATIF (MINGGUAN)</text>{hneg_str}
 
-    <rect x="16" y="857" width="428" height="130" rx="8" fill="url(#gH)" stroke="#f59e0b"/><text x="28" y="877" font-family="sans-serif" font-size="11" font-weight="bold" fill="#fbbf24">TOP 5 HABITS (MINGGUAN)</text>{h_str}
-    <rect x="16" y="995" width="428" height="130" rx="8" fill="url(#gD)" stroke="#10b981"/><text x="28" y="1015" font-family="sans-serif" font-size="11" font-weight="bold" fill="#34d399">TOP 5 DAILIES (MINGGUAN)</text>{d_str}
-    <rect x="16" y="1133" width="428" height="92" rx="8" fill="url(#gNeg)" stroke="#dc2626"/><text x="28" y="1153" font-family="sans-serif" font-size="11" font-weight="bold" fill="#f87171">TOP 3 HABITS NEGATIF (MINGGUAN)</text>{hneg_str}
-    <rect x="16" y="1233" width="428" height="130" rx="8" fill="url(#gT5M)" stroke="#6366f1"/><text x="28" y="1253" font-family="sans-serif" font-size="11" font-weight="bold" fill="#818cf8">TOP 5 HABITS (BULANAN)</text>{hmonth_str}
+    <rect x="16" y="1031" width="208" height="140" rx="8" fill="url(#gH)" stroke="#f59e0b"/><text x="28" y="1051" font-family="sans-serif" font-size="10.5" font-weight="bold" fill="#fbbf24">TOP 5 HABITS (MINGGUAN)</text>{h_str}
+    <rect x="236" y="1031" width="208" height="140" rx="8" fill="url(#gD)" stroke="#10b981"/><text x="248" y="1051" font-family="sans-serif" font-size="10.5" font-weight="bold" fill="#34d399">TOP 5 DAILIES (MINGGUAN)</text>{d_str}
+
+    <rect x="16" y="1179" width="208" height="140" rx="8" fill="url(#gT5M)" stroke="#6366f1"/><text x="28" y="1199" font-family="sans-serif" font-size="10.5" font-weight="bold" fill="#818cf8">TOP 5 HABITS (BULANAN)</text>{hmonth_str}
+    <rect x="236" y="1179" width="208" height="140" rx="8" fill="url(#gP)" stroke="#1e293b"/>
+    <text x="248" y="1199" font-family="sans-serif" font-size="10.5" font-weight="bold" fill="#94a3b8" letter-spacing="0.5">IDLE HABITS</text>
+    <g transform="translate(248, 1212) scale(0.85)">{ic_moon}</g><text x="270" y="1227" class="s">Yesterday</text>
+    <text x="270" y="1244" class="v">{idle_yesterday_count}<tspan class="s"> / {total_habits_count} habits</tspan></text>
+    <line x1="246" y1="1256" x2="442" y2="1256" stroke="#334155" stroke-width="1"/>
+    <g transform="translate(248, 1263) scale(0.85)">{ic_calendar}</g><text x="270" y="1278" class="s">This Week</text>
+    <text x="270" y="1295" class="v">{habits_untouched_week}<tspan class="s"> ({idle_week_pct}%)</tspan></text>
 
     <rect x="16" y="{QUOTE_Y}" width="428" height="{quote_box_h}" rx="9" fill="url(#gI)" stroke="url(#gB)"/>
     <text x="28" y="{QUOTE_Y+23}" font-family="sans-serif" font-size="11" font-weight="bold" fill="#facc15">SCROLL OF INSIGHT</text>
