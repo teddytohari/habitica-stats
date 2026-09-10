@@ -417,9 +417,9 @@ svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w
     <linearGradient id="gB" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#78350f"/></linearGradient>
     <linearGradient id="gC" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#24121b"/><stop offset="100%" stop-color="#180c13"/></linearGradient>
     <linearGradient id="gP" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#12182b"/><stop offset="100%" stop-color="#0b101e"/></linearGradient>
-    <linearGradient id="gH" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#4a2c12"/><stop offset="100%" stop-color="#241505"/></linearGradient>
-    <linearGradient id="gD" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0d3d28"/><stop offset="100%" stop-color="#062318"/></linearGradient>
-    <linearGradient id="gI" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1a1226"/><stop offset="100%" stop-color="#0e0a16"/></linearGradient>
+    <linearGradient id="gH" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#332010"/><stop offset="100%" stop-color="#1c1106"/></linearGradient>
+    <linearGradient id="gD" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0a2c1e"/><stop offset="100%" stop-color="#051a12"/></linearGradient>
+    <linearGradient id="gI" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#3d2b0a"/><stop offset="100%" stop-color="#1c1405"/></linearGradient>
     <linearGradient id="gBar" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#34d399"/></linearGradient>
     <linearGradient id="gT5H" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#082629"/><stop offset="100%" stop-color="#051619"/></linearGradient>
     <linearGradient id="gT5V" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2a1145"/><stop offset="100%" stop-color="#170a28"/></linearGradient>
@@ -479,7 +479,7 @@ svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w
 
     <text x="18" y="404" font-family="sans-serif" font-size="11" fill="#60a5fa" font-weight="bold">PRODUCTIVITY &amp; DISCIPLINE MATRIX</text>
     <text x="18" y="424" class="s">Dailies Today: <tspan class="v">{len(done)}/{len(due)} ({pct}%)</tspan></text>
-    <text x="444" y="424" text-anchor="end" class="s">Habits Diam 7 Hari: <tspan class="v" fill="#fb923c">{habits_untouched_week}</tspan></text>
+    <text x="410" y="424" text-anchor="end" class="s">Diam 7 Hari: <tspan class="v" fill="#fb923c">{habits_untouched_week}</tspan></text>
     <rect x="16" y="432" width="428" height="11" rx="5.5" fill="#151b2e"/><rect x="16" y="432" width="{int(428*(pct/100))}" height="11" rx="5.5" fill="url(#gBar)"/>
     <rect x="16" y="451" width="428" height="34" rx="7" fill="url(#gP)" stroke="#1e293b"/>
     <g transform="translate(26, 460) scale(0.7)">{ic_thumb_up}</g><text x="42" y="472" class="s">Habit Mastery: <tspan class="v">{hratio}% Positive</tspan></text>
@@ -507,7 +507,7 @@ svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w
     <rect x="16" y="1079" width="428" height="92" rx="8" fill="url(#gNeg)" stroke="#dc2626"/><text x="28" y="1099" font-family="sans-serif" font-size="11" font-weight="bold" fill="#f87171">TOP 3 HABITS NEGATIF (MINGGUAN)</text>{hneg_str}
     <rect x="16" y="1179" width="428" height="130" rx="8" fill="url(#gT5M)" stroke="#6366f1"/><text x="28" y="1199" font-family="sans-serif" font-size="11" font-weight="bold" fill="#818cf8">TOP 5 HABITS (BULANAN)</text>{hmonth_str}
 
-    <rect x="16" y="{QUOTE_Y}" width="428" height="{quote_box_h}" rx="9" fill="url(#gI)" stroke="#6d28d9"/>
+    <rect x="16" y="{QUOTE_Y}" width="428" height="{quote_box_h}" rx="9" fill="url(#gI)" stroke="url(#gB)"/>
     <text x="28" y="{QUOTE_Y+23}" font-family="sans-serif" font-size="11" font-weight="bold" fill="#facc15">SCROLL OF INSIGHT</text>
     <text x="28" y="{QUOTE_Y+45}" font-family="Georgia, serif" font-size="12" font-style="italic" fill="#e2e8f0">{quote_tspans}</text>
   </g>
