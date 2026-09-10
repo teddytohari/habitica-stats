@@ -21,7 +21,8 @@ db = {
     "last_daily_date": "", "daily_habit_baseline": 0,
     "last_quest_key": None, "last_quest_is_boss": False,
     "last_habit_counters": {}, "weekly_habit_clicks": {}, "weekly_habit_neg": {},
-    "today_habit_clicks": {}, "last_completed_daily_ids": []
+    "today_habit_clicks": {}, "last_completed_daily_ids": [],
+    "monthly_habit_clicks": {}, "current_month_id": "", "habit_daily_log": []
 }
 if os.path.exists(DB_FILE):
     with open(DB_FILE, "r", encoding="utf-8") as f: db.update(json.load(f))
@@ -41,6 +42,11 @@ if db["current_cycle_id"] != cycle:
     db["weekly_habit_clicks"] = {}
     db["weekly_habit_neg"] = {}
     db["current_cycle_id"] = cycle
+
+month_id = adjusted.strftime("%Y-%m")
+if db.get("current_month_id") != month_id:
+    db["monthly_habit_clicks"] = {}
+    db["current_month_id"] = month_id
 
 if db.get("damage_day_date") != today_str:
     if db.get("current_day_damage", 0) > db.get("peak_daily_damage", 0):
@@ -139,19 +145,20 @@ for d_task in done:
 
 db["last_completed_daily_ids"] = list(current_completed_ids)
 
-top_d = sorted(db["weekly_top_dailies"].values(), key=lambda x: x["count"], reverse=True)[:3]
-top_d5 = sorted(db["weekly_top_dailies"].values(), key=lambda x: x["count"], reverse=True)[:5]
+top_d = sorted(db["weekly_top_dailies"].values(), key=lambda x: x["count"], reverse=True)[:5]
 
 habits = [t for t in t_res if t.get("type") == "habit"]
 up = sum(t.get("counterUp", 0) for t in habits)
 dn = sum(t.get("counterDown", 0) for t in habits)
 hratio = int((up / (up + dn) * 100)) if (up + dn) > 0 else 100
 
-# --- Pelacakan klik per-habit (dasar utk Top 3 mingguan, Top 5 harian, Top 3 negatif mingguan) ---
+# --- Pelacakan klik per-habit (dasar utk Top 5 mingguan, Top 5 harian,
+#     Top 5 3-hari-terakhir, Top 5 bulanan, Top 3 negatif mingguan) ---
 last_habit_counters = db.get("last_habit_counters", {})
 weekly_habit_clicks = db.get("weekly_habit_clicks", {})
 weekly_habit_neg = db.get("weekly_habit_neg", {})
 today_habit_clicks = db.get("today_habit_clicks", {})
+monthly_habit_clicks = db.get("monthly_habit_clicks", {})
 
 for h in habits:
     hid = h.get("id")
@@ -164,6 +171,7 @@ for h in habits:
     if delta_up > 0:
         bump(weekly_habit_clicks, hid, text, delta_up)
         bump(today_habit_clicks, hid, text, delta_up)
+        bump(monthly_habit_clicks, hid, text, delta_up)
     if delta_dn > 0:
         bump(weekly_habit_neg, hid, text, delta_dn)
     last_habit_counters[hid] = {"up": cur_up, "down": cur_dn}
@@ -172,17 +180,46 @@ db["last_habit_counters"] = last_habit_counters
 db["weekly_habit_clicks"] = weekly_habit_clicks
 db["weekly_habit_neg"] = weekly_habit_neg
 db["today_habit_clicks"] = today_habit_clicks
+db["monthly_habit_clicks"] = monthly_habit_clicks
 
-top_h = sorted(weekly_habit_clicks.values(), key=lambda x: x["count"], reverse=True)[:3]
-top_h5 = sorted(today_habit_clicks.values(), key=lambda x: x["count"], reverse=True)[:5]
+top_h = sorted(weekly_habit_clicks.values(), key=lambda x: x["count"], reverse=True)[:5]
 top_hneg3 = sorted(weekly_habit_neg.values(), key=lambda x: x["count"], reverse=True)[:3]
+top_h_month = sorted(monthly_habit_clicks.values(), key=lambda x: x["count"], reverse=True)[:5]
+
+# Habits yang tidak pernah diklik (positif maupun negatif) minggu ini
+touched_ids_week = set(weekly_habit_clicks.keys()) | set(weekly_habit_neg.keys())
+habits_untouched_week = sum(1 for h in habits if h.get("id") not in touched_ids_week)
 
 if db["last_daily_date"] != today_str:
+    # Arsipkan data klik hari yang baru saja lewat (dipakai utk ranking "3 hari terakhir")
+    db.setdefault("habit_daily_log", [])
+    if db["today_habit_clicks"]:
+        db["habit_daily_log"].append({"date": db["last_daily_date"], "clicks": db["today_habit_clicks"]})
+    db["habit_daily_log"] = db["habit_daily_log"][-3:]
     db["last_daily_date"] = today_str
     db["daily_habit_baseline"] = up
     db["today_habit_clicks"] = {}
     today_habit_clicks = {}
-    top_h5 = []  # baru mulai hari ini, belum ada data
+
+top_h5_daily = sorted(today_habit_clicks.values(), key=lambda x: x["count"], reverse=True)[:5]
+
+# Top 5 habits paling banyak diklik dalam 3 hari terakhir (hari ini + 2 hari terarsip terakhir)
+def merge_click_dicts(*dicts):
+    merged = {}
+    for d in dicts:
+        for tid, entry in d.items():
+            m = merged.get(tid, {"text": entry["text"], "count": 0})
+            m["text"] = entry["text"]
+            m["count"] += entry["count"]
+            merged[tid] = m
+    return merged
+
+recent_logs = [entry["clicks"] for entry in db.get("habit_daily_log", [])[-2:]]
+rolling3_source = merge_click_dicts(today_habit_clicks, *recent_logs)
+top_h_3day = sorted(rolling3_source.values(), key=lambda x: x["count"], reverse=True)[:5]
+
+def trunc(s, n=17):
+    return s if len(s) <= n else s[:n-1].rstrip() + "…"
 
 h_today = max(0, up - db["daily_habit_baseline"])
 t_today = sum(1 for t in c_res if t.get("dateCompleted") and datetime.fromisoformat(t["dateCompleted"].replace("Z", "+00:00")).astimezone(WIB).strftime("%Y-%m-%d") == today_str)
@@ -231,10 +268,10 @@ bio = f"""### PERFORMANCE MATRIX
 - Selesai Hari Ini: **{h_today} Habits • {len(done)} Dailies • {t_today} To-Dos**
 
 ---
-🟠 **TOP 3 HABITS (MINGGUAN)**
+🟠 **TOP 5 HABITS (MINGGUAN)**
 {habit_bio_lines}
 
-🟢 **TOP 3 DAILIES (MINGGUAN)**
+🟢 **TOP 5 DAILIES (MINGGUAN)**
 {daily_bio_lines}
 
 ---
@@ -351,7 +388,7 @@ quote_tspans = "".join(
 )
 
 canvas_w = 460
-QUOTE_Y = 1239
+QUOTE_Y = 1325
 quote_box_h = 40 + max(1, len(quote_lines)) * 18 + 12
 canvas_h = QUOTE_Y + quote_box_h + 20
 
@@ -366,11 +403,12 @@ for i in range(24):
     bg_pattern += '<polygon points="25,15 0,50 50,50" fill="#94a3b8"/>'
     bg_pattern += '</g>'
 
-h_str = "".join(f'<text x="28" y="{696+i*18}" class="list">{i+1}. {it["text"]} (+{it["count"]})</text>' for i, it in enumerate(top_h))
-d_str = "".join(f'<text x="28" y="{796+i*18}" class="list">{i+1}. {it["text"]} ({it["count"]}x)</text>' for i, it in enumerate(top_d))
-hneg_str = "".join(f'<text x="28" y="{896+i*18}" class="list">{i+1}. {it["text"]} (-{it["count"]})</text>' for i, it in enumerate(top_hneg3))
-h5_str = "".join(f'<text x="28" y="{996+i*18}" class="list">{i+1}. {it["text"]} (+{it["count"]})</text>' for i, it in enumerate(top_h5))
-d5_str = "".join(f'<text x="28" y="{1134+i*18}" class="list">{i+1}. {it["text"]} ({it["count"]}x)</text>' for i, it in enumerate(top_d5))
+h5daily_str = "".join(f'<text x="28" y="{696+i*18}" class="list">{i+1}. {trunc(it["text"])} (+{it["count"]})</text>' for i, it in enumerate(top_h5_daily))
+h53day_str = "".join(f'<text x="248" y="{696+i*18}" class="list">{i+1}. {trunc(it["text"])} (+{it["count"]})</text>' for i, it in enumerate(top_h_3day))
+h_str = "".join(f'<text x="28" y="{844+i*18}" class="list">{i+1}. {it["text"]} (+{it["count"]})</text>' for i, it in enumerate(top_h))
+d_str = "".join(f'<text x="28" y="{982+i*18}" class="list">{i+1}. {it["text"]} ({it["count"]}x)</text>' for i, it in enumerate(top_d))
+hneg_str = "".join(f'<text x="28" y="{1120+i*18}" class="list">{i+1}. {it["text"]} (-{it["count"]})</text>' for i, it in enumerate(top_hneg3))
+hmonth_str = "".join(f'<text x="28" y="{1220+i*18}" class="list">{i+1}. {it["text"]} (+{it["count"]})</text>' for i, it in enumerate(top_h_month))
 
 svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w} {canvas_h}" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <defs>
@@ -379,12 +417,13 @@ svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w
     <linearGradient id="gB" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#78350f"/></linearGradient>
     <linearGradient id="gC" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#24121b"/><stop offset="100%" stop-color="#180c13"/></linearGradient>
     <linearGradient id="gP" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#12182b"/><stop offset="100%" stop-color="#0b101e"/></linearGradient>
-    <linearGradient id="gH" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#211710"/><stop offset="100%" stop-color="#140d07"/></linearGradient>
-    <linearGradient id="gD" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0f2119"/><stop offset="100%" stop-color="#07140e"/></linearGradient>
+    <linearGradient id="gH" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#4a2c12"/><stop offset="100%" stop-color="#241505"/></linearGradient>
+    <linearGradient id="gD" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0d3d28"/><stop offset="100%" stop-color="#062318"/></linearGradient>
     <linearGradient id="gI" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1a1226"/><stop offset="100%" stop-color="#0e0a16"/></linearGradient>
     <linearGradient id="gBar" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#34d399"/></linearGradient>
     <linearGradient id="gT5H" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#082629"/><stop offset="100%" stop-color="#051619"/></linearGradient>
-    <linearGradient id="gT5D" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2a0f24"/><stop offset="100%" stop-color="#180915"/></linearGradient>
+    <linearGradient id="gT5V" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2a1145"/><stop offset="100%" stop-color="#170a28"/></linearGradient>
+    <linearGradient id="gT5M" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1e1b4b"/><stop offset="100%" stop-color="#0f0d2e"/></linearGradient>
     <linearGradient id="gNeg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2a0f14"/><stop offset="100%" stop-color="#180a0d"/></linearGradient>
     <linearGradient id="goldRing" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fde68a"/><stop offset="50%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#92400e"/></linearGradient>
     <linearGradient id="gemGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fde68a"/><stop offset="50%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#b45309"/></linearGradient>
@@ -440,6 +479,7 @@ svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w
 
     <text x="18" y="404" font-family="sans-serif" font-size="11" fill="#60a5fa" font-weight="bold">PRODUCTIVITY &amp; DISCIPLINE MATRIX</text>
     <text x="18" y="424" class="s">Dailies Today: <tspan class="v">{len(done)}/{len(due)} ({pct}%)</tspan></text>
+    <text x="444" y="424" text-anchor="end" class="s">Habits Diam 7 Hari: <tspan class="v" fill="#fb923c">{habits_untouched_week}</tspan></text>
     <rect x="16" y="432" width="428" height="11" rx="5.5" fill="#151b2e"/><rect x="16" y="432" width="{int(428*(pct/100))}" height="11" rx="5.5" fill="url(#gBar)"/>
     <rect x="16" y="451" width="428" height="34" rx="7" fill="url(#gP)" stroke="#1e293b"/>
     <g transform="translate(26, 460) scale(0.7)">{ic_thumb_up}</g><text x="42" y="472" class="s">Habit Mastery: <tspan class="v">{hratio}% Positive</tspan></text>
@@ -459,12 +499,13 @@ svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w
     <rect x="16" y="601" width="208" height="46" rx="8" fill="url(#gP)" stroke="#1e293b"/><text x="26" y="617" class="l">BOUNTY BOARD</text><g transform="translate(26, 622) scale(0.8)">{ic_tg}</g><text x="50" y="636" class="v">{t_active} Open / {t_cleared} Done</text>
     <rect x="236" y="601" width="208" height="46" rx="8" fill="url(#gP)" stroke="#1e293b"/><text x="246" y="617" class="l">DISCIPLINE FLAME</text><g transform="translate(246, 622) scale(0.8)">{ic_fr}</g><text x="270" y="636" class="v">{streak} Days Streak</text>
 
-    <rect x="16" y="655" width="428" height="92" rx="8" fill="url(#gH)" stroke="#78350f"/><text x="28" y="675" font-family="sans-serif" font-size="11" font-weight="bold" fill="#f59e0b">TOP 3 HABITS (WEEKLY)</text>{h_str}
-    <rect x="16" y="755" width="428" height="92" rx="8" fill="url(#gD)" stroke="#064e3b"/><text x="28" y="775" font-family="sans-serif" font-size="11" font-weight="bold" fill="#10b981">TOP 3 DAILIES (WEEKLY)</text>{d_str}
-    <rect x="16" y="855" width="428" height="92" rx="8" fill="url(#gNeg)" stroke="#dc2626"/><text x="28" y="875" font-family="sans-serif" font-size="11" font-weight="bold" fill="#f87171">TOP 3 HABITS NEGATIF (WEEKLY)</text>{hneg_str}
+    <rect x="16" y="655" width="208" height="140" rx="8" fill="url(#gT5H)" stroke="#06b6d4"/><text x="28" y="675" font-family="sans-serif" font-size="10.5" font-weight="bold" fill="#22d3ee">TOP 5 HABITS (HARI INI)</text>{h5daily_str}
+    <rect x="236" y="655" width="208" height="140" rx="8" fill="url(#gT5V)" stroke="#a855f7"/><text x="248" y="675" font-family="sans-serif" font-size="10.5" font-weight="bold" fill="#c084fc">TOP 5 (3 HARI TERAKHIR)</text>{h53day_str}
 
-    <rect x="16" y="955" width="428" height="130" rx="8" fill="url(#gT5H)" stroke="#06b6d4"/><text x="28" y="975" font-family="sans-serif" font-size="11" font-weight="bold" fill="#22d3ee">TOP 5 HABITS (HARI INI)</text>{h5_str}
-    <rect x="16" y="1093" width="428" height="130" rx="8" fill="url(#gT5D)" stroke="#ec4899"/><text x="28" y="1113" font-family="sans-serif" font-size="11" font-weight="bold" fill="#f472b6">TOP 5 DAILIES (WEEKLY)</text>{d5_str}
+    <rect x="16" y="803" width="428" height="130" rx="8" fill="url(#gH)" stroke="#f59e0b"/><text x="28" y="823" font-family="sans-serif" font-size="11" font-weight="bold" fill="#fbbf24">TOP 5 HABITS (MINGGUAN)</text>{h_str}
+    <rect x="16" y="941" width="428" height="130" rx="8" fill="url(#gD)" stroke="#10b981"/><text x="28" y="961" font-family="sans-serif" font-size="11" font-weight="bold" fill="#34d399">TOP 5 DAILIES (MINGGUAN)</text>{d_str}
+    <rect x="16" y="1079" width="428" height="92" rx="8" fill="url(#gNeg)" stroke="#dc2626"/><text x="28" y="1099" font-family="sans-serif" font-size="11" font-weight="bold" fill="#f87171">TOP 3 HABITS NEGATIF (MINGGUAN)</text>{hneg_str}
+    <rect x="16" y="1179" width="428" height="130" rx="8" fill="url(#gT5M)" stroke="#6366f1"/><text x="28" y="1199" font-family="sans-serif" font-size="11" font-weight="bold" fill="#818cf8">TOP 5 HABITS (BULANAN)</text>{hmonth_str}
 
     <rect x="16" y="{QUOTE_Y}" width="428" height="{quote_box_h}" rx="9" fill="url(#gI)" stroke="#6d28d9"/>
     <text x="28" y="{QUOTE_Y+23}" font-family="sans-serif" font-size="11" font-weight="bold" fill="#facc15">SCROLL OF INSIGHT</text>
