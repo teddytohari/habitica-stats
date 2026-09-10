@@ -307,15 +307,13 @@ for i in range(45):
     grass += f'<polygon points="{gx-2},140 {gx},{gy:.1f} {gx+2},140" fill="#15803d" opacity="{op:.2f}"/>'
 
 # 3 batu acak di tanah (tidak berbaris, dijauhkan dari area logo/nama di sisi kiri)
+# Catatan: sengaja TANPA loop while/retry — posisi dasar sudah berjarak,
+# lalu diberi offset acak kecil, supaya dijamin selesai instan (tidak ada risiko macet).
 random.seed(58)
 rocks = ""
-rock_xs = []
-for i in range(3):
-    while True:
-        rx = random.randint(250, 430)
-        if all(abs(rx - other) > 60 for other in rock_xs):  # jaga jarak biar tidak terlihat berbaris rapat
-            rock_xs.append(rx)
-            break
+base_xs = [265, 335, 405]
+for bx in base_xs:
+    rx = bx + random.randint(-15, 15)
     ry = random.randint(126, 136)
     rs = random.uniform(0.8, 1.3)
     rocks += f'<g transform="translate({rx},{ry}) scale({rs:.2f})">'
