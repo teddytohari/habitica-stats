@@ -5,15 +5,15 @@
   ],
   "peak_gold": 39495,
   "total_mana_spent": 734.0,
-  "last_mana": 302,
+  "last_mana": 350,
   "buffs_cast": 30,
-  "bosses_slain": 15,
+  "bosses_slain": 16,
   "all_time_damage": 20462.0,
   "weekly_damage": 4904.0,
   "peak_daily_damage": 6950.0,
   "current_day_damage": 1093.0,
   "damage_day_date": "2026-09-11",
-  "last_damage_up": 5377,
+  "last_damage_up": 0,
   "weekly_top_dailies": {
     "bfdf0eba-c8a3-4b0c-ac41-ba2df558807d": {
       "text": "Drink water in the morning ",
@@ -54,19 +54,19 @@
   },
   "last_daily_date": "2026-09-11",
   "daily_habit_baseline": 22,
-  "last_quest_key": "mayhemMistiflying1",
+  "last_quest_key": "taskwoodsTerror1",
   "last_quest_is_boss": true,
   "last_habit_counters": {
     "a7738b9e-49a9-4e59-9896-83571c330c1c": {
-      "up": 2,
+      "up": 0,
       "down": 0
     },
     "77f441f2-f99e-40f3-8b1a-5ae04255a03f": {
       "up": 0,
-      "down": 1
+      "down": 0
     },
     "1fef3a4f-3558-4911-86b9-39a9a6c9d58f": {
-      "up": 1,
+      "up": 0,
       "down": 0
     },
     "1e0d7b6e-d756-4b44-a32e-9020f89b7503": {
@@ -82,19 +82,19 @@
       "down": 0
     },
     "379abfe3-1535-4237-adcf-117cd95f176b": {
-      "up": 1,
+      "up": 0,
       "down": 0
     },
     "1a9aeab6-5a75-4f34-bf70-180dc5394f1d": {
-      "up": 5,
+      "up": 0,
       "down": 0
     },
     "87c92412-ace6-4193-bdec-f87222ab060c": {
-      "up": 2,
+      "up": 0,
       "down": 0
     },
     "8e19b1b7-2d9e-4017-a33a-dca0802cf347": {
-      "up": 1,
+      "up": 0,
       "down": 0
     },
     "c1c77eff-03d4-435f-9017-e3c28cd5f0ee": {
@@ -102,7 +102,7 @@
       "down": 0
     },
     "b4988daa-371f-4ad7-b685-74448fb0b155": {
-      "up": 1,
+      "up": 0,
       "down": 0
     },
     "4e6a943b-dc82-46b6-980b-0a3b2fff5edd": {
@@ -110,7 +110,7 @@
       "down": 0
     },
     "6a74dab8-a1c1-4272-af7d-851350939bef": {
-      "up": 4,
+      "up": 0,
       "down": 0
     },
     "b2ca4f83-d519-4120-a621-e08b6ebb4afb": {
@@ -118,11 +118,11 @@
       "down": 0
     },
     "1ab21ba0-b4b2-4dfd-9fd7-7f7083e5c168": {
-      "up": 1,
+      "up": 0,
       "down": 0
     },
     "b992b57a-ba05-44d3-86b4-5abe6755c929": {
-      "up": 1,
+      "up": 0,
       "down": 0
     },
     "3561dabe-5c61-47a3-bcb5-9f51a71fe9e5": {
@@ -150,7 +150,7 @@
       "down": 0
     },
     "5846a8ec-2664-44c8-8ff4-eca2cddd007a": {
-      "up": 1,
+      "up": 0,
       "down": 0
     },
     "63e8284a-1ab3-45c0-8394-28c31b39a1a0": {
@@ -158,11 +158,11 @@
       "down": 0
     },
     "f18afa35-3f22-43df-88ca-d10dd71148ca": {
-      "up": 1,
+      "up": 0,
       "down": 0
     },
     "fb8f1fe7-db20-442a-8cdb-51eaeaeb5808": {
-      "up": 1,
+      "up": 0,
       "down": 0
     }
   },
@@ -228,17 +228,7 @@
   },
   "today_habit_clicks": {},
   "today_habit_neg": {},
-  "last_completed_daily_ids": [
-    "bfdf0eba-c8a3-4b0c-ac41-ba2df558807d",
-    "a793ab72-3711-47e6-bcae-7202b8a73c98",
-    "0ccf8f94-5e50-4913-b98d-5305f4b4dce9",
-    "10095d12-603b-40af-bea3-52c301f2cd91",
-    "e30c85b2-9b79-4e33-99b6-052eb9e98e58",
-    "6ef47ca0-4a20-47b0-85c3-9694c7178dca",
-    "7ea1af51-1a7d-40b8-b866-2b95fcbac3b8",
-    "325d8585-0a79-4f05-8a4c-13dfa5e6de5f",
-    "63fa7fa1-ff43-4f00-b967-7872ead696f8"
-  ],
+  "last_completed_daily_ids": [],
   "monthly_habit_clicks": {
     "b992b57a-ba05-44d3-86b4-5abe6755c929": {
       "text": "Kurangi Makanan ",
