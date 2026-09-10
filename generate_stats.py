@@ -191,7 +191,7 @@ t_cleared = len(c_res)
 g_total = up + t_cleared + len(done)
 
 streak = max([t.get("streak", 0) for t in dailies], default=0)
-days = max(1, (now.weekday() if now.hour >= 6 else (now.weekday() - 1) % 7) + 1)
+days = max(1, (adjusted.date() - week_start).days + 1)  # jumlah hari sejak reset mingguan (Minggu)
 avg_dmg = db["weekly_damage"] / days
 
 with open(DB_FILE, "w", encoding="utf-8") as f: json.dump(db, f, indent=2)
@@ -258,11 +258,16 @@ logo_svg = '''
 <rect x="14" y="20" width="100" height="100" rx="22" fill="url(#logoBgGlow)" stroke="url(#goldRing)" stroke-width="3"/>
 <rect x="21" y="27" width="86" height="86" rx="17" fill="none" stroke="#f5d78e" stroke-width="1" opacity="0.35"/>
 <circle cx="64" cy="66" r="34" fill="#f2b705" opacity="0.14"/>
+<g filter="url(#goldGlow)">
+<path d="M64 36 L86 66 L64 96 L42 66 Z" fill="#fbbf24" opacity="0.5"/>
+</g>
 <path d="M64 36 L86 66 L64 96 L42 66 Z" fill="url(#gemGlow)" stroke="#78350f" stroke-width="2"/>
 <path d="M64 36 L86 66 L64 66 Z" fill="#fff7d6" opacity="0.5"/>
 <circle cx="64" cy="60" r="7" fill="#fffbe8" opacity="0.9"/>
 <path d="M64 22 L67 31 L76 33 L67 35 L64 44 L61 35 L52 33 L61 31 Z" fill="#fde68a"/>
 <path d="M40 92 L42 97 L47 99 L42 101 L40 106 L38 101 L33 99 L38 97 Z" fill="#f5d78e" opacity="0.85"/>
+<path d="M87 46 L89 51 L94 53 L89 55 L87 60 L85 55 L80 53 L85 51 Z" fill="#fff7d6" opacity="0.9"/>
+<path d="M45 82 L46.5 85.5 L50 87 L46.5 88.5 L45 92 L43.5 88.5 L40 87 L43.5 85.5 Z" fill="#fde68a" opacity="0.85"/>
 '''
 
 # ==========================================
@@ -271,9 +276,12 @@ logo_svg = '''
 random.seed(42)
 pine_trees = ""
 for i in range(16):
-    x = random.randint(-30, 430); y = random.randint(10, 60)
-    scale = random.uniform(0.7, 1.3); opacity = random.uniform(0.55, 0.95)
-    pine_trees += f'<g transform="translate({x}, {y}) scale({scale})" opacity="{opacity}">'
+    x = random.randint(-30, 430)
+    scale = random.uniform(0.7, 1.3)
+    # Batang pohon ditambatkan ke garis tanah (~y128) supaya tidak ada yang "melayang"
+    y = 128 - scale * 80 + random.uniform(-4, 4)
+    opacity = random.uniform(0.55, 0.95)
+    pine_trees += f'<g transform="translate({x}, {y:.1f}) scale({scale:.2f})" opacity="{opacity:.2f}">'
     pine_trees += '<polygon points="25,0 0,35 50,35" fill="#0d7a58"/>'
     pine_trees += '<polygon points="25,15 0,50 50,50" fill="#0a6b4d"/>'
     pine_trees += '<polygon points="25,30 0,65 50,65" fill="#085c42"/>'
@@ -286,8 +294,9 @@ for i in range(30):
     r = random.uniform(0.6, 1.8); op = random.uniform(0.4, 0.95)
     night_stars += f'<circle cx="{sx}" cy="{sy}" r="{r}" fill="#fef9e7" opacity="{op}"/>'
 
-# Tanah di bawah pohon pinus (biar tidak terlihat mengambang) + rumput
-ground_band = '<rect x="0" y="112" width="460" height="28" fill="url(#groundGrad)"/>'
+# Tanah di bawah pohon pinus — gradasi memudar (bukan garis kaku), naik sampai
+# sekitar bawah teks "Level ... Warrior" supaya batang pohon terlihat berpijak
+ground_band = '<rect x="0" y="90" width="460" height="50" fill="url(#groundGrad)"/>'
 random.seed(33)
 grass = ""
 for i in range(45):
@@ -296,6 +305,23 @@ for i in range(45):
     gy = 140 - gh
     op = random.uniform(0.5, 0.9)
     grass += f'<polygon points="{gx-2},140 {gx},{gy:.1f} {gx+2},140" fill="#15803d" opacity="{op:.2f}"/>'
+
+# 3 batu acak di tanah (tidak berbaris, dijauhkan dari area logo/nama di sisi kiri)
+random.seed(58)
+rocks = ""
+rock_xs = []
+for i in range(3):
+    while True:
+        rx = random.randint(250, 430)
+        if all(abs(rx - other) > 60 for other in rock_xs):  # jaga jarak biar tidak terlihat berbaris rapat
+            rock_xs.append(rx)
+            break
+    ry = random.randint(126, 136)
+    rs = random.uniform(0.8, 1.3)
+    rocks += f'<g transform="translate({rx},{ry}) scale({rs:.2f})">'
+    rocks += '<ellipse cx="0" cy="0" rx="9" ry="5" fill="#57534e" stroke="#3f3a36" stroke-width="1"/>'
+    rocks += '<ellipse cx="-3" cy="-2" rx="3" ry="1.6" fill="#78716c" opacity="0.6"/>'
+    rocks += '</g>'
 
 ic_sw = '<path d="M4 20L20 4M8 20L20 8" stroke="#fb7185" stroke-width="2.5" stroke-linecap="round"/>'
 ic_fr = '<path d="M12 22C12 22 5 15 5 10C5 6 8 2 12 2C12 2 10 6 10 10C10 12 12 14 12 14C12 14 15 11 15 8C17 10 19 13 19 16C19 19.5 16 22 12 22Z" fill="#f59e0b"/>'
@@ -366,7 +392,11 @@ svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w
     <linearGradient id="gemGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fde68a"/><stop offset="50%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#b45309"/></linearGradient>
     <radialGradient id="logoBgGlow" cx="50%" cy="42%" r="72%"><stop offset="0%" stop-color="#1e4534"/><stop offset="45%" stop-color="#123024"/><stop offset="100%" stop-color="#061410"/></radialGradient>
     <radialGradient id="gemGlow" cx="50%" cy="32%" r="68%"><stop offset="0%" stop-color="#fff7d6"/><stop offset="35%" stop-color="#fde68a"/><stop offset="70%" stop-color="#f2b705"/><stop offset="100%" stop-color="#8a5a10"/></radialGradient>
-    <linearGradient id="groundGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#2a1f14"/><stop offset="100%" stop-color="#120d09"/></linearGradient>
+    <linearGradient id="groundGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#2a1f14" stop-opacity="0"/><stop offset="45%" stop-color="#2a1f14" stop-opacity="0.9"/><stop offset="100%" stop-color="#120d09" stop-opacity="1"/></linearGradient>
+    <filter id="goldGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="3.2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
   </defs>
   <style>
     .t {{ font-family: sans-serif; font-weight: 900; fill: #fff; }}
@@ -383,6 +413,7 @@ svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w
     {night_stars}
     {ground_band}
     {pine_trees}
+    {rocks}
     {grass}
     <rect width="460" height="140" fill="#0b0e18" opacity="0.22"/>
     <line x1="0" y1="140" x2="460" y2="140" stroke="url(#gB)" stroke-width="1.5"/>
