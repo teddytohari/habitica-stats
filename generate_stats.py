@@ -51,9 +51,9 @@ if db.get("damage_day_date") != today_str:
 # ==========================================
 # 3. FETCH HABITICA API DATA
 # ==========================================
-u_res = requests.get("https://habitica.com/api/v3/user", headers=headers).json().get("data", {})
-t_res = requests.get("https://habitica.com/api/v3/tasks/user", headers=headers).json().get("data", [])
-c_res = requests.get("https://habitica.com/api/v3/tasks/user?type=completedTodos", headers=headers).json().get("data", [])
+u_res = requests.get("https://habitica.com/api/v3/user", headers=headers, timeout=20).json().get("data", {})
+t_res = requests.get("https://habitica.com/api/v3/tasks/user", headers=headers, timeout=20).json().get("data", [])
+c_res = requests.get("https://habitica.com/api/v3/tasks/user?type=completedTodos", headers=headers, timeout=20).json().get("data", [])
 
 if not isinstance(t_res, list): t_res = []
 if not isinstance(c_res, list): c_res = []
@@ -244,7 +244,7 @@ bio = f"""### PERFORMANCE MATRIX
 [Lihat Versi HD]({STATS_IMG_URL})
 """
 try:
-    requests.put("https://habitica.com/api/v3/user", headers=headers, json={"profile.blurb": bio})
+    requests.put("https://habitica.com/api/v3/user", headers=headers, json={"profile.blurb": bio}, timeout=20)
 except Exception:
     pass
 
