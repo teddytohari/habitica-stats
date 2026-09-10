@@ -3,21 +3,21 @@
   "classes_used": [
     "warrior"
   ],
-  "peak_gold": 37967,
-  "total_mana_spent": 493.0,
-  "last_mana": 310,
+  "peak_gold": 37982,
+  "total_mana_spent": 501.0,
+  "last_mana": 302,
   "buffs_cast": 20,
-  "bosses_slain": 8,
-  "all_time_damage": 15562.0,
-  "weekly_damage": 4.0,
+  "bosses_slain": 9,
+  "all_time_damage": 16432.0,
+  "weekly_damage": 874.0,
   "peak_daily_damage": 6950.0,
-  "current_day_damage": 1306.0,
+  "current_day_damage": 2176.0,
   "damage_day_date": "2026-09-10",
-  "last_damage_up": 477,
+  "last_damage_up": 1347,
   "weekly_top_dailies": {},
   "last_daily_date": "2026-09-10",
   "daily_habit_baseline": 23,
-  "last_quest_key": "dilatoryDistress2",
+  "last_quest_key": "lostMasterclasser2",
   "last_quest_is_boss": true,
   "last_habit_counters": {
     "a7738b9e-49a9-4e59-9896-83571c330c1c": {
@@ -73,7 +73,7 @@
       "down": 0
     },
     "6a74dab8-a1c1-4272-af7d-851350939bef": {
-      "up": 2,
+      "up": 3,
       "down": 0
     },
     "b2ca4f83-d519-4120-a621-e08b6ebb4afb": {
@@ -132,14 +132,14 @@
   "weekly_habit_clicks": {
     "6a74dab8-a1c1-4272-af7d-851350939bef": {
       "text": "Olahraga / gerak",
-      "count": 2
+      "count": 3
     }
   },
   "weekly_habit_neg": {},
   "today_habit_clicks": {
     "6a74dab8-a1c1-4272-af7d-851350939bef": {
       "text": "Olahraga / gerak",
-      "count": 2
+      "count": 3
     }
   },
   "last_completed_daily_ids": [],
