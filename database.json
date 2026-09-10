@@ -7,7 +7,7 @@
   "total_mana_spent": 734.0,
   "last_mana": 302,
   "buffs_cast": 30,
-  "bosses_slain": 14,
+  "bosses_slain": 15,
   "all_time_damage": 20462.0,
   "weekly_damage": 4904.0,
   "peak_daily_damage": 6950.0,
@@ -54,7 +54,7 @@
   },
   "last_daily_date": "2026-09-11",
   "daily_habit_baseline": 22,
-  "last_quest_key": "dilatoryDistress3",
+  "last_quest_key": "mayhemMistiflying1",
   "last_quest_is_boss": true,
   "last_habit_counters": {
     "a7738b9e-49a9-4e59-9896-83571c330c1c": {
@@ -229,15 +229,15 @@
   "today_habit_clicks": {},
   "today_habit_neg": {},
   "last_completed_daily_ids": [
-    "a793ab72-3711-47e6-bcae-7202b8a73c98",
-    "6ef47ca0-4a20-47b0-85c3-9694c7178dca",
-    "e30c85b2-9b79-4e33-99b6-052eb9e98e58",
-    "10095d12-603b-40af-bea3-52c301f2cd91",
-    "325d8585-0a79-4f05-8a4c-13dfa5e6de5f",
     "bfdf0eba-c8a3-4b0c-ac41-ba2df558807d",
+    "a793ab72-3711-47e6-bcae-7202b8a73c98",
     "0ccf8f94-5e50-4913-b98d-5305f4b4dce9",
-    "63fa7fa1-ff43-4f00-b967-7872ead696f8",
-    "7ea1af51-1a7d-40b8-b866-2b95fcbac3b8"
+    "10095d12-603b-40af-bea3-52c301f2cd91",
+    "e30c85b2-9b79-4e33-99b6-052eb9e98e58",
+    "6ef47ca0-4a20-47b0-85c3-9694c7178dca",
+    "7ea1af51-1a7d-40b8-b866-2b95fcbac3b8",
+    "325d8585-0a79-4f05-8a4c-13dfa5e6de5f",
+    "63fa7fa1-ff43-4f00-b967-7872ead696f8"
   ],
   "monthly_habit_clicks": {
     "b992b57a-ba05-44d3-86b4-5abe6755c929": {
