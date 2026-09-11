@@ -22,7 +22,11 @@ db = {
     "last_quest_key": None, "last_quest_is_boss": False,
     "last_habit_counters": {}, "weekly_habit_clicks": {}, "weekly_habit_neg": {},
     "today_habit_clicks": {}, "today_habit_neg": {}, "last_completed_daily_ids": [],
-    "monthly_habit_clicks": {}, "current_month_id": "", "habit_daily_log": []
+    "monthly_habit_clicks": {}, "current_month_id": "", "habit_daily_log": [],
+    # NEW ACCUMULATORS
+    "all_time_habits_pos": 0, "all_time_habits_neg": 0,
+    "all_time_dailies_completed": 0, "all_time_todos_completed": 0,
+    "last_completed_todo_ids": []
 }
 if os.path.exists(DB_FILE):
     with open(DB_FILE, "r", encoding="utf-8") as f: db.update(json.load(f))
@@ -32,7 +36,7 @@ today_str = now.strftime("%Y-%m-%d")
 
 # --- Siklus mingguan: reset setiap hari Minggu (asumsi day-start jam 06:00 WIB) ---
 adjusted = now - timedelta(hours=6)
-days_since_sunday = (adjusted.weekday() + 1) % 7  # Senin=0 ... Minggu=6 -> Minggu jadi 0
+days_since_sunday = (adjusted.weekday() + 1) % 7
 week_start = (adjusted - timedelta(days=days_since_sunday)).date()
 cycle = week_start.isoformat()
 
@@ -86,10 +90,12 @@ mp = u_res.get("stats", {}).get("mp", 0.0)
 if c_class not in db["classes_used"]: db["classes_used"].append(c_class)
 db["peak_gold"] = max(db["peak_gold"], gold)
 
+# PERBAIKAN MANA: Penggunaan mana berapapun akan dihitung.
 if db["last_mana"] is not None and mp < db["last_mana"]:
     diff = db["last_mana"] - mp
-    db["total_mana_spent"] += diff
-    if diff >= 15: db["buffs_cast"] += int(diff // 25) + 1
+    if diff > 0:
+        db["total_mana_spent"] += diff
+        db["buffs_cast"] += 1
 db["last_mana"] = mp
 
 dmg_up = u_res.get("party", {}).get("quest", {}).get("progress", {}).get("up", 0.0)
@@ -118,8 +124,6 @@ db["last_quest_key"] = quest_key_now if quest_active_now else None
 db["last_quest_is_boss"] = is_boss_now if quest_active_now else False
 
 def bump(store, tid, text, amount):
-    """Simpan/akumulasi statistik pakai ID task sebagai kunci (bukan nama),
-    supaya rename task tidak memutus riwayat, dan nama yang tampil selalu ikut yang terbaru."""
     entry = store.get(tid, {"text": text, "count": 0})
     entry["text"] = text
     entry["count"] += amount
@@ -131,11 +135,12 @@ done = [t for t in due if t.get("completed", False)]
 pct = int((len(done) / len(due) * 100)) if due else 100
 dailies_gagal = max(0, len(due) - len(done))
 
-# --- Hanya hitung dailies yang BARU SAJA selesai (transisi belum->selesai),
-#     bukan setiap kali skrip jalan, supaya tidak dobel-hitung kalau cron sering jalan ---
 current_completed_ids = set(d.get("id") for d in done)
 last_completed_ids = set(db.get("last_completed_daily_ids", []))
 newly_completed = current_completed_ids - last_completed_ids
+
+# Tambahkan ke akumulator permanen Dailies
+db["all_time_dailies_completed"] += len(newly_completed)
 
 for d_task in done:
     tid = d_task.get("id")
@@ -152,8 +157,10 @@ up = sum(t.get("counterUp", 0) for t in habits)
 dn = sum(t.get("counterDown", 0) for t in habits)
 hratio = int((up / (up + dn) * 100)) if (up + dn) > 0 else 100
 
-# --- Pelacakan klik per-habit (dasar utk Top 5 mingguan, Top 5 harian,
-#     Top 5 3-hari-terakhir, Top 5 bulanan, Top 3 negatif mingguan) ---
+# Set baseline permanen jika sebelumnya kosong
+if db["all_time_habits_pos"] == 0 and up > 0: db["all_time_habits_pos"] = up
+if db["all_time_habits_neg"] == 0 and dn > 0: db["all_time_habits_neg"] = dn
+
 last_habit_counters = db.get("last_habit_counters", {})
 weekly_habit_clicks = db.get("weekly_habit_clicks", {})
 weekly_habit_neg = db.get("weekly_habit_neg", {})
@@ -169,11 +176,14 @@ for h in habits:
     prev = last_habit_counters.get(hid, {"up": cur_up, "down": cur_dn})
     delta_up = max(0, cur_up - prev.get("up", cur_up))
     delta_dn = max(0, cur_dn - prev.get("down", cur_dn))
+    
     if delta_up > 0:
+        db["all_time_habits_pos"] += delta_up  # Tambah ke akumulator permanen
         bump(weekly_habit_clicks, hid, text, delta_up)
         bump(today_habit_clicks, hid, text, delta_up)
         bump(monthly_habit_clicks, hid, text, delta_up)
     if delta_dn > 0:
+        db["all_time_habits_neg"] += delta_dn  # Tambah ke akumulator permanen
         bump(weekly_habit_neg, hid, text, delta_dn)
         bump(today_habit_neg, hid, text, delta_dn)
     last_habit_counters[hid] = {"up": cur_up, "down": cur_dn}
@@ -185,19 +195,23 @@ db["today_habit_clicks"] = today_habit_clicks
 db["today_habit_neg"] = today_habit_neg
 db["monthly_habit_clicks"] = monthly_habit_clicks
 
+# Tambahkan ke akumulator permanen To-Dos
+current_completed_todos = set(t.get("id") for t in c_res)
+newly_completed_todos = current_completed_todos - set(db.get("last_completed_todo_ids", []))
+if db["all_time_todos_completed"] == 0: db["all_time_todos_completed"] = len(c_res)
+db["all_time_todos_completed"] += len(newly_completed_todos)
+db["last_completed_todo_ids"] = list(current_completed_todos)
+
 top_h = sorted(weekly_habit_clicks.values(), key=lambda x: x["count"], reverse=True)[:5]
 top_hneg3 = sorted(weekly_habit_neg.values(), key=lambda x: x["count"], reverse=True)[:3]
 top_h_month = sorted(monthly_habit_clicks.values(), key=lambda x: x["count"], reverse=True)[:5]
 
-# Habits yang tidak pernah diklik (positif maupun negatif) minggu ini
 touched_ids_week = set(weekly_habit_clicks.keys()) | set(weekly_habit_neg.keys())
 habits_untouched_week = sum(1 for h in habits if h.get("id") not in touched_ids_week)
 total_habits_count = len(habits)
 idle_week_pct = int(round(habits_untouched_week / total_habits_count * 100)) if total_habits_count else 0
 
 if db["last_daily_date"] != today_str:
-    # Arsipkan data klik & negatif hari yang baru saja lewat
-    # (dipakai utk ranking "3 hari terakhir" dan "Idle Habits (Daily)" yang menampilkan data kemarin)
     db.setdefault("habit_daily_log", [])
     if db["today_habit_clicks"] or db["today_habit_neg"]:
         db["habit_daily_log"].append({
@@ -207,24 +221,21 @@ if db["last_daily_date"] != today_str:
         })
     db["habit_daily_log"] = db["habit_daily_log"][-3:]
     db["last_daily_date"] = today_str
-    db["daily_habit_baseline"] = up
+    db["daily_habit_baseline"] = db["all_time_habits_pos"]
     db["today_habit_clicks"] = {}
     db["today_habit_neg"] = {}
     today_habit_clicks = {}
 
-# Idle Habits (Daily) memakai data hari KEMARIN (hari yang baru saja diarsipkan),
-# bukan hari ini yang masih berjalan, supaya datanya sudah lengkap saat ditampilkan.
 _log = db.get("habit_daily_log", [])
 if _log:
     _yesterday = _log[-1]
     touched_yesterday_ids = set(_yesterday.get("clicks", {}).keys()) | set(_yesterday.get("neg", {}).keys())
     idle_yesterday_count = sum(1 for h in habits if h.get("id") not in touched_yesterday_ids)
 else:
-    idle_yesterday_count = total_habits_count  # belum ada arsip sama sekali
+    idle_yesterday_count = total_habits_count
 
 top_h5_daily = sorted(today_habit_clicks.values(), key=lambda x: x["count"], reverse=True)[:5]
 
-# Top 5 habits paling banyak diklik dalam 3 hari terakhir (hari ini + 2 hari terarsip terakhir)
 def merge_click_dicts(*dicts):
     merged = {}
     for d in dicts:
@@ -242,18 +253,22 @@ top_h_3day = sorted(rolling3_source.values(), key=lambda x: x["count"], reverse=
 def trunc(s, n=17):
     return s if len(s) <= n else s[:n-1].rstrip() + "…"
 
-h_today = max(0, up - db["daily_habit_baseline"])
+h_today = max(0, db["all_time_habits_pos"] - db["daily_habit_baseline"])
 t_today = sum(1 for t in c_res if t.get("dateCompleted") and datetime.fromisoformat(t["dateCompleted"].replace("Z", "+00:00")).astimezone(WIB).strftime("%Y-%m-%d") == today_str)
 t_active = len([t for t in t_res if t.get("type") == "todo"])
 t_cleared = len(c_res)
-g_total = up + t_cleared + len(done)
+
+# ALL COMPLETED YANG BARU = Total Positif Habit + Total Semua ToDos + Total Dailies yg diakumulasi
+g_total = db["all_time_habits_pos"] + db["all_time_todos_completed"] + db["all_time_dailies_completed"]
 
 streak = max([t.get("streak", 0) for t in dailies], default=0)
-days = max(1, (adjusted.date() - week_start).days + 1)  # jumlah hari sejak reset mingguan (Minggu)
+days = max(1, (adjusted.date() - week_start).days + 1)
 avg_dmg = db["weekly_damage"] / days
 
 with open(DB_FILE, "w", encoding="utf-8") as f: json.dump(db, f, indent=2)
-def fmt(n): return f"{n/1000000:.2f}M" if n>=1000000 else f"{n/1000:.1f}K" if n>=1000 else str(int(n))
+
+# FORMAT MENGGUNAKAN k DAN m KECIL
+def fmt(n): return f"{n/1000000:.2f}m" if n>=1000000 else f"{n/1000:.1f}k" if n>=1000 else str(int(n))
 
 quote_text = "Consistency is not perfection, it is simply refusing to give up."
 if os.path.exists("quote.txt"):
@@ -307,10 +322,7 @@ except Exception:
     pass
 
 # ==========================================
-# 5. LOGO EMBLEM: Obsidian + Radial Glow Hangat (vector murni)
-#    Catatan: logo brand asli (Metamask/Telegram/Mozilla/dll) tidak dipakai
-#    karena itu IP berhak cipta pihak lain. Ini desain permata orisinal
-#    dengan nuansa serupa (mewah, minimalis, memancar dari dalam).
+# 5. LOGO EMBLEM
 # ==========================================
 logo_svg = '''
 <rect x="14" y="20" width="100" height="100" rx="22" fill="url(#logoBgGlow)" stroke="url(#goldRing)" stroke-width="3"/>
@@ -329,14 +341,13 @@ logo_svg = '''
 '''
 
 # ==========================================
-# 6. IKON VEKTOR + HUTAN PINUS (diperjelas) + BINTANG MALAM
+# 6. IKON VEKTOR + HUTAN PINUS + BINTANG MALAM
 # ==========================================
 random.seed(42)
 pine_trees = ""
 for i in range(16):
     x = random.randint(-30, 430)
     scale = random.uniform(0.7, 1.3)
-    # Batang pohon ditambatkan ke garis tanah (~y128) supaya tidak ada yang "melayang"
     y = 128 - scale * 80 + random.uniform(-4, 4)
     opacity = random.uniform(0.55, 0.95)
     pine_trees += f'<g transform="translate({x}, {y:.1f}) scale({scale:.2f})" opacity="{opacity:.2f}">'
@@ -352,8 +363,6 @@ for i in range(30):
     r = random.uniform(0.6, 1.8); op = random.uniform(0.4, 0.95)
     night_stars += f'<circle cx="{sx}" cy="{sy}" r="{r}" fill="#fef9e7" opacity="{op}"/>'
 
-# Tanah di bawah pohon pinus — gradasi memudar (bukan garis kaku), naik sampai
-# sekitar bawah teks "Level ... Warrior" supaya batang pohon terlihat berpijak
 ground_band = '<rect x="0" y="90" width="460" height="50" fill="url(#groundGrad)"/>'
 random.seed(33)
 grass = ""
@@ -364,9 +373,6 @@ for i in range(45):
     op = random.uniform(0.5, 0.9)
     grass += f'<polygon points="{gx-2},140 {gx},{gy:.1f} {gx+2},140" fill="#15803d" opacity="{op:.2f}"/>'
 
-# 3 batu acak di tanah (tidak berbaris, dijauhkan dari area logo/nama di sisi kiri)
-# Catatan: sengaja TANPA loop while/retry — posisi dasar sudah berjarak,
-# lalu diberi offset acak kecil, supaya dijamin selesai instan (tidak ada risiko macet).
 random.seed(58)
 rocks = ""
 base_xs = [265, 335, 405]
@@ -511,10 +517,14 @@ svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w
     <rect x="16" y="493" width="101" height="46" rx="7" fill="#1f1610" stroke="#b45309"/><text x="22" y="509" class="l">HABITS TODAY</text><g transform="translate(22, 513) scale(0.75)">{ic_sp}</g><text x="44" y="528" class="v">{h_today}</text>
     <rect x="125" y="493" width="101" height="46" rx="7" fill="#0d1f18" stroke="#059669"/><text x="131" y="509" class="l">DAILIES TODAY</text><g transform="translate(131, 513) scale(0.75)">{ic_ck}</g><text x="153" y="528" class="v">{len(done)}</text>
     <rect x="234" y="493" width="101" height="46" rx="7" fill="#0f1f33" stroke="#0284c7"/><text x="240" y="509" class="l">TO-DOS TODAY</text><g transform="translate(240, 513) scale(0.75)">{ic_tg}</g><text x="262" y="528" class="v">{t_today}</text>
+    
+    <!-- FIX 1: All Completed -->
     <rect x="343" y="493" width="101" height="46" rx="7" fill="#241b0b" stroke="#ca8a04"/><text x="349" y="509" class="l">ALL COMPLETED</text><g transform="translate(349, 513) scale(0.75)">{ic_st}</g><text x="371" y="528" class="v" fill="#fbbf24">{fmt(g_total)}</text>
 
-    <rect x="16" y="547" width="101" height="46" rx="7" fill="#0d2818" stroke="#16a34a"/><text x="22" y="563" class="l">HABITS POSITIF</text><g transform="translate(22, 567) scale(0.7)">{ic_thumb_up}</g><text x="40" y="581" class="v">{up}</text>
-    <rect x="125" y="547" width="101" height="46" rx="7" fill="#2a0f14" stroke="#dc2626"/><text x="131" y="563" class="l">HABITS NEGATIF</text><g transform="translate(131, 567) scale(0.7)">{ic_thumb_down}</g><text x="149" y="581" class="v">{dn}</text>
+    <!-- FIX 2: Habits Positif/Negatif -->
+    <rect x="16" y="547" width="101" height="46" rx="7" fill="#0d2818" stroke="#16a34a"/><text x="22" y="563" class="l">HABITS POSITIF</text><g transform="translate(22, 567) scale(0.7)">{ic_thumb_up}</g><text x="40" y="581" class="v">{fmt(db['all_time_habits_pos'])}</text>
+    <rect x="125" y="547" width="101" height="46" rx="7" fill="#2a0f14" stroke="#dc2626"/><text x="131" y="563" class="l">HABITS NEGATIF</text><g transform="translate(131, 567) scale(0.7)">{ic_thumb_down}</g><text x="149" y="581" class="v">{fmt(db['all_time_habits_neg'])}</text>
+    
     <rect x="234" y="547" width="101" height="46" rx="7" fill="#2a1608" stroke="#ea580c"/><text x="240" y="563" class="l">DAILIES GAGAL</text><g transform="translate(240, 567) scale(0.75)">{ic_x}</g><text x="260" y="581" class="v">{dailies_gagal}</text>
     <rect x="343" y="547" width="101" height="46" rx="7" fill="#170f33" stroke="#7c3aed"/><text x="349" y="563" class="l">TODO BELUM</text><g transform="translate(349, 567) scale(0.7)">{ic_clip}</g><text x="367" y="581" class="v">{t_active}</text>
 
@@ -530,13 +540,15 @@ svg = f"""<svg width="{canvas_w*2}" height="{canvas_h*2}" viewBox="0 0 {canvas_w
     <rect x="236" y="1031" width="208" height="140" rx="8" fill="url(#gD)" stroke="#10b981"/><text x="248" y="1051" font-family="sans-serif" font-size="10.5" font-weight="bold" fill="#34d399">TOP 5 DAILIES (MINGGUAN)</text>{d_str}
 
     <rect x="16" y="1179" width="208" height="140" rx="8" fill="url(#gT5M)" stroke="#6366f1"/><text x="28" y="1199" font-family="sans-serif" font-size="10.5" font-weight="bold" fill="#818cf8">TOP 5 HABITS (BULANAN)</text>{hmonth_str}
+    
+    <!-- FIX 4: Warna Idle Habits dibuat lebih jelas (#cbd5e1) -->
     <rect x="236" y="1179" width="208" height="140" rx="8" fill="url(#gP)" stroke="#1e293b"/>
-    <text x="248" y="1199" font-family="sans-serif" font-size="10.5" font-weight="bold" fill="#94a3b8" letter-spacing="0.5">IDLE HABITS</text>
-    <g transform="translate(248, 1212) scale(0.85)">{ic_moon}</g><text x="270" y="1227" class="s">Yesterday</text>
-    <text x="270" y="1244" class="v">{idle_yesterday_count}<tspan class="s"> / {total_habits_count} habits</tspan></text>
+    <text x="248" y="1199" font-family="sans-serif" font-size="10.5" font-weight="bold" fill="#cbd5e1" letter-spacing="0.5">IDLE HABITS</text>
+    <g transform="translate(248, 1212) scale(0.85)">{ic_moon}</g><text x="270" y="1227" font-family="sans-serif" font-size="11.5px" fill="#cbd5e1">Yesterday</text>
+    <text x="270" y="1244" class="v">{idle_yesterday_count}<tspan font-family="sans-serif" font-size="11.5px" fill="#cbd5e1"> / {total_habits_count} habits</tspan></text>
     <line x1="246" y1="1256" x2="442" y2="1256" stroke="#334155" stroke-width="1"/>
-    <g transform="translate(248, 1263) scale(0.85)">{ic_calendar}</g><text x="270" y="1278" class="s">This Week</text>
-    <text x="270" y="1295" class="v">{habits_untouched_week}<tspan class="s"> ({idle_week_pct}%)</tspan></text>
+    <g transform="translate(248, 1263) scale(0.85)">{ic_calendar}</g><text x="270" y="1278" font-family="sans-serif" font-size="11.5px" fill="#cbd5e1">This Week</text>
+    <text x="270" y="1295" class="v">{habits_untouched_week}<tspan font-family="sans-serif" font-size="11.5px" fill="#cbd5e1"> ({idle_week_pct}%)</tspan></text>
 
     <rect x="16" y="{QUOTE_Y}" width="428" height="{quote_box_h}" rx="9" fill="url(#gI)" stroke="url(#gB)"/>
     <text x="28" y="{QUOTE_Y+23}" font-family="sans-serif" font-size="11" font-weight="bold" fill="#facc15">SCROLL OF INSIGHT</text>
