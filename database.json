@@ -7,13 +7,13 @@
   "total_mana_spent": 980.0,
   "last_mana": 307,
   "buffs_cast": 34,
-  "bosses_slain": 20,
-  "all_time_damage": 24761.0,
-  "weekly_damage": 9203.0,
+  "bosses_slain": 21,
+  "all_time_damage": 25915.0,
+  "weekly_damage": 10357.0,
   "peak_daily_damage": 6950.0,
-  "current_day_damage": 5392.0,
-  "damage_day_date": "2026-09-11",
-  "last_damage_up": 4299,
+  "current_day_damage": 1154.0,
+  "damage_day_date": "2026-09-12",
+  "last_damage_up": 5453,
   "weekly_top_dailies": {
     "bfdf0eba-c8a3-4b0c-ac41-ba2df558807d": {
       "text": "Drink water in the morning ",
@@ -52,9 +52,9 @@
       "count": 2
     }
   },
-  "last_daily_date": "2026-09-11",
-  "daily_habit_baseline": 22,
-  "last_quest_key": "dilatoryDistress3",
+  "last_daily_date": "2026-09-12",
+  "daily_habit_baseline": 16,
+  "last_quest_key": "mayhemMistiflying3",
   "last_quest_is_boss": true,
   "last_habit_counters": {
     "a7738b9e-49a9-4e59-9896-83571c330c1c": {
@@ -234,72 +234,18 @@
       "count": 1
     }
   },
-  "today_habit_clicks": {
-    "fb8f1fe7-db20-442a-8cdb-51eaeaeb5808": {
-      "text": "Beres - beres apapun ",
-      "count": 1
-    },
-    "a7738b9e-49a9-4e59-9896-83571c330c1c": {
-      "text": "Ada kemajuan",
-      "count": 1
-    },
-    "1fef3a4f-3558-4911-86b9-39a9a6c9d58f": {
-      "text": "Deep thinking tanpa distraks",
-      "count": 1
-    },
-    "379abfe3-1535-4237-adcf-117cd95f176b": {
-      "text": "Belajar skill inti (AI / bis",
-      "count": 1
-    },
-    "1a9aeab6-5a75-4f34-bf70-180dc5394f1d": {
-      "text": "Ketepatan Waktu Sholat.",
-      "count": 4
-    },
-    "b4988daa-371f-4ad7-b685-74448fb0b155": {
-      "text": "Pernapasan ",
-      "count": 1
-    },
-    "6a74dab8-a1c1-4272-af7d-851350939bef": {
-      "text": "Olahraga / gerak",
-      "count": 1
-    },
-    "b2ca4f83-d519-4120-a621-e08b6ebb4afb": {
-      "text": "Mengangkat kaki ke tembok ",
-      "count": 1
-    },
-    "1ab21ba0-b4b2-4dfd-9fd7-7f7083e5c168": {
-      "text": "Tidak Menghamburkan uang ",
-      "count": 1
-    },
-    "b992b57a-ba05-44d3-86b4-5abe6755c929": {
-      "text": "Kurangi Makanan ",
-      "count": 1
-    },
-    "5846a8ec-2664-44c8-8ff4-eca2cddd007a": {
-      "text": "Reward Menonton Anime ",
-      "count": 2
-    }
-  },
-  "today_habit_neg": {
-    "77f441f2-f99e-40f3-8b1a-5ae04255a03f": {
-      "text": "Trading Forex",
-      "count": 1
-    },
-    "1a9aeab6-5a75-4f34-bf70-180dc5394f1d": {
-      "text": "Ketepatan Waktu Sholat.",
-      "count": 1
-    }
-  },
+  "today_habit_clicks": {},
+  "today_habit_neg": {},
   "last_completed_daily_ids": [
-    "63fa7fa1-ff43-4f00-b967-7872ead696f8",
-    "e30c85b2-9b79-4e33-99b6-052eb9e98e58",
-    "10095d12-603b-40af-bea3-52c301f2cd91",
     "6ef47ca0-4a20-47b0-85c3-9694c7178dca",
-    "a793ab72-3711-47e6-bcae-7202b8a73c98",
-    "0ccf8f94-5e50-4913-b98d-5305f4b4dce9",
+    "10095d12-603b-40af-bea3-52c301f2cd91",
     "7ea1af51-1a7d-40b8-b866-2b95fcbac3b8",
+    "a793ab72-3711-47e6-bcae-7202b8a73c98",
+    "325d8585-0a79-4f05-8a4c-13dfa5e6de5f",
+    "e30c85b2-9b79-4e33-99b6-052eb9e98e58",
     "bfdf0eba-c8a3-4b0c-ac41-ba2df558807d",
-    "325d8585-0a79-4f05-8a4c-13dfa5e6de5f"
+    "63fa7fa1-ff43-4f00-b967-7872ead696f8",
+    "0ccf8f94-5e50-4913-b98d-5305f4b4dce9"
   ],
   "monthly_habit_clicks": {
     "b992b57a-ba05-44d3-86b4-5abe6755c929": {
@@ -417,6 +363,65 @@
           "count": 1
         }
       }
+    },
+    {
+      "date": "2026-09-11",
+      "clicks": {
+        "fb8f1fe7-db20-442a-8cdb-51eaeaeb5808": {
+          "text": "Beres - beres apapun ",
+          "count": 1
+        },
+        "a7738b9e-49a9-4e59-9896-83571c330c1c": {
+          "text": "Ada kemajuan",
+          "count": 1
+        },
+        "1fef3a4f-3558-4911-86b9-39a9a6c9d58f": {
+          "text": "Deep thinking tanpa distraks",
+          "count": 1
+        },
+        "379abfe3-1535-4237-adcf-117cd95f176b": {
+          "text": "Belajar skill inti (AI / bis",
+          "count": 1
+        },
+        "1a9aeab6-5a75-4f34-bf70-180dc5394f1d": {
+          "text": "Ketepatan Waktu Sholat.",
+          "count": 4
+        },
+        "b4988daa-371f-4ad7-b685-74448fb0b155": {
+          "text": "Pernapasan ",
+          "count": 1
+        },
+        "6a74dab8-a1c1-4272-af7d-851350939bef": {
+          "text": "Olahraga / gerak",
+          "count": 1
+        },
+        "b2ca4f83-d519-4120-a621-e08b6ebb4afb": {
+          "text": "Mengangkat kaki ke tembok ",
+          "count": 1
+        },
+        "1ab21ba0-b4b2-4dfd-9fd7-7f7083e5c168": {
+          "text": "Tidak Menghamburkan uang ",
+          "count": 1
+        },
+        "b992b57a-ba05-44d3-86b4-5abe6755c929": {
+          "text": "Kurangi Makanan ",
+          "count": 1
+        },
+        "5846a8ec-2664-44c8-8ff4-eca2cddd007a": {
+          "text": "Reward Menonton Anime ",
+          "count": 2
+        }
+      },
+      "neg": {
+        "77f441f2-f99e-40f3-8b1a-5ae04255a03f": {
+          "text": "Trading Forex",
+          "count": 1
+        },
+        "1a9aeab6-5a75-4f34-bf70-180dc5394f1d": {
+          "text": "Ketepatan Waktu Sholat.",
+          "count": 1
+        }
+      }
     }
   ],
   "all_time_habits_pos": 16,
@@ -424,35 +429,35 @@
   "all_time_dailies_completed": 9,
   "all_time_todos_completed": 56,
   "last_completed_todo_ids": [
-    "a3552703-1484-4875-b6c9-afa5ed3e8069",
-    "79f40b7b-25c5-4885-bd8a-89534aaca81d",
-    "71073efe-71bc-450c-b304-828f29a49405",
-    "0671e0aa-7422-4cf6-8501-b30e3c3d8da9",
-    "f5766e16-4a75-42ac-af60-32f8dea9c1d2",
-    "df30167c-ea60-4b78-8fcc-c00de4c9d507",
-    "75c451d6-03b7-4c09-99de-eef39f33b536",
-    "701520f6-41c9-451e-a114-2e8bbd5a6ceb",
-    "cf851cd0-df34-45d4-8f60-49e087ffbedb",
-    "8afc0219-5ee5-4c43-9911-7ffeb67c7f9c",
-    "e2cd34f6-8c1e-4e95-b129-12a9e3e07da2",
-    "028b711c-a9a5-4977-b961-98db4ac882e0",
-    "36494690-fed4-4f36-91c0-9e3c56bae9e3",
-    "cd7b966d-3a75-4bfe-af25-5a11be31880d",
-    "424d5067-7f06-4824-8013-a403ddff1655",
-    "a4771123-3bdf-4ed8-b4b3-8af6d5251395",
     "fd3da501-ae56-4a2d-8c4c-19f894fbc2cb",
-    "abc8e9aa-05f6-4307-8fc8-ee5717501c44",
-    "5848fbfc-7e42-4ad7-8817-d9744db361ae",
-    "73a3a9bd-61e3-43bc-ab1c-7e90976a0010",
-    "22008000-9490-4eac-8347-e6b4d909a920",
-    "a1a9c514-e612-428a-875c-9588c602f9cb",
-    "254d085b-cc2d-4a12-ae15-2fdb03e5529a",
-    "b166f9d1-c4c4-4c54-8042-13abdeb95815",
-    "9e09dc4d-87a4-44cf-96e4-e2293d7ced3e",
     "d463c547-608b-4b4e-b6c9-cc935fcce9fb",
+    "e2cd34f6-8c1e-4e95-b129-12a9e3e07da2",
+    "254d085b-cc2d-4a12-ae15-2fdb03e5529a",
+    "9e09dc4d-87a4-44cf-96e4-e2293d7ced3e",
+    "abc8e9aa-05f6-4307-8fc8-ee5717501c44",
+    "028b711c-a9a5-4977-b961-98db4ac882e0",
+    "a1a9c514-e612-428a-875c-9588c602f9cb",
+    "a3552703-1484-4875-b6c9-afa5ed3e8069",
+    "701520f6-41c9-451e-a114-2e8bbd5a6ceb",
+    "0671e0aa-7422-4cf6-8501-b30e3c3d8da9",
+    "79f40b7b-25c5-4885-bd8a-89534aaca81d",
+    "22008000-9490-4eac-8347-e6b4d909a920",
+    "424d5067-7f06-4824-8013-a403ddff1655",
     "7c964f58-bd40-427d-b1d7-c5cd6ee716d1",
+    "36494690-fed4-4f36-91c0-9e3c56bae9e3",
+    "4a4033db-3be8-4a9e-9bf0-bdd973602ad4",
+    "df30167c-ea60-4b78-8fcc-c00de4c9d507",
+    "f5766e16-4a75-42ac-af60-32f8dea9c1d2",
+    "a4771123-3bdf-4ed8-b4b3-8af6d5251395",
+    "5848fbfc-7e42-4ad7-8817-d9744db361ae",
+    "75c451d6-03b7-4c09-99de-eef39f33b536",
     "fabda627-482c-4896-808f-12c776f05fd2",
-    "4a4033db-3be8-4a9e-9bf0-bdd973602ad4"
+    "71073efe-71bc-450c-b304-828f29a49405",
+    "cd7b966d-3a75-4bfe-af25-5a11be31880d",
+    "8afc0219-5ee5-4c43-9911-7ffeb67c7f9c",
+    "cf851cd0-df34-45d4-8f60-49e087ffbedb",
+    "b166f9d1-c4c4-4c54-8042-13abdeb95815",
+    "73a3a9bd-61e3-43bc-ab1c-7e90976a0010"
   ],
   "alltime_top_dailies": {
     "Drink water in the morning ": 4,
