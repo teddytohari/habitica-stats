@@ -4,16 +4,16 @@
     "warrior"
   ],
   "peak_gold": 39495,
-  "total_mana_spent": 784.0,
-  "last_mana": 500,
-  "buffs_cast": 33,
-  "bosses_slain": 17,
-  "all_time_damage": 20685.0,
-  "weekly_damage": 5127.0,
+  "total_mana_spent": 980.0,
+  "last_mana": 304,
+  "buffs_cast": 34,
+  "bosses_slain": 18,
+  "all_time_damage": 21563.0,
+  "weekly_damage": 6005.0,
   "peak_daily_damage": 6950.0,
-  "current_day_damage": 1316.0,
+  "current_day_damage": 2194.0,
   "damage_day_date": "2026-09-11",
-  "last_damage_up": 223,
+  "last_damage_up": 1101,
   "weekly_top_dailies": {
     "bfdf0eba-c8a3-4b0c-ac41-ba2df558807d": {
       "text": "Drink water in the morning ",
@@ -54,7 +54,7 @@
   },
   "last_daily_date": "2026-09-11",
   "daily_habit_baseline": 22,
-  "last_quest_key": "lostMasterclasser3",
+  "last_quest_key": "stoikalmCalamity3",
   "last_quest_is_boss": true,
   "last_habit_counters": {
     "a7738b9e-49a9-4e59-9896-83571c330c1c": {
@@ -162,7 +162,7 @@
       "down": 0
     },
     "fb8f1fe7-db20-442a-8cdb-51eaeaeb5808": {
-      "up": 0,
+      "up": 1,
       "down": 0
     }
   },
@@ -217,7 +217,7 @@
     },
     "fb8f1fe7-db20-442a-8cdb-51eaeaeb5808": {
       "text": "Beres - beres apapun ",
-      "count": 1
+      "count": 2
     }
   },
   "weekly_habit_neg": {
@@ -226,7 +226,12 @@
       "count": 1
     }
   },
-  "today_habit_clicks": {},
+  "today_habit_clicks": {
+    "fb8f1fe7-db20-442a-8cdb-51eaeaeb5808": {
+      "text": "Beres - beres apapun ",
+      "count": 1
+    }
+  },
   "today_habit_neg": {},
   "last_completed_daily_ids": [],
   "monthly_habit_clicks": {
@@ -280,7 +285,7 @@
     },
     "fb8f1fe7-db20-442a-8cdb-51eaeaeb5808": {
       "text": "Beres - beres apapun ",
-      "count": 1
+      "count": 2
     }
   },
   "current_month_id": "2026-09",
@@ -343,37 +348,37 @@
       }
     }
   ],
-  "all_time_habits_pos": 0,
+  "all_time_habits_pos": 2,
   "all_time_habits_neg": 0,
   "all_time_dailies_completed": 0,
   "all_time_todos_completed": 54,
   "last_completed_todo_ids": [
-    "22008000-9490-4eac-8347-e6b4d909a920",
-    "5848fbfc-7e42-4ad7-8817-d9744db361ae",
-    "0671e0aa-7422-4cf6-8501-b30e3c3d8da9",
-    "8afc0219-5ee5-4c43-9911-7ffeb67c7f9c",
-    "e2cd34f6-8c1e-4e95-b129-12a9e3e07da2",
-    "d463c547-608b-4b4e-b6c9-cc935fcce9fb",
-    "4a4033db-3be8-4a9e-9bf0-bdd973602ad4",
-    "028b711c-a9a5-4977-b961-98db4ac882e0",
-    "71073efe-71bc-450c-b304-828f29a49405",
-    "424d5067-7f06-4824-8013-a403ddff1655",
-    "254d085b-cc2d-4a12-ae15-2fdb03e5529a",
     "f5766e16-4a75-42ac-af60-32f8dea9c1d2",
-    "75c451d6-03b7-4c09-99de-eef39f33b536",
-    "abc8e9aa-05f6-4307-8fc8-ee5717501c44",
-    "cd7b966d-3a75-4bfe-af25-5a11be31880d",
-    "fd3da501-ae56-4a2d-8c4c-19f894fbc2cb",
-    "fabda627-482c-4896-808f-12c776f05fd2",
-    "701520f6-41c9-451e-a114-2e8bbd5a6ceb",
-    "cf851cd0-df34-45d4-8f60-49e087ffbedb",
-    "a4771123-3bdf-4ed8-b4b3-8af6d5251395",
-    "9e09dc4d-87a4-44cf-96e4-e2293d7ced3e",
-    "73a3a9bd-61e3-43bc-ab1c-7e90976a0010",
-    "a1a9c514-e612-428a-875c-9588c602f9cb",
     "36494690-fed4-4f36-91c0-9e3c56bae9e3",
-    "df30167c-ea60-4b78-8fcc-c00de4c9d507",
+    "8afc0219-5ee5-4c43-9911-7ffeb67c7f9c",
+    "424d5067-7f06-4824-8013-a403ddff1655",
+    "fd3da501-ae56-4a2d-8c4c-19f894fbc2cb",
+    "4a4033db-3be8-4a9e-9bf0-bdd973602ad4",
+    "75c451d6-03b7-4c09-99de-eef39f33b536",
     "79f40b7b-25c5-4885-bd8a-89534aaca81d",
+    "0671e0aa-7422-4cf6-8501-b30e3c3d8da9",
+    "73a3a9bd-61e3-43bc-ab1c-7e90976a0010",
+    "22008000-9490-4eac-8347-e6b4d909a920",
+    "cd7b966d-3a75-4bfe-af25-5a11be31880d",
+    "a4771123-3bdf-4ed8-b4b3-8af6d5251395",
+    "254d085b-cc2d-4a12-ae15-2fdb03e5529a",
+    "fabda627-482c-4896-808f-12c776f05fd2",
+    "a1a9c514-e612-428a-875c-9588c602f9cb",
+    "701520f6-41c9-451e-a114-2e8bbd5a6ceb",
+    "df30167c-ea60-4b78-8fcc-c00de4c9d507",
+    "5848fbfc-7e42-4ad7-8817-d9744db361ae",
+    "71073efe-71bc-450c-b304-828f29a49405",
+    "d463c547-608b-4b4e-b6c9-cc935fcce9fb",
+    "e2cd34f6-8c1e-4e95-b129-12a9e3e07da2",
+    "9e09dc4d-87a4-44cf-96e4-e2293d7ced3e",
+    "cf851cd0-df34-45d4-8f60-49e087ffbedb",
+    "028b711c-a9a5-4977-b961-98db4ac882e0",
+    "abc8e9aa-05f6-4307-8fc8-ee5717501c44",
     "a3552703-1484-4875-b6c9-afa5ed3e8069"
   ],
   "alltime_top_dailies": {
