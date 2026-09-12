@@ -5,15 +5,15 @@
   ],
   "peak_gold": 40450,
   "total_mana_spent": 980.0,
-  "last_mana": 307,
+  "last_mana": 308,
   "buffs_cast": 34,
-  "bosses_slain": 23,
+  "bosses_slain": 24,
   "all_time_damage": 27119.0,
   "weekly_damage": 11561.0,
   "peak_daily_damage": 6950.0,
   "current_day_damage": 2358.0,
   "damage_day_date": "2026-09-12",
-  "last_damage_up": 6657,
+  "last_damage_up": 217,
   "weekly_top_dailies": {
     "bfdf0eba-c8a3-4b0c-ac41-ba2df558807d": {
       "text": "Drink water in the morning ",
@@ -54,7 +54,7 @@
   },
   "last_daily_date": "2026-09-12",
   "daily_habit_baseline": 16,
-  "last_quest_key": "taskwoodsTerror3",
+  "last_quest_key": "stoikalmCalamity3",
   "last_quest_is_boss": true,
   "last_habit_counters": {
     "a7738b9e-49a9-4e59-9896-83571c330c1c": {
@@ -63,10 +63,10 @@
     },
     "77f441f2-f99e-40f3-8b1a-5ae04255a03f": {
       "up": 0,
-      "down": 1
+      "down": 0
     },
     "1fef3a4f-3558-4911-86b9-39a9a6c9d58f": {
-      "up": 1,
+      "up": 0,
       "down": 0
     },
     "1e0d7b6e-d756-4b44-a32e-9020f89b7503": {
@@ -82,12 +82,12 @@
       "down": 0
     },
     "379abfe3-1535-4237-adcf-117cd95f176b": {
-      "up": 1,
+      "up": 0,
       "down": 0
     },
     "1a9aeab6-5a75-4f34-bf70-180dc5394f1d": {
-      "up": 4,
-      "down": 1
+      "up": 0,
+      "down": 0
     },
     "87c92412-ace6-4193-bdec-f87222ab060c": {
       "up": 0,
@@ -102,7 +102,7 @@
       "down": 0
     },
     "b4988daa-371f-4ad7-b685-74448fb0b155": {
-      "up": 1,
+      "up": 0,
       "down": 0
     },
     "4e6a943b-dc82-46b6-980b-0a3b2fff5edd": {
@@ -110,19 +110,19 @@
       "down": 0
     },
     "6a74dab8-a1c1-4272-af7d-851350939bef": {
-      "up": 1,
+      "up": 0,
       "down": 0
     },
     "b2ca4f83-d519-4120-a621-e08b6ebb4afb": {
-      "up": 1,
+      "up": 0,
       "down": 0
     },
     "1ab21ba0-b4b2-4dfd-9fd7-7f7083e5c168": {
-      "up": 1,
+      "up": 0,
       "down": 0
     },
     "b992b57a-ba05-44d3-86b4-5abe6755c929": {
-      "up": 1,
+      "up": 0,
       "down": 0
     },
     "3561dabe-5c61-47a3-bcb5-9f51a71fe9e5": {
@@ -150,7 +150,7 @@
       "down": 0
     },
     "5846a8ec-2664-44c8-8ff4-eca2cddd007a": {
-      "up": 2,
+      "up": 0,
       "down": 0
     },
     "63e8284a-1ab3-45c0-8394-28c31b39a1a0": {
@@ -162,7 +162,7 @@
       "down": 0
     },
     "fb8f1fe7-db20-442a-8cdb-51eaeaeb5808": {
-      "up": 1,
+      "up": 0,
       "down": 0
     }
   },
@@ -236,17 +236,7 @@
   },
   "today_habit_clicks": {},
   "today_habit_neg": {},
-  "last_completed_daily_ids": [
-    "10095d12-603b-40af-bea3-52c301f2cd91",
-    "325d8585-0a79-4f05-8a4c-13dfa5e6de5f",
-    "7ea1af51-1a7d-40b8-b866-2b95fcbac3b8",
-    "a793ab72-3711-47e6-bcae-7202b8a73c98",
-    "0ccf8f94-5e50-4913-b98d-5305f4b4dce9",
-    "6ef47ca0-4a20-47b0-85c3-9694c7178dca",
-    "e30c85b2-9b79-4e33-99b6-052eb9e98e58",
-    "63fa7fa1-ff43-4f00-b967-7872ead696f8",
-    "bfdf0eba-c8a3-4b0c-ac41-ba2df558807d"
-  ],
+  "last_completed_daily_ids": [],
   "monthly_habit_clicks": {
     "b992b57a-ba05-44d3-86b4-5abe6755c929": {
       "text": "Kurangi Makanan ",
@@ -429,35 +419,34 @@
   "all_time_dailies_completed": 9,
   "all_time_todos_completed": 56,
   "last_completed_todo_ids": [
-    "a4771123-3bdf-4ed8-b4b3-8af6d5251395",
-    "36494690-fed4-4f36-91c0-9e3c56bae9e3",
-    "cf851cd0-df34-45d4-8f60-49e087ffbedb",
-    "0671e0aa-7422-4cf6-8501-b30e3c3d8da9",
-    "4a4033db-3be8-4a9e-9bf0-bdd973602ad4",
-    "abc8e9aa-05f6-4307-8fc8-ee5717501c44",
-    "d463c547-608b-4b4e-b6c9-cc935fcce9fb",
-    "75c451d6-03b7-4c09-99de-eef39f33b536",
-    "701520f6-41c9-451e-a114-2e8bbd5a6ceb",
-    "424d5067-7f06-4824-8013-a403ddff1655",
-    "9e09dc4d-87a4-44cf-96e4-e2293d7ced3e",
-    "fabda627-482c-4896-808f-12c776f05fd2",
-    "a1a9c514-e612-428a-875c-9588c602f9cb",
-    "cd7b966d-3a75-4bfe-af25-5a11be31880d",
+    "8afc0219-5ee5-4c43-9911-7ffeb67c7f9c",
     "254d085b-cc2d-4a12-ae15-2fdb03e5529a",
-    "028b711c-a9a5-4977-b961-98db4ac882e0",
-    "a3552703-1484-4875-b6c9-afa5ed3e8069",
-    "5848fbfc-7e42-4ad7-8817-d9744db361ae",
-    "f5766e16-4a75-42ac-af60-32f8dea9c1d2",
-    "e2cd34f6-8c1e-4e95-b129-12a9e3e07da2",
-    "fd3da501-ae56-4a2d-8c4c-19f894fbc2cb",
-    "df30167c-ea60-4b78-8fcc-c00de4c9d507",
-    "79f40b7b-25c5-4885-bd8a-89534aaca81d",
-    "b166f9d1-c4c4-4c54-8042-13abdeb95815",
-    "7c964f58-bd40-427d-b1d7-c5cd6ee716d1",
-    "71073efe-71bc-450c-b304-828f29a49405",
+    "abc8e9aa-05f6-4307-8fc8-ee5717501c44",
     "73a3a9bd-61e3-43bc-ab1c-7e90976a0010",
     "22008000-9490-4eac-8347-e6b4d909a920",
-    "8afc0219-5ee5-4c43-9911-7ffeb67c7f9c"
+    "701520f6-41c9-451e-a114-2e8bbd5a6ceb",
+    "71073efe-71bc-450c-b304-828f29a49405",
+    "028b711c-a9a5-4977-b961-98db4ac882e0",
+    "cf851cd0-df34-45d4-8f60-49e087ffbedb",
+    "fabda627-482c-4896-808f-12c776f05fd2",
+    "7c964f58-bd40-427d-b1d7-c5cd6ee716d1",
+    "a1a9c514-e612-428a-875c-9588c602f9cb",
+    "df30167c-ea60-4b78-8fcc-c00de4c9d507",
+    "b166f9d1-c4c4-4c54-8042-13abdeb95815",
+    "fd3da501-ae56-4a2d-8c4c-19f894fbc2cb",
+    "e2cd34f6-8c1e-4e95-b129-12a9e3e07da2",
+    "424d5067-7f06-4824-8013-a403ddff1655",
+    "a4771123-3bdf-4ed8-b4b3-8af6d5251395",
+    "cd7b966d-3a75-4bfe-af25-5a11be31880d",
+    "a3552703-1484-4875-b6c9-afa5ed3e8069",
+    "d463c547-608b-4b4e-b6c9-cc935fcce9fb",
+    "5848fbfc-7e42-4ad7-8817-d9744db361ae",
+    "9e09dc4d-87a4-44cf-96e4-e2293d7ced3e",
+    "36494690-fed4-4f36-91c0-9e3c56bae9e3",
+    "4a4033db-3be8-4a9e-9bf0-bdd973602ad4",
+    "f5766e16-4a75-42ac-af60-32f8dea9c1d2",
+    "75c451d6-03b7-4c09-99de-eef39f33b536",
+    "79f40b7b-25c5-4885-bd8a-89534aaca81d"
   ],
   "alltime_top_dailies": {
     "Drink water in the morning ": 4,
